@@ -1,0 +1,82 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 2,
+    "name": "theghostlab/cycle",
+    "title": "Cycle",
+    "category": "media",
+    "icon": "update",
+    "description": "Create variations of your content, set a cycle strategy, and have your content update on its own.",
+    "keywords": [
+        "content",
+        "random"
+    ],
+    "version": "0.1.0",
+    "textdomain": "theghostlab",
+    "attributes": {
+        "blockId":{
+            "type":"string",
+            "default": ""
+        },
+        "previewContent": {
+            "type": "string",
+            "default": ""
+        },
+        "currentId": {
+            "type": "string",
+            "default": ""
+        },
+        "pastEntryId": {
+            "type": "string",
+            "default": ""
+        },
+        "entries": {
+            "type": "array",
+            "default": []
+        },
+        "update" : {
+            "type": "object",
+            "default": {
+                "on": "",
+                "interval": 1,
+                "frequency": "d"
+            }
+        },
+        "randomize": {
+            "type": "object",
+            "default": {
+                "setting": "random"
+            }
+        },
+        "repeat": {
+            "type": "boolean",
+            "default": true
+        },
+        "entriesStatus": {
+            "type": "array",
+            "default": []
+        },
+        "metadata": {
+            "type": "object",
+            "default": {
+                "name": ""
+            }
+        },
+        "previousSettings": {
+            "type": "object"
+        }
+    },
+    "usesContext": [ "postId" ],
+    "supports": {
+        "align": true,
+        "alignWide": true
+    },
+    "styles": [],
+    "example": {
+        "attributes": {
+            "message": "This is a notice!"
+        }
+    },
+    "editorStyle":["file:style.scss", "file:index.css"],
+    "editorScript": ["file:index.js", "cycle-helper-js"],
+    "viewScript": [ "file:view.js", "cycle-shared-view-script" ]
+}

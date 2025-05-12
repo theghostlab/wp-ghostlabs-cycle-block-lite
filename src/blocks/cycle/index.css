@@ -1,0 +1,117 @@
+.theghostlab-cycle {
+    scroll-margin-top: 90px;
+    position: relative;
+    display: grid;
+
+    /*border: 1px dashed lightskyblue;*/
+}
+
+.theghostlab-cycle > .block-editor-inner-blocks > .block-editor-block-list__layout {
+    display: grid;
+}
+
+.theghostlab-cycle.is-selected > .block-editor-inner-blocks > .block-editor-block-list__layout > .theghostlab-cycle-entry:first-of-type ~ .theghostlab-cycle-entry:not(:first-of-type),
+.theghostlab-cycle:not(.is-selected):not(.has-child-selected) > .block-editor-inner-blocks > .block-editor-block-list__layout > .theghostlab-cycle-entry:first-of-type ~ .theghostlab-cycle-entry:not(:first-of-type) {
+    visibility: hidden;
+}
+
+.theghostlab-cycle.has-child-selected > .block-editor-inner-blocks > .block-editor-block-list__layout > .theghostlab-cycle-entry:not(.is-selected):has(~ .theghostlab-cycle-entry.is-selected),
+.theghostlab-cycle.has-child-selected > .block-editor-inner-blocks > .block-editor-block-list__layout > .theghostlab-cycle-entry.is-selected ~ .theghostlab-cycle-entry:not(.is-selected),
+.theghostlab-cycle.has-child-selected > .block-editor-inner-blocks > .block-editor-block-list__layout > .theghostlab-cycle-entry:not(.has-child-selected):has(~ .theghostlab-cycle-entry.has-child-selected),
+.theghostlab-cycle.has-child-selected > .block-editor-inner-blocks > .block-editor-block-list__layout > .theghostlab-cycle-entry.has-child-selected ~ .theghostlab-cycle-entry:not(.has-child-selected) {
+    visibility: hidden;
+}
+
+.theghostlab-cycle > .block-editor-inner-blocks > .block-editor-block-list__layout > .theghostlab-cycle-entry:not(.last-selected):has(~ .theghostlab-cycle-entry.last-selected) {
+    visibility: hidden;
+}
+
+.theghostlab-cycle > .block-editor-inner-blocks > .block-editor-block-list__layout > .theghostlab-cycle-entry.last-selected {
+    visibility: visible !important;
+}
+
+.theghostlab-cycle-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.theghostlab-cycle-controls .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.theghostlab-cycle-controls button {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    transition: background-color .36s ease-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: .24rem;
+    padding-inline: 1rem;
+}
+
+.theghostlab-cycle-controls button:hover {
+    background-color: var(--wp-admin-theme-color, #3858e9) !important;
+    color: var(--wp--preset--color--white, #FFFFFF) !important;
+}
+
+
+.theghostlab-cycle-controls button:hover .theghostlab-toggle-off svg {
+    stroke: var(--wp--preset--color--white);
+}
+
+.theghostlab-cycle-controls .theghostlab-toggle {
+    flex: 1;
+}
+
+.theghostlab-cycle-controls button svg {
+    width: 20px;
+}
+
+.theghostlab-cycle-controls button:has(.theghostlab-toggle-on) {
+    background-color: var(--wp-admin-theme-color, #3858e9);
+}
+
+.theghostlab-cycle-controls button .theghostlab-toggle-on svg {
+    fill: none;
+    stroke: var(--wp--preset--color--white);
+}
+
+.theghostlab-cycle-controls button .theghostlab-toggle-off svg {
+    fill: none;
+}
+
+.theghostlab-cycle-toolbar.components-accessible-toolbar {
+    border: 0;
+    border-radius: 0;
+    border-right: 1px solid #1e1e1e;
+    display: inline-flex;
+    flex-shrink: 0;
+}
+
+.theghostlab-cycle__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid currentColor;
+    gap: .5rem;
+    line-height: 1;
+    padding-block: .625rem;
+    border-radius: 4px;
+    text-decoration: none;
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+}

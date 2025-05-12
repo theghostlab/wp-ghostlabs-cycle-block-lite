@@ -1,0 +1,77 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 2,
+    "name": "theghostlab/cycle-entry",
+    "title": "Variation",
+    "category": "text",
+    "icon": "page",
+    "parent": [
+        "theghostlab/cycle"
+    ],
+    "description": "",
+    "keywords": [
+        "content",
+        "random",
+        "entry"
+    ],
+    "version": "0.1.0",
+    "textdomain": "theghostlab",
+    "attributes": {
+        "id": {
+            "type": "string",
+            "default": ""
+        },
+        "parentId": {
+            "type": "string",
+            "default": ""
+        },
+        "content": {
+            "type": "string",
+            "source": "html",
+            "selector": "p"
+        },
+        "utmSet": {
+            "type": "string",
+            "default": ""
+        },
+        "utmCodes": {
+            "type": "object",
+            "default": {
+                "utm_source": "",
+                "utm_medium": "",
+                "utm_campaign": "",
+                "utm_term": "",
+                "utm_content": ""
+            }
+        },
+        "label": {
+            "type": "string",
+            "default": ""
+        },
+        "metadata": {
+            "type": "object",
+            "default": {
+                "name": ""
+            }
+        },
+        "className": {
+            "type": "string",
+            "default": "theghostlab-cycle-entry"
+        },
+        "index": {
+            "type": "number",
+            "default": 0
+        }
+    },
+    "supports": {
+        "align": true
+    },
+    "styles": [
+        
+    ],
+    "editorScript": "file:index.js",
+    "editorStyle": "file:index.css",
+    "style": [
+        "file:style-index.css"
+    ]
+}

@@ -1,0 +1,16 @@
+.ghostlabs-cycle-single-preview {
+    --ghostlabs-cycle-color-preview: #EFEBF5;
+
+    border-radius: .25rem;
+    outline: 5px solid var(--ghostlabs-cycle-color-preview);
+    position: relative;
+}
+
+.ghostlabs-cycle-single-preview::after {
+    content: 'Cycle Preview: ' attr(data-variation-name) ' ';
+    background-color: var(--ghostlabs-cycle-color-preview);
+    position: absolute;
+    top: -26px;
+    right: 0;
+    padding-inline: .5rem;
+}

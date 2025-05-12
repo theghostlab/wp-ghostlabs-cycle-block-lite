@@ -1,0 +1,16 @@
+.theghostlab-cycle__button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid currentColor;
+	gap: .5rem;
+	line-height: 1;
+	padding-block: .625rem;
+	border-radius: 4px;
+	text-decoration: none;
+
+	svg {
+		width: 16px;
+		height: 16px;
+	}
+}

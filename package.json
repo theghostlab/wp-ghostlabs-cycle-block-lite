@@ -1,0 +1,47 @@
+{
+  "name": "theghostlab-cycle",
+  "version": "1.0.0",
+  "description": "Gutenberg Cycle",
+  "main": "index.js",
+  "scripts": {
+    "start": "wp-scripts start",
+    "start:one": "wp-scripts start src/blocks/cycle/index.js",
+    "start:two": "wp-scripts start src/blocks/cycle-entry/index.js",
+    "start:three": "wp-scripts start src/blocks/cycle-default-view/index.js",
+    "watch:js": "node esbuild.mjs --watch",
+    "watch": "npm-run-all --parallel watch:*",
+    "build": "wp-scripts build && cross-env NODE_ENV=production node esbuild.mjs --bundle && rm -rf tmp/*",
+    "plugin-zip": "wp-scripts build && rm -rf js/* && cross-env NODE_ENV=production node esbuild.mjs --bundle && zip -r ~/Desktop/ghostlabs-cycle-block-lite.zip ./ -x '*git*' '*node_modules*' '*.idea*' '*.nova*' '*bin*' '*dist*' '*src*' '*tmp*' '*javascript*' '*vendor*' '.gitignore' 'package.json' 'package-lock.json' 'stream.php' 'webpack.dev.config.js' 'puppeteer.js' '*puppeteer*' '.env.dev' 'composer.json' 'composer.lock' 'postcss.config.js' 'Readme.md' 'tailwind.config.js' 'bundle.sh' '.DS_Store'"
+  },
+  "author": "GhostLabs",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.10",
+    "@wordpress/icons": "^9.32.0",
+    "@wordpress/scripts": "^26.12.0",
+    "@xstate/react": "^3.2.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "cross-env": "^7.0.3",
+    "esbuild": "^0.23.1",
+    "friendly-cron": "^0.0.2",
+    "node-cron": "^3.0.3",
+    "npm-run-all": "^4.1.5",
+    "puppeteer": "^22.8.1",
+    "tailwind-merge": "^1.14.0",
+    "tailwindcss": "^3.3.3",
+    "xstate": "^4.38.2"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.19",
+    "@headlessui/tailwindcss": "^0.2.0",
+    "@uiball/loaders": "^1.3.0",
+    "@wordpress/i18n": "^4.41.0",
+    "date-fns": "^2.30.0",
+    "fuse.js": "^6.6.2",
+    "node-notifier": "^10.0.1",
+    "path-browserify": "^1.0.1",
+    "react-router-dom": "^6.16.0",
+    "ulid": "^2.3.0"
+  }
+}
