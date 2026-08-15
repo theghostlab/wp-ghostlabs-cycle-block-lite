@@ -1,30 +1,25 @@
-import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
-
-const ShuffleToggle = ({callback, icon, iconOn, iconOff, label, value}) => {
-    const [isShuffleOn, setShuffleOn] = useState(value);
-
-    const handleToggle = () => {
-        const newValue = !isShuffleOn;
-        setShuffleOn(newValue);
-        callback(newValue);
-    };
-
-    return (
-        <button
-            className={`components-button is-secondary theghostlab-toggle`}
-            aria-pressed={isShuffleOn}
-            onClick={handleToggle}
-        >
-            <span className="visually-hidden">{isShuffleOn ? __(`${label} is on`,'theghostlab') : __(`${label} is off`,'theghostlab')}</span>
-            {isShuffleOn ? (
-                icon && <i className={'theghostlab-toggle-on'} title={__(`${label} is on`,'theghostlab')}>{icon()}</i>
-            ) : (
-                icon && <i className={'theghostlab-toggle-off'} title={__(`${label} is off`,'theghostlab')}>{icon()}</i>
-            )}
-        </button>
-    );
-};
-
+/**
+ * A pressed-state toggle button. The accessible name stays stable ("Shuffle",
+ * "Repeat") and the state lives in aria-pressed alone — a name that flips with
+ * the state ("Shuffle is on") makes AT read contradictions like "Shuffle is
+ * off, pressed". Controlled by the parent: the value prop is the state, so an
+ * attribute change from outside can never desync a local copy.
+ */
+const ShuffleToggle = ({callback, icon, label, value}) => (
+    <button
+        type="button"
+        className={`components-button is-secondary theghostlab-toggle`}
+        aria-pressed={value}
+        onClick={() => callback(!value)}
+    >
+        <span className="visually-hidden">{label}</span>
+        {icon && (
+            <i
+                className={value ? 'theghostlab-toggle-on' : 'theghostlab-toggle-off'}
+                aria-hidden="true"
+            >{icon()}</i>
+        )}
+    </button>
+);
 
 export default ShuffleToggle;

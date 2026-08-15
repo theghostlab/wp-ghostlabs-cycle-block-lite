@@ -1,93 +1,146 @@
-=== GhostLabs Cycle Block: Lite ===
+=== Cycle Block – Rotate & Schedule Content Variations ===
+Contributors: ghostlabs
 Donate link: https://theghostlab.io
-Contributors: GhostLabs
-Tags: SEO, content, dynamic content, content rotation, gutenberg block, block editor, ab testing, split testing, personalization, content testing, call to action, testimonials, marketing, shuffle
-Requires at least: 6.8
-Tested up to: 6.8
-Stable tag: 1.0
-Requires PHP: 7.4
-License: GPLv2
-License URI: http://www.gnu.org/licenses/gpl.html
+Tags: content rotation, scheduled content, testimonials, gutenberg, rotating content
+Requires at least: 6.4
+Tested up to: 7.0
+Requires PHP: 8.1
+Stable tag: 1.1.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Cycle Block is a lightweight and powerful Gutenberg block plugin that lets you display different content on each page load.
+Rotate content variations on a schedule — weekly, monthly, or every visit. Rendered server-side, so there's no flicker or layout shift.
 
 == Description ==
-Cycle Block is a lightweight and powerful Gutenberg block plugin that lets you display different content on each page load. With support for shuffle mode, it's perfect for marketers, content creators, and site owners who want to add dynamic variation to their content without writing a single line of code. Use it to keep content fresh, rotate headlines, create randomized call-to-actions, or simply make your site more engaging. Each visit can show a different variation, encouraging repeat views and reducing bounce rates.
 
-**More examples of block variations:**
-- Dynamic Testimonials
-- Daily Promotions
-- Limited-Time Offers
-- Rotating Blog Teasers
-- Seasonal Product Highlights
-- Call-to-Action Banners
-- Portfolios
-- Case Studies
-- Entire page sections
-- Or even just a single sentence
+Write several versions of a section once, and let the page show a different one over time.
 
-All these examples are now easy to automatically update, rotate, or randomize in the WordPress block editor with Cycle Block.
+A testimonial that changes every week. A hero message that rotates each month. A call to action
+that differs on every visit. You write the variations in the block editor, choose how often they
+change, and the page takes it from there.
 
-== Want More Features? Check Out Cycle Pro ==
-Upgrade to the Pro version for advanced capabilities:
-- **Sequence Mode**: Display content variations in a set order.
-- **UTM Settings for Content Tracking** – Monitor performance of each variation with custom tracking.
-- **Dedicated Support**: Get fast help from the GhostLabs team.
+**How it works**
 
-**[Get Cycle Block Pro here](https://theghostlab.io/cycle-block)**
+Add a **Cycle** block, then add a variation inside it for each version you want. Anything can go
+in a variation — headings, images, buttons, columns, other blocks. Pick an interval, and that is
+the whole setup.
+
+* **Daily, weekly or monthly** rotation.
+* **Shuffle**, so a full pass shows every variation before any repeats.
+* **Sequence**, if you want them in the order you wrote them.
+* **Repeat**, or stop on the last variation once the cycle has run through.
+* **Preview from the editor**, stepping through every variation without waiting for the schedule
+  and without disturbing what visitors see.
+* **Unlimited variations** per block, and as many blocks as you like per page.
+
+**Rendered on the server, which matters more than it sounds**
+
+The variation is chosen before the page is sent to the browser. Only one is ever in the HTML.
+
+* **No flicker and no layout shift.** Nothing swaps after the page has painted, so the block
+  never causes the jump that hurts Core Web Vitals.
+* **No hidden duplicate content.** Search engines see one variation, not all of them stacked in
+  the markup with the rest hidden by CSS.
+* **No JavaScript required** to choose or display a variation.
+* **Nothing is written into your post content**, so your saved posts do not change as the
+  schedule advances.
+
+**Built to behave**
+
+* Every variation is real block content, so it inherits your theme's colours, typography and
+  spacing rather than fighting them.
+* The schedule is tracked per block *and* per post, so duplicating a page gives the copy its own
+  schedule instead of sharing one.
+* If anything goes wrong — a missing schedule, a plugin conflict — the block falls back to
+  showing its content rather than breaking the page.
+* Built to WCAG 2.2 AA and fully translatable.
+
+= Source code =
+
+The plugin's compiled JavaScript is built from readable sources, and both are published
+together at:
+
+https://github.com/theghostlab/wp-ghostlabs-cycle-block-lite
+
+That repository contains this plugin exactly as distributed, plus the uncompiled `src/` and
+`dev/` behind its bundles and the configuration used to build them. Everything builds from
+public packages — `composer install && pnpm install && pnpm run build` reproduces the shipped
+`build/` and `assets/js/` byte for byte.
+
+== Installation ==
+
+1. Install through the **Plugins** screen, or upload the plugin folder to `/wp-content/plugins/`.
+2. Activate it through the **Plugins** screen.
+3. In any post, page or template, add the **Cycle** block, then add a variation inside it for
+   each version of the content you want.
 
 == Frequently Asked Questions ==
 
-= What is Cycle? =
-Cycle is a WordPress Gutenberg plugin that allows you to create and manage multiple content variations within the same page or post. Visitors will see different content each time they refresh the page or at set intervals.
+= How does it decide which variation to show? =
 
-= How does the content variation work? =
-You can create as many variations as you want. In the free version, these are shown in shuffle (random) mode. You can control how often a new variation is shown—on refresh, or every day, week, or month.
+Each block keeps a queue. When enough time has passed for the interval you chose, the next
+variation in the queue is handed out and the queue moves on. With shuffle on, the queue is
+reshuffled at the start of each pass, so every variation appears once before any repeats.
 
-= Can I use Cycle for A/B testing? =
-Yes! Cycle supports basic A/B testing by allowing you to rotate different versions of content and track engagement using external tools.
+= What happens if nobody visits for a while? =
 
-= Does Cycle support UTM tracking? =
-UTM support is available in the **Pro version** of Cycle. You can attach unique UTM codes to each variation to track performance across campaigns.
+The block moves on by one variation, not by however many intervals were missed. A page nobody
+visited for a month does not skip a month's worth of content the next time someone arrives.
 
-= How does Cycle benefit SEO? =
-Cycle helps keep your content fresh and engaging. By reducing bounce rates and increasing time on site, it sends positive signals to search engines about your site’s relevance and activity.
+= I use a caching plugin. Will variations still rotate? =
 
-= Can I control how often the content changes? =
-Absolutely. You can configure content to change on every page refresh, or on a daily, weekly, or monthly interval.
+This is the one thing worth checking. A full-page cache stores the finished HTML, chosen
+variation included, so the rotation effectively runs at your cache's expiry rather than at the
+interval you set.
 
-= Is Cycle easy to use for beginners? =
-Yes. Cycle is built to work seamlessly with the Gutenberg editor and doesn't require any coding skills.
+If your cache lifetime is shorter than your interval — a daily cache with a weekly rotation, for
+example — everything behaves as expected. If it is longer, either shorten the cache lifetime for
+those pages or lengthen the interval to match.
 
-= Does Cycle affect site performance? =
-No. Cycle is lightweight and optimized for performance. It runs only when needed and doesn't impact page speed or load times.
+= Does it work with any block? =
 
-= How is a Cycle triggered? =
-While all cycles are set at scheduled intervals, each new cycle is triggered by user site traffic. More specifically, when a user visits the page where the cycle lite block is embedded.
+Yes. A variation is an ordinary block container, so it can hold headings, paragraphs, images,
+buttons, columns, groups, and blocks from other plugins.
 
-= What is "drift"? =
-A drift of when a cycle can occur when the intervals are set for daily or longer. Slow site traffic can cause a cycle to trigger 1-15 minutes after it is set to transition into the next cycle.
+= What happens to my page if the plugin is deactivated? =
 
-= Where can I contribute to the plugin? =
-Development for this plugin is handled via [GitHub](https://github.com/theghostlab/wp-ghostlabs-cycle-block-lite) any issues or pull requests should be posted there.
+Every variation shows, one after another, as ordinary content. Nothing is lost and nothing
+breaks — your content was never stored anywhere but in the post itself.
+
+= I duplicated a page. Do both copies share a schedule? =
+
+No. The schedule is keyed to the block *and* the post, so a duplicate starts its own.
+
+= Does this do A/B testing? =
+
+Not in the statistical sense — it rotates content on a schedule rather than splitting traffic
+and measuring significance. If you want to know which variation performs, the Pro edition adds
+per-variation analytics events; this edition rotates, it does not measure.
+
+= Why does it need PHP 8.1? =
+
+The plugin is built on modern PHP. Most hosts have offered 8.1 or newer for some time, and your
+host's control panel will show which version your site runs. Earlier releases of this plugin ran
+on PHP 7.4, which has been unsupported since 2022.
 
 == Changelog ==
-= 1.0 =
-Initial Release
+
+= 1.1.0 =
+* Rebuilt on the codebase GhostLabs develops Cycle Block from, so this edition now receives the
+  same fixes as the Pro edition instead of lagging behind it.
+* Accessibility pass to WCAG 2.2 AA across the editor interface.
+* The whole plugin is now translatable, and translations from WordPress.org are picked up
+  automatically.
+* The front-end stylesheet is loaded only on pages that actually use the block, instead of on
+  every page of the site.
+* Fixed: a block whose queue had run out could log a PHP warning on the front end.
+* Fixed: rendering over the REST API no longer advances the schedule — a request that is not a
+  page view should not consume a variation.
+* **Requires PHP 8.1** (previously 7.4).
 
 == Upgrade Notice ==
-= 1.0 =
-Initial Release
 
-== Screenshots ==
-1. Add multiple variations
-2. Add simple to complex layouts and patterns in variations
-3. Select interval
-4. Loop variation
-5. Preview variations instantly
-6. A/B Test
-7. Unlimited layout and styling options
-
-== Installation ==
-1. Upload GhostLabs Cycle Block: Lite by uploading the `ghostlabs-cycle-block-lite.zip` from the "Add Plugin" page.
-2. Activate GhostLabs Cycle Block: Lite through the `Plugins` menu in WordPress.
+= 1.1.0 =
+Requires PHP 8.1 or newer; sites on an older version will not be offered this update. Every
+feature you had is still here. Your content is unaffected: variations live in your posts, not in
+the plugin.

@@ -1,8 +1,8 @@
 import { __ } from '@wordpress/i18n';
 import { Flex, FlexBlock, FlexItem, ToolbarButton } from '@wordpress/components';
 import { chevronLeft, chevronRight } from '@wordpress/icons';
-import { truncateString } from '../../../../../javascript/utils';
-import { toolbarNavStyle } from '../../../../../javascript/inlineStyles';
+import { truncateString } from '../../../../../dev/javascript/utils';
+import { toolbarNavStyle } from '../../../../../dev/javascript/inlineStyles';
 
 const disable = childBlocks => childBlocks.length < 2;
 
@@ -13,7 +13,7 @@ export default ({entries, childBlocks}) => {
             <FlexItem>
                 <ToolbarButton
                     icon={ chevronLeft }
-                    label={__("Previous Entry", "theghostlab")}
+                    label={__("Previous Entry", "ghostlabs-cycle-block-lite")}
                     disabled={ disable(childBlocks) }
                     onClick={ () => {
                         wp.data.dispatch('core/block-editor').selectBlock(childBlocks[childBlocks.length - 1].clientId);
@@ -32,7 +32,7 @@ export default ({entries, childBlocks}) => {
             <FlexItem>
                 <ToolbarButton
                     icon={ chevronRight }
-                    label={__("Next Entry", "theghostlab")}
+                    label={__("Next Entry", "ghostlabs-cycle-block-lite")}
                     disabled={ disable(childBlocks) }
                     onClick={ () => {
                         wp.data.dispatch('core/block-editor').selectBlock(childBlocks[1].clientId);

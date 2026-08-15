@@ -1,3 +1,8 @@
+// Resolved by webpack's `@tier` alias to the compiling edition's src/tier/.
+// An edition with per-variation analytics binds them here; one without
+// Events layer and answers with a no-op, so none of that code is bundled there.
+import runCustomEvents from "@tier/cycle/custom-events";
+
 const singlePreviewStyle = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const ghostlabsTesting = urlParams.get("ghostlabs_testing");
@@ -18,3 +23,5 @@ const singlePreviewStyle = () => {
 }
 
 singlePreviewStyle();
+
+runCustomEvents();

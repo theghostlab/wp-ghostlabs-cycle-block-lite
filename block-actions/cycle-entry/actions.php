@@ -1,5 +1,5 @@
 <?php
 
-function ghostLabsCycleEntryBlock() {
-    register_block_type( THEGHOSTLAB_CYCLE_PLUGIN_PATH.'build/blocks/cycle-entry' );
+function create_theghostlab_cycle_entry_block(): void {
+    register_block_type( GHOSTLABS_CYCLE_BLOCK_PLUGIN_PATH.'build/blocks/cycle-entry' );
 }

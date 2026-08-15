@@ -1,74 +1,47 @@
-import * as esbuild from 'esbuild'
-import notifier from 'node-notifier';
-import { formatISO9075 } from 'date-fns';
+import * as esbuild from 'esbuild';
 
+/**
+ * Settings-app bundler — free tier.
+ *
+ * dev/javascript/settings/settings.jsx -> assets/js/settings/settings-bundle.js
+ *
+ * Deliberately leaner than the paid tier's, which wraps the build in a
+ * plugin that timestamps each run and raises a desktop notification on failure.
+ * That costs `date-fns` and `node-notifier` as dependencies for developer
+ * convenience alone; this tier has one entry point and its failures are read off
+ * the exit code, so it carries neither.
+ *
+ * esbuild bundles for real, unlike the webpack block build which treats
+ * @wordpress/* as externals — so everything imported from here must be a
+ * declared dependency. pnpm's strict node_modules will fail the build rather
+ * than silently resolve a hoisted transitive.
+ */
 const isProduction = process.env.NODE_ENV === 'production';
-const args = process.argv.slice(2);
-const watch = args.includes('--watch');
+const watch = process.argv.slice( 2 ).includes( '--watch' );
 
-const watchPlugin = {
-    name: 'watch-plugin',
-    setup({onStart, onEnd, ...rest}){
-        const term = watch ? 'watch build' : 'Build';
+const ctx = await esbuild.context( {
+	color: true,
+	entryPoints: [ 'dev/javascript/settings/settings.jsx' ],
+	entryNames: '[dir]/[name]-bundle',
+	bundle: true,
+	outbase: 'dev/javascript',
+	outdir: 'assets/js',
+	minify: isProduction,
+	sourcemap: ! isProduction,
+	treeShaking: true,
+	pure: [ 'console.log' ],
+	loader: {
+		'.jpg': 'dataurl',
+		'.png': 'dataurl',
+		'.svg': 'text',
+		'.js': 'jsx',
+	},
+} );
 
-        onStart( () => {
-            const date = formatISO9075(new Date());
-            // console.log('\x1b[33m%s\x1b[0m', `${term} started: ${new Date(new Date().toJSON())}`)
-            // console.log(`\x1b[39m[${new Date(new Date().toJSON())}]\x1b[0m`);
-            console.log(`\u001B[2m\u001B[90m[${date}]\u001B[39m\u001B[22m \x1b[33m${term} started...\x1b[0m`);
-        })
-
-        onEnd( result => {
-
-            const date = formatISO9075(new Date());
-
-            if( result.errors.length ) {
-                // console.error('\x1b[31m%s\x1b[0m', `${term} failed: ${new Date(new Date().toJSON())}`, result.errors);
-                console.log(`\u001B[2m\u001B[90m[${date}]\u001B[39m\u001B[22m \x1b[31m${term} failed!\x1b[0m`, result.errors);
-
-                notifier.notify({
-                    title: `${term} Error!`,
-                    message: result.errors.map( err => `${err.text} \n`)
-                });
-            } else {
-
-                // console.log("rest", rest);
-                // console.log('\x1b[32m%s\x1b[0m',`${term} succeeded: ${new Date(new Date().toJSON())}`);
-                console.log(`\u001B[2m\u001B[90m[${date}]\u001B[39m\u001B[22m \x1b[32m${term} succeeded.\x1b[0m`);
-
-            }
-        })
-    }
-}
-
-const ctx = await esbuild.context({
-    color: true,
-    entryPoints: [
-        'javascript/notice.js',
-    ],
-    entryNames: '[dir]/[name]-bundle',
-    bundle: true,
-    outbase: 'javascript',
-    outdir: 'js',
-    minify: isProduction, // Minify only in production
-    sourcemap: !isProduction, // Source maps only in development
-    treeShaking: true,
-    // pure: ['console.log'],
-    loader: {
-        '.jpg': 'dataurl',
-        '.png': 'dataurl',
-        '.svg': 'text',
-        '.js': 'jsx'
-    },
-    plugins:[
-        watchPlugin
-    ]
-})
-
-if( watch ) {
-    await ctx.watch();
-    console.log('\x1b[36m%s\x1b[0m', 'watching... (╭ರ_•́) 👀');
+if ( watch ) {
+	await ctx.watch();
+	console.log( 'watching settings app…' );
 } else {
-    ctx.rebuild();
-    ctx.dispose();
+	await ctx.rebuild();
+	await ctx.dispose();
 }

@@ -1,8 +1,8 @@
 import { __ } from '@wordpress/i18n';
 import { Flex, FlexBlock, FlexItem, ToolbarButton } from '@wordpress/components';
 import { chevronLeft, chevronRight } from '@wordpress/icons';
-import { truncateString } from '../../../../../javascript/utils';
-import { toolbarNavStyle } from '../../../../../javascript/inlineStyles';
+import { truncateString } from '../../../../../dev/javascript/utils';
+import { toolbarNavStyle } from '../../../../../dev/javascript/inlineStyles';
 
 const next = (el,siblingBlockIds) => {
     const nextEntry = el.nextSibling
@@ -68,7 +68,7 @@ export default ({el, parentClientId, blockName, label}) => {
             <FlexItem>
                 <ToolbarButton
                     icon={ chevronLeft }
-                    label={__("Previous Entry", "theghostlab")}
+                    label={__("Previous Entry", "ghostlabs-cycle-block-lite")}
                     disabled={ disable(siblingBlockIds) }
                     onClick={ () => {
                         previous(el,siblingBlockIds) 
@@ -81,7 +81,7 @@ export default ({el, parentClientId, blockName, label}) => {
             <FlexItem>
                 <ToolbarButton
                     icon={ chevronRight }
-                    label={__("Next Entry", "theghostlab")}
+                    label={__("Next Entry", "ghostlabs-cycle-block-lite")}
                     disabled={ disable(siblingBlockIds) }
                     onClick={ () => {
                         next(el, siblingBlockIds)

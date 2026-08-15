@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "theghostlab/cycle-entry",
+  "title": "Variation",
+  "category": "text",
+  "icon": "page",
+  "parent": [
+    "theghostlab/cycle"
+  ],
+  "description": "",
+  "keywords": [
+    "content",
+    "random",
+    "entry"
+  ],
+  "version": "0.1.0",
+  "textdomain": "ghostlabs-cycle-block-lite",
+  "attributes": {
+    "id": {
+      "type": "string",
+      "default": ""
+    },
+    "parentId": {
+      "type": "string",
+      "default": ""
+    },
+    "content": {
+      "type": "string",
+      "source": "html",
+      "selector": "p"
+    },
+    "label": {
+      "type": "string",
+      "default": ""
+    },
+    "metadata": {
+      "type": "object",
+      "default": {
+        "name": ""
+      }
+    },
+    "className": {
+      "type": "string",
+      "default": "theghostlab-cycle-entry"
+    },
+    "index": {
+      "type": "number",
+      "default": 0
+    },
+    "customEvents": {
+      "type": "array",
+      "default": []
+    }
+  },
+  "supports": {
+    "align": true,
+    "anchor": true,
+    "ariaLabel": true
+  },
+  "styles": [],
+  "editorScript": "file:index.js",
+  "editorStyle": "file:index.css",
+  "style": [
+    "file:style-index.css"
+  ]
+}

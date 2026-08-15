@@ -1,6 +1,6 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
-    "apiVersion": 2,
+    "apiVersion": 3,
     "name": "theghostlab/cycle",
     "title": "Cycle",
     "category": "media",
@@ -11,7 +11,7 @@
         "random"
     ],
     "version": "0.1.0",
-    "textdomain": "theghostlab",
+    "textdomain": "ghostlabs-cycle-block-lite",
     "attributes": {
         "blockId":{
             "type":"string",
@@ -37,7 +37,7 @@
             "type": "object",
             "default": {
                 "on": "",
-                "interval": 1,
+                "interval": 7,
                 "frequency": "d"
             }
         },
@@ -68,7 +68,9 @@
     "usesContext": [ "postId" ],
     "supports": {
         "align": true,
-        "alignWide": true
+        "alignWide": true,
+        "anchor": true,
+        "ariaLabel": true
     },
     "styles": [],
     "example": {
@@ -78,5 +80,5 @@
     },
     "editorStyle":["file:style.scss", "file:index.css"],
     "editorScript": ["file:index.js", "cycle-helper-js"],
-    "viewScript": [ "file:view.js", "cycle-shared-view-script" ]
+    "viewScript": [ "file:view.js", "theghostlab-cycle-block-shared-view-script" ]
 }

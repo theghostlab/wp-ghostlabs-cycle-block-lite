@@ -1,0 +1,27 @@
+{
+    "name": "ghostlabs/cycle-block-lite",
+    "description": "Rotate content variations on a schedule \u2014 weekly, monthly, or every visit.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=8.1",
+        "ext-json": "*",
+        "ext-mysqli": "*",
+        "ghostlabs/wp-kit": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "GHOSTLABS\\CYCLE_BLOCK\\": "inc/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "repositories": [
+        {
+            "name": "wp-kit",
+            "type": "vcs",
+            "url": "https://github.com/theghostlab/ghostlabs-wp-kit"
+        }
+    ]
+}

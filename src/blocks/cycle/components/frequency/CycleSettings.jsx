@@ -1,19 +1,13 @@
 import {__} from '@wordpress/i18n';
 import {Flex, FlexBlock, Panel, PanelRow, SelectControl} from '@wordpress/components';
 import {useState} from '@wordpress/element';
+import {intervalOptions} from './intervals';
 
-const frequencyOptions = () => {
-
-    const selections = [ ...(typeof b === 'object' ? b : []), {
-        label: __("Daily", 'theghostlab'),
-        value: '1-d'
-    },{
-        label: __("Weekly", 'theghostlab'),
-        value: '7-d'
-    }];
-
-    return selections;
-}
+// Resolved by webpack's `@tier` alias to the compiling edition's src/tier/.
+// Each edition supplies the schedules it sells. Which those are
+// sells is a tier question, so the list is tier-supplied rather than filtered
+// here against a verdict this component cannot see in every edition.
+import tierIntervals from "@tier/cycle/frequency-options";
 
 const parseCycle = value => value.split('-');
 
@@ -32,9 +26,10 @@ export default ({attributes, setAttributes}) => {
                 <Flex>
                     <FlexBlock>
                         <SelectControl
-                            label={__("Cycle", 'theghostlab')}
+                            __next40pxDefaultSize
+                            label={__("Cycle", 'ghostlabs-cycle-block-lite')}
                             value={ cycle }
-                            options={ frequencyOptions() }
+                            options={ intervalOptions(tierIntervals) }
                             onChange={ value => {
 
                                 setCycle(value);
@@ -50,7 +45,7 @@ export default ({attributes, setAttributes}) => {
                                     }
                                 });
                             }}
-                            help={__(`Set when to display another variation.`, 'theghostlab')}
+                            help={__(`Set when to display another variation.`, 'ghostlabs-cycle-block-lite')}
                         />
                     </FlexBlock>
                 </Flex>

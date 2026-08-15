@@ -17,36 +17,43 @@ const isBlockIdReserved = blockId => {
     return test.length > 1;
 };
 
-/**
- * Checks if a block ID is already reserved by another child block
- * @param {string} blockId - The ID to check
- * @param {string} clientId - The current block's client ID
- * @returns {boolean} - Whether the ID is reserved
- */
 const isChildBlockIdReserved = (blockId, clientId) => {
-    // Use select from the data module
-    const { select } = wp.data;
 
-    // Find parent cycle block
-    const parentClientIds = select('core/block-editor').getBlockParentsByBlockName(clientId, 'theghostlab/cycle');
-    const parentClientId = parentClientIds[0];
+    const parentClientIds = select( 'core/block-editor' ).getBlockParentsByBlockName( clientId, 'theghostlab/cycle' );
+    const parentClientId = parentClientIds[0] ?? undefined;
 
-    // If no parent found, ID is not reserved
-    if (!parentClientId) return false;
+    if( !parentClientId ) return false;
 
-    // Get all child blocks of the parent
-    const childBlocks = select('core/block-editor').getBlocks(parentClientId);
+    const childBlocks = select( 'core/block-editor' ).getBlocks(parentClientId);
 
-    // Count occurrences of the block ID
-    const idOccurrences = childBlocks.filter(
-        block => block.attributes?.id === blockId && block.clientId !== clientId
-    );
+    const test = childBlocks.reduce((a,{attributes}) => {
 
-    // ID is reserved if it appears in more than one block
-    return idOccurrences.length > 0;
+        if( attributes?.id === blockId ) {
+            a.push(blockId);
+        }
+
+        return a;
+    },[]);
+
+    return test.length > 1;
 };
 
+/**
+ * The document the block canvas renders into.
+ *
+ * apiVersion 3 blocks render inside the editor-canvas iframe while their editor
+ * scripts keep running in the parent frame, so the parent's `document` never
+ * contains a #block-… node there. Non-iframed canvases still render into the
+ * parent document, which the fallback covers.
+ */
+const canvasDocument = () =>
+    document.querySelector('iframe[name="editor-canvas"]')?.contentDocument ?? document;
+
+const blockNode = clientId => canvasDocument().getElementById(`block-${clientId}`);
+
 export {
+    blockNode,
+    canvasDocument,
     isBlockIdReserved,
     isChildBlockIdReserved
 }
