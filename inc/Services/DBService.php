@@ -7,19 +7,12 @@ use stdClass;
 use wpdb;
 use GHOSTLABS\CYCLE_BLOCK\DTO\Pagination;
 
-/**
- * Generic query building over camelCase <-> snake_case translation.
- *
- * The four wpdb::prepare() calls below stay baselined in PHPStan
- * (argument.type: literal-string): each query interpolates a table name and
- * column list assembled from calling code before the values go through
- * prepare(), so the query string cannot be a literal by construction — the
- * same posture as Loader's hook registry.
- */
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class DBService
 {
     protected wpdb $wpdb;
-    /** @var array<string, string> gettype() name -> wpdb::prepare specifier */
+    
     private array $specifierMap = [
         "double" => "f",
         "integer" => "d",
@@ -32,28 +25,26 @@ class DBService
         $this->wpdb =& $wpdb;
     }
 
-    /**
-     * @param Pagination $pagination
-     * @param string $table
-     * @param string|null $orderBy A literal ORDER BY clause, e.g. "created_on DESC, id DESC".
-     *                             Interpolated directly, so it must be a constant supplied by
-     *                             calling code — never request input. Omit and MySQL returns
-     *                             rows in whatever order it likes, which makes paging over
-     *                             them repeat or skip rows.
-     * @return array<int, array<string, mixed>>|null Rows with snake_case columns
-     *         mapped back to camelCase keys.
-     */
     function selectAll(Pagination $pagination, $table, ?string $orderBy = null)
     {
-        $table = $this->setTable($table);
+        $orderBy = $this->safeOrderBy($orderBy);
 
-        $sql = sprintf(
-            "SELECT * FROM %s%s LIMIT %d, %d;",
-            $table,
-            $orderBy === null ? '' : ' ORDER BY ' . $orderBy,
+        // grandfathered in `phpstan-baseline.neon`. That count was raised
+
+        $query = 'SELECT * FROM %i'
+            . ($orderBy === null ? '' : ' ORDER BY ' . $orderBy)
+            . ' LIMIT %d, %d';
+
+        $sql = $this->wpdb->prepare(
+            $query,
+            $this->setTable($table),
             $pagination->startingLimit,
             $pagination->pageSize
         );
+
+        if (! is_string($sql)) {
+            return null;
+        }
 
         $results = $this->wpdb->get_results($sql, ARRAY_A);
 
@@ -73,34 +64,29 @@ class DBService
         return $data;
     }
 
-    /**
-     * @param array<string, mixed> $data camelCase keys; translated to snake_case columns.
-     * @param string $table
-     * @return int|bool Rows affected, or false when the query could not be prepared.
-     */
     function insertOnUpdate($data, $table)
     {
-        $table = $this->setTable($table);
-
         [
             "columns" => $columns,
+            "columnNames" => $columnNames,
             "valuesFormat" => $valuesFormat,
             "updateFormat" => $updateFormat,
-            "rawValues" => $rawValues
+            "rawValues" => $rawValues,
+            "updateArgs" => $updateArgs
         ] = $this->formatInsertOnUpdate($data);
 
-        $sql = sprintf(
-            "INSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s",
-            $table,
+        $query = sprintf(
+            'INSERT INTO %%i (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s',
             $columns,
             $valuesFormat,
             $updateFormat
         );
 
-        $sql = $this->wpdb->prepare($sql,array_merge($rawValues, $rawValues));
+        $sql = $this->wpdb->prepare(
+            $query,
+            array_merge([$this->setTable($table)], $columnNames, $rawValues, $updateArgs)
+        );
 
-        // prepare() returns null when it rejects the query — a placeholder/argument
-        // mismatch, most likely — and query() takes a string.
         if ($sql === null) {
             return false;
         }
@@ -112,24 +98,14 @@ class DBService
     {
         $spaced = preg_replace("/([a-z])([A-Z])/", '$1_$2', lcfirst($input));
 
-        // preg_replace returns null if the subject is not valid UTF-8. Passing that
-        // to strtolower is deprecated in PHP 8.1 and fatal in 9; fall back to the
-        // untransformed input, which is still a usable column name.
         return strtolower($spaced ?? lcfirst($input));
     }
 
-    /**
-     * @param string $input
-     */
     function snakeToCamel($input): string
     {
         return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $input))));
     }
 
-    /**
-     * @param array<string, mixed> $payload
-     * @return array{columns: string, valuesFormat: string, updateFormat: string, rawValues: list<mixed>}
-     */
     private function formatInsertOnUpdate($payload): array
     {
         $data = [];
@@ -140,22 +116,28 @@ class DBService
         }
 
         $keys = array_keys($data);
-        $columns = implode(",", $keys);
         $values = array_values($data);
         $insertTypes = $this->setInsertTypes($data);
         $updateTypes = $this->setUpdateTypes($data);
 
+        $updateArgs = [];
+
+        foreach ($data as $column => $value) {
+            $updateArgs[] = $column;
+            $updateArgs[] = $value;
+        }
+
         return [
-            "columns" => $columns,
+
+            "columns" => implode(", ", array_fill(0, count($keys), '%i')),
+            "columnNames" => $keys,
             "valuesFormat" => $insertTypes,
             "updateFormat" => $updateTypes,
-            "rawValues" => $values
+            "rawValues" => $values,
+            "updateArgs" => $updateArgs
         ];
     }
 
-    /**
-     * @param array<string, mixed> $data
-     */
     private function setInsertTypes($data): string
     {
         $format = [];
@@ -175,33 +157,6 @@ class DBService
         return implode(",", array_values($format));
     }
 
-    /**
-     * @param array<mixed> $data Values only; keys are ignored.
-     */
-    private function setDeleteTypes($data): string
-    {
-        $format = [];
-
-        foreach ($data as $value)
-        {
-            $specifier = "g";
-            $type = gettype($value);
-
-            if (isset($this->specifierMap[$type])) {
-                $specifier = "%" . $this->specifierMap[$type];
-            }
-
-            $format[] = $specifier;
-        }
-
-        // Appended with [], so it is already a list — unlike setInsertTypes(), which
-        // keys by column name and does need the array_values().
-        return implode(",", $format);
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     */
     private function setUpdateTypes($data): string
     {
         $format = [];
@@ -215,9 +170,7 @@ class DBService
                 $specifier = "%" . $this->specifierMap[$type];
             }
 
-            $key = trim($this->camelToSnake($key));
-
-            $format[] = "$key = $specifier";
+            $format[] = "%i = $specifier";
         }
 
         return implode(", ", $format);
@@ -228,56 +181,108 @@ class DBService
         return sprintf('%s%s',$this->wpdb->prefix, $table );
     }
 
-    /**
-     * @param array<mixed> $payload Values for the IN (...) clause.
-     * @return list<array<string, mixed>>|null
-     */
-    public function delete(array $payload, string $column, string $table)
+    private function safeOrderBy(?string $orderBy): ?string
     {
-        $formats = $this->setDeleteTypes($payload);
-        $table = $this->setTable($table);
-        $column = $this->camelToSnake($column);
+        if ($orderBy === null || trim($orderBy) === '') {
+            return null;
+        }
 
-        $sql = sprintf("DELETE from %s WHERE %s IN (%s)", $table, $column, $formats);
+        $orderBy = trim($orderBy);
 
-        return $this->wpdb->get_results(
-            $this->wpdb->prepare($sql, $payload),
-            ARRAY_A
-        );
+        $term = '[A-Za-z_][A-Za-z0-9_]*(?:\s+(?:ASC|DESC))?';
+
+        return preg_match('/^' . $term . '(?:\s*,\s*' . $term . ')*$/i', $orderBy) === 1
+            ? $orderBy
+            : null;
+    }
+
+    private function safeLimit(string $limit): string
+    {
+        $limit = trim($limit);
+
+        return preg_match('/^LIMIT\s+\d+(?:\s*,\s*\d+)?$/i', $limit) === 1 ? $limit : '';
     }
 
     public function getCount(string $table): ?string
     {
-        $table = $this->setTable($table);
 
-        $sql = sprintf("SELECT COUNT(*) FROM %s;", $table);
+        $sql = $this->wpdb->prepare('SELECT COUNT(*) FROM %i', $this->setTable($table));
+
+        if (! is_string($sql)) {
+            return null;
+        }
 
         return $this->wpdb->get_var( $sql );
     }
 
-    /**
-     * Delete the rows matching every given column, ANDed.
-     *
-     * @param array<string, mixed> $conditions camelCase keys; translated to snake_case columns.
-     * @return int|bool Rows deleted, or false when the statement could not be prepared.
-     */
+    public function selectSince(string $table, string $column, int $days): array
+    {
+        $sql = $this->wpdb->prepare(
+            'SELECT * FROM %i WHERE %i >= ( NOW() - INTERVAL %d DAY )',
+            $this->setTable($table),
+            $this->camelToSnake($column),
+            max(1, $days)
+        );
+
+        if (!is_string($sql)) {
+            return [];
+        }
+
+        $rows = $this->wpdb->get_results($sql, ARRAY_A);
+
+        if (!is_array($rows)) {
+            return [];
+        }
+
+        $data = [];
+
+        foreach ($rows as $row) {
+            $mapped = [];
+
+            foreach ((array) $row as $key => $value) {
+                $mapped[$this->snakeToCamel((string) $key)] = $value;
+            }
+
+            $data[] = $mapped;
+        }
+
+        return $data;
+    }
+
+    public function deleteOlderThanDays(string $table, string $column, int $days): int
+    {
+        $sql = $this->wpdb->prepare(
+            'DELETE FROM %i WHERE %i < ( NOW() - INTERVAL %d DAY )',
+            $this->setTable($table),
+            $this->camelToSnake($column),
+            max(1, $days)
+        );
+
+        if (!is_string($sql)) {
+            return 0;
+        }
+
+        return (int) $this->wpdb->query($sql);
+    }
+
     public function deleteByColumns(array $conditions, string $table)
     {
-        $table = $this->setTable($table);
-
         $where = [];
         $values = [];
 
         foreach ($conditions as $key => $value) {
             $specifier = $this->specifierMap[gettype($value)] ?? 's';
 
-            $where[] = sprintf('%s = %%%s', $this->camelToSnake($key), $specifier);
+            $where[] = sprintf('%%i = %%%s', $specifier);
+            $values[] = $this->camelToSnake($key);
             $values[] = $value;
         }
 
+        $query = sprintf('DELETE FROM %%i WHERE %s', implode(' AND ', $where));
+
         $sql = $this->wpdb->prepare(
-            sprintf('DELETE FROM %s WHERE %s', $table, implode(' AND ', $where)),
-            $values
+            $query,
+            array_merge([$this->setTable($table)], $values)
         );
 
         if ($sql === null) {
@@ -287,44 +292,38 @@ class DBService
         return $this->wpdb->query($sql);
     }
 
-    /**
-     * @param string $table
-     * @param array<string,mixed> $keys
-     * @param string $limit
-     * @return list<array<string,mixed>>|null Rows as associative arrays — get_results
-     *         is called with ARRAY_A, so stdClass is never in play. Callers index the
-     *         result ([0]), which the previous `object` in this union made impossible
-     *         to verify.
-     */
     public function getTableByKeys(string $table, array $keys, string $limit = '')
     {
-        $values = array_values($keys);
-        $formats = explode(',',$this->setUpdateTypes($keys));
-        $table = $this->setTable($table);
 
-        $i = -1;
+        $limit = $this->safeLimit($limit);
 
-        foreach ($formats as &$format)
-        {
-            $i++;
+        $conditions = [];
+        $args       = [];
 
-            if( $i === 0 ) {
-                $format = sprintf("WHERE %s", $format);
-            } else {
-                $format = sprintf("AND %s", $format);
-            }
+        foreach ($keys as $key => $value) {
+            $specifier = $this->specifierMap[gettype($value)] ?? 's';
+
+            $conditions[] = sprintf(
+                '%s %%i = %%%s',
+                $conditions === [] ? 'WHERE' : 'AND',
+                $specifier
+            );
+
+            $args[] = $this->camelToSnake($key);
+            $args[] = $value;
         }
 
-        $formats = implode(' ',$formats);
+        $query = sprintf('SELECT * FROM %%i %s %s', implode(' ', $conditions), $limit);
 
-        $sql = sprintf("SELECT * FROM %s %s %s;", $table, $formats, $limit);
-
-        return $this->wpdb->get_results(
-            $this->wpdb->prepare(
-                $sql,
-                $values
-            ),
-            ARRAY_A
+        $sql = $this->wpdb->prepare(
+            $query,
+            array_merge([$this->setTable($table)], $args)
         );
+
+        if (! is_string($sql)) {
+            return null;
+        }
+
+        return $this->wpdb->get_results($sql, ARRAY_A);
     }
 }

@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'ghostlabs/cycle-block-lite',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => 'aecd278ebf388a9c26239a6f96a72d7034523799',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,20 +11,11 @@
     ),
     'versions' => array(
         'ghostlabs/cycle-block-lite' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'aecd278ebf388a9c26239a6f96a72d7034523799',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'ghostlabs/wp-kit' => array(
-            'pretty_version' => 'v1.0.1',
-            'version' => '1.0.1.0',
-            'reference' => 'f4afbc395dacae599c4ed114f6a7271ed2a5ed2b',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../ghostlabs/wp-kit',
             'aliases' => array(),
             'dev_requirement' => false,
         ),

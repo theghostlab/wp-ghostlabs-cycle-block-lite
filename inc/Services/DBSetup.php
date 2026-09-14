@@ -5,13 +5,11 @@ namespace GHOSTLABS\CYCLE_BLOCK\Services;
 use GHOSTLABS\CYCLE_BLOCK\Boot\TierBootFactory;
 use wpdb;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 final class DBSetup
 {
-    /**
-     * Bump this when any createTable* statement changes. Plugin updates never
-     * reactivate the plugin, so maybeUpgrade()'s version check on admin_init is
-     * the only path a schema change has onto an already-installed site.
-     */
+    
     public const SCHEMA_VERSION = '0.5.0';
     public const VERSION_OPTION = 'theghostlab_cycle_db_version';
 
@@ -23,30 +21,10 @@ final class DBSetup
         $this->wpdb =& $wpdb;
     }
 
-    /**
-     * @return list<string>
-     */
     private function prepTables(): array
     {
         return array_values( array_filter(get_class_methods($this), fn($method) => strpos($method, 'createTable') !== false ) );
     }
-
-
-    /*
-     * The CREATE statements below are dbDelta-conformant on purpose — this is
-     * load-bearing, not style:
-     *
-     *  - No IF NOT EXISTS: dbDelta parses the table name right after
-     *    "CREATE TABLE", so IF NOT EXISTS made it misread the name, skip the
-     *    describe-and-diff entirely, and just execute the raw SQL — which is why
-     *    the old statements could only ever CREATE, never ALTER.
-     *  - PRIMARY KEY is followed by two spaces (dbDelta's documented format).
-     *  - Every UNIQUE KEY is *named*, and named exactly what MySQL auto-generated
-     *    on existing installs from the old bare `UNIQUE (col)` form (the first
-     *    column's name). A mismatched name makes dbDelta add a duplicate index —
-     *    block_id_2, block_id_3 — on every upgrade pass, forever.
-     *    SchemaUpgradeTest::testRunningTheUpgradeTwiceLeavesTheSchemaAlone pins this.
-     */
 
     private function createTableFrequency(): void {
 
@@ -107,10 +85,6 @@ final class DBSetup
         dbDelta( $sql );
     }
 
-    /**
-     * Re-run the schema when the recorded version lags the shipped one. Cheap on
-     * the happy path — one autoloaded option read and a string compare.
-     */
     public function maybeUpgrade(): void
     {
         if ( get_option( self::VERSION_OPTION ) === self::SCHEMA_VERSION ) {
@@ -122,9 +96,6 @@ final class DBSetup
 
     public function install(): void {
 
-        // Before dbDelta: dbDelta only ever ADDs — it cannot drop the legacy
-        // unique keys, and while the one-column schedule key exists the widened
-        // (block_id, post_id) key changes nothing.
         $this->dropLegacyKeys();
 
         foreach ($this->prepTables() as $method) {
@@ -133,27 +104,9 @@ final class DBSetup
 
         $this->installTierTables();
 
-        // update_option, not add_option: add_option never overwrites, so an
-        // upgraded install kept its old recorded version and maybeUpgrade()
-        // would re-run dbDelta on every admin request.
         update_option( self::VERSION_OPTION, self::SCHEMA_VERSION );
     }
 
-    /**
-     * Tables only the running edition uses.
-     *
-     * `prepTables()` reflects over this class, so anything declared here runs in
-     * every edition — which is exactly how an edition came to create a table it
-     * had no code to write to. The edition is asked instead, through
-     * `TierBootInterface::schemaStatements()`.
-     *
-     * Resolved through `TierBootFactory` rather than a filter on purpose: this
-     * also runs from the activation hook, and by then `plugins_loaded` — where
-     * `boot()` registers everything — has already fired. A filter would be
-     * missing at exactly the moment the tables are first created, and `install()`
-     * stamps the version option on its way out, so `maybeUpgrade()` would never
-     * come back to fix it.
-     */
     private function installTierTables(): void
     {
         $statements = TierBootFactory::current()->schemaStatements(
@@ -172,21 +125,9 @@ final class DBSetup
         }
     }
 
-    /**
-     * Drop the legacy unique keys dbDelta cannot remove. Idempotent: a fresh
-     * install never creates them, and once dropped the SHOW INDEX probe finds
-     * nothing. MySQL auto-named each from its first column:
-     *
-     *  - pre-0.4.0 `UNIQUE (block_id)` on the schedule tables, superseded by
-     *    the widened block_post pair key;
-     *
-     * An edition's own tables add their own entries through
-     * `TierBootInterface::legacyIndexes()`.
-     */
     private function dropLegacyKeys(): void
     {
-        // The shared schedule tables, plus whatever the running edition adds for
-        // its own — an edition owns its tables, so it owns their migrations.
+
         $legacyKeys = [
             'frequency' => 'block_id',
             'queue'     => 'block_id',
@@ -196,13 +137,19 @@ final class DBSetup
         foreach ($legacyKeys as $suffix => $keyName) {
             $table = $this->wpdb->prefix . self::$tablePrefix . $suffix;
 
-            if ( $this->wpdb->get_var( $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+            $exists = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table );
+
+            if ( ! is_string( $exists ) || $this->wpdb->get_var( $exists ) !== $table ) {
                 continue;
             }
 
-            $legacy = $this->wpdb->get_results(
-                $this->wpdb->prepare( 'SHOW INDEX FROM %i WHERE Key_name = %s', $table, $keyName )
-            );
+            $indexes = $this->wpdb->prepare( 'SHOW INDEX FROM %i WHERE Key_name = %s', $table, $keyName );
+
+            if ( ! is_string( $indexes ) ) {
+                continue;
+            }
+
+            $legacy = $this->wpdb->get_results( $indexes );
 
             if ( empty( $legacy ) ) {
                 continue;

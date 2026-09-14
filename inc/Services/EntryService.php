@@ -9,25 +9,16 @@ use GHOSTLABS\CYCLE_BLOCK\Constants\Formats;
 use GHOSTLABS\CYCLE_BLOCK\DTO\Row\BlockSettingsRow;
 use GHOSTLABS\CYCLE_BLOCK\DTO\Row\FrequencyRow;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class EntryService
 {
-    /**
-     * The block's editor attributes. Typed loosely on purpose: parse_blocks does not
-     * apply block.json defaults, so which keys are present depends on what the editor
-     * actually serialised. Expect blockId, currentId, pastEntryId, entries, update
-     * {on, interval, frequency, date}, repeat and randomize {setting} — but check
-     * before reading rather than assuming.
-     *
-     * @var array<string, mixed>
-     */
+    
     private array $blockAttributes;
     private int $postId;
     private DBService $DBService;
     private IntervalFrequency $intervalFrequency;
 
-    /**
-     * @param array<string, mixed> $blockAttributes
-     */
     public function __construct(int $postId, array $blockAttributes)
     {
         $this->blockAttributes   = $blockAttributes;
@@ -46,9 +37,6 @@ class EntryService
         return $this->computeEntry($blockSettings);
     }
 
-    /**
-     * @param list<array<string, mixed>>|null $blockSettings
-     */
     private function computeEntry(?array $blockSettings): ?BlockSettingsRow
     {
         if( !$blockSettings ) return null;
@@ -58,16 +46,11 @@ class EntryService
             $blockSettings[0]
         );
 
-        /** @var BlockSettingsRow $row */
         $row = DTOMapper::map($escaped, BlockSettingsRow::class);
 
         return $row;
     }
 
-    /**
-     * @return array<string, mixed> The block's frequency row.
-     * @throws Exception
-     */
     public function getBlock(?string $blockId = null) {
 
         $block = $this->DBService->getTableByKeys(DBTables::frequencyTable(), [
@@ -82,10 +65,6 @@ class EntryService
         return $block[0];
     }
 
-    /**
-     * @param array<string, mixed> $block The block's frequency row.
-     * @return array<string, mixed>
-     */
     public function firstRun(array $block): array
     {
         if( !empty($block['last_displayed']) ) return $block;

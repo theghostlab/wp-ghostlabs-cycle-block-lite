@@ -34,12 +34,12 @@ const slugMaskBlur = input => input
     .replace(/\s+/g, '-')
     .replace(/[^a-z0-9-]/g, '')
     .replace(/-{2,}/g, '-')
-    .replace(/^-+|-+$/g, '') // Remove leading and trailing hyphens
+    .replace(/^-+|-+$/g, '')
     .trim();
 
 const formatDateTime = date => {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');  // Months are 0-11, hence +1
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
@@ -51,7 +51,7 @@ const formatDateTime = date => {
 const memoize = (fn, callback) => {
     let cache = {};
     return (...args) => {
-        let n = args[0];  // just taking one argument here
+        let n = args[0];
         if (n in cache) {
 
             if( typeof callback === 'function') {

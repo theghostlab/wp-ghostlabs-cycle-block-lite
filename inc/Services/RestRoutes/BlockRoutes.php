@@ -19,14 +19,8 @@ use GHOSTLABS\CYCLE_BLOCK\Services\Variations;
 use WP_Error;
 use WP_REST_Request;
 
-/**
- * The block editor's runtime endpoints, migrated off admin-ajax.
- *
- * Discovered through RestRouteInterface, so registration goes through the
- * loader and stays behind the edition's gate — the same posture the wp_ajax
- * actions these replace had. Editor-level operations, so the gate is edit_posts; the REST
- * cookie nonce replaces the old hand-rolled one (wp.apiFetch sends it).
- */
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class BlockRoutes implements RestRouteInterface
 {
     private Utils $utils;
@@ -67,12 +61,6 @@ class BlockRoutes implements RestRouteInterface
         ]);
     }
 
-    /**
-     * The editor re-minted a duplicated blockId: seed the shown-history for the
-     * new identity unless a schedule row already exists for it.
-     *
-     * @return \WP_REST_Response|WP_Error
-     */
     public function updateBlock(WP_REST_Request $request)
     {
         $dto = $this->validated(BlockRequestDto::class, new UpdateBlockValidation(), $request);
@@ -99,9 +87,6 @@ class BlockRoutes implements RestRouteInterface
         return rest_ensure_response(['status' => true]);
     }
 
-    /**
-     * @return \WP_REST_Response|WP_Error
-     */
     public function clearTestPreview(WP_REST_Request $request)
     {
         $dto = $this->validated(BlockRequestDto::class, new ClearTestPreviewValidation(), $request);
@@ -119,15 +104,6 @@ class BlockRoutes implements RestRouteInterface
         return rest_ensure_response(['status' => delete_transient($transient)]);
     }
 
-    /**
-     * The editor changed a block's starting position. A position other than the
-     * current entry resets the schedule; the rows re-seed on the next save.
-     * `status` carries the current id back on reset (the editor saves the post
-     * in response) and null when nothing changed — the same contract the AJAX
-     * version's empty response expressed.
-     *
-     * @return \WP_REST_Response|WP_Error
-     */
     public function entryChange(WP_REST_Request $request)
     {
         $dto = $this->validated(EntryChangeDto::class, new EntryChangeValidation(), $request);
@@ -151,15 +127,6 @@ class BlockRoutes implements RestRouteInterface
         return rest_ensure_response(['status' => null]);
     }
 
-    /**
-     * Object-level authorization. The route's permission_callback checks the
-     * generic `edit_posts`, which Contributors and Authors also hold — so each
-     * callback confirms the caller may edit *this specific* post before touching
-     * its schedule or preview state. Without it, anyone who can edit something
-     * could reset the cycling of a post they do not own (IDOR).
-     *
-     * @return WP_Error|null Null when authorized; a 403 WP_Error otherwise.
-     */
     private function authorizePost(int $postId): ?WP_Error
     {
         if (current_user_can('edit_post', $postId)) {
@@ -173,20 +140,10 @@ class BlockRoutes implements RestRouteInterface
         );
     }
 
-    /**
-     * Map and validate the JSON body; a WP_Error (400, with the errors) comes
-     * back instead of a DTO when the payload is incomplete.
-     *
-     * @template T of object
-     * @param class-string<T> $dtoClass
-     * @return T|WP_Error
-     * @throws \ReflectionException
-     */
     private function validated(string $dtoClass, DTOValidationInterface $validation, WP_REST_Request $request)
     {
         $payload = $this->utils->setPayload($request->get_json_params());
 
-        /** @var T $dto */
         $dto = DTOMapper::map($payload, $dtoClass);
 
         $errors = DTOMapper::validate($dto, $validation::rules());

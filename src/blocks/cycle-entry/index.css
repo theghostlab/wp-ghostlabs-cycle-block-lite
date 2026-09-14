@@ -21,10 +21,6 @@
         font-weight: 500;
     }
 }
-/* ─────────────────────────────────────────────────────────────
-   Custom event modal ("3A"): dark identity rail + form pane.
-   Renders in the parent document (WP Modal portals to body).
-   ───────────────────────────────────────────────────────────── */
 
 .ghostlabs-event-modal {
     width: 800px;
@@ -47,8 +43,6 @@
     align-items: stretch;
     min-height: 100%;
 }
-
-/* ── Identity rail ── */
 
 .ghostlabs-event-modal__rail {
     flex: 0 0 300px;
@@ -160,8 +154,6 @@
     font-weight: 600;
 }
 
-/* ── Form pane ── */
-
 .ghostlabs-event-modal__pane {
     flex: 1 1 auto;
     background: #ffffff;
@@ -230,13 +222,11 @@
     min-width: 20px;
     height: 20px;
     border-radius: 10px;
-    background: #f0b849;
-    color: #1e1e1e;
+    background: #613A93;
+    color: #ffffff;
     font-size: 12px;
     font-weight: 700;
 }
-
-/* ── Parameters card ── */
 
 .ghostlabs-event-modal__card {
     border: 1px solid #dddddd;
@@ -277,8 +267,6 @@
 }
 
 .ghostlabs-event-modal__remove.components-button {
-    /* #757575, not the old #949494 — the ✕ is a text glyph and 3.05:1 fails
-       the 4.5:1 text bar; this is the same gray the close button already uses. */
     color: #757575;
     height: 24px;
     width: 24px;
@@ -301,8 +289,6 @@
     color: var(--wp-admin-theme-color, #3858e9);
     font-weight: 600;
 }
-
-/* ── Note + footer ── */
 
 .ghostlabs-event-modal__note {
     background: #f0f6fc;
@@ -357,8 +343,6 @@
     }
 }
 
-/* Toggle tracks tuned for the dark rail: the stock unchecked track is white,
-   which glares against #1e1e1e; checked keeps the accent. */
 .ghostlabs-event-modal__behaviors .components-form-toggle:not(.is-checked) .components-form-toggle__track {
     background-color: #55585d;
     border-color: transparent;

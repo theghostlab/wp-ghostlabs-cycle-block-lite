@@ -2,6 +2,7 @@
 
 namespace GHOSTLABS\CYCLE_BLOCK\Services;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Parse
 {
@@ -44,14 +45,6 @@ class Parse
     {
         if( empty($this->content) ) return false;
         if( empty($this->contentId) ) return false;
-
-//        error_log(__LINE__);
-//        error_log(__FILE__);
-//        error_log(__FUNCTION__);
-//        error_log(__CLASS__);
-//        error_log(__METHOD__);
-//        error_log("CONTENT::: {$this->contentId}");
-//        error_log(print_r($this->content,true));
 
         return true;
     }

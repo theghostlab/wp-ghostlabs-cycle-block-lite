@@ -14,11 +14,21 @@
  * @author        GhostLabs
  * @license       GPL-2.0-or-later
  *
+ *
+ * ⚠️ **No `Domain Path` header, deliberately.** This edition ships no
+ * `languages/` directory — WordPress.org installs and loads its language packs
+ * from `wp-content/languages/plugins/`, as it has for every hosted plugin since
+ * WP 4.6. The header named `/languages` for as long as it existed and the folder
+ * never did, which Plugin Check reports. The matching half is
+ * `Boot\FreeBoot::translationsDir()` returning null, so `bootstrap.php` makes no
+ * `load_plugin_textdomain()` call either; `TierTranslationsTest` holds the two
+ * together and will fail the moment one of them changes alone.
+ *
  * @wordpress-plugin
  * Plugin Name:       Cycle Block
  * Plugin URI:        https://theghostlab.io/cycle-block
- * Description:       Rotate content variations on a schedule — weekly, monthly, or every visit. Rendered server-side, so there's no flicker or layout shift.
- * Version:           1.1.0
+ * Description:       Rotate content variations on a schedule — daily, weekly or monthly. Rendered server-side, so there's no flicker or layout shift.
+ * Version:           2.0.2
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            GhostLabs
@@ -26,20 +36,16 @@
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       ghostlabs-cycle-block-lite
- * Domain Path:       /languages
  */
 
-// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Identify this tier. Shared code can branch on this if needed.
 define( 'GHOSTLABS_CYCLE_BLOCK_EDITION', 'free' );
-define( 'GHOSTLABS_CYCLE_BLOCK_VERSION', '1.1.0' );
+define( 'GHOSTLABS_CYCLE_BLOCK_VERSION', '2.0.2' );
 define( 'GHOSTLABS_CYCLE_BLOCK_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'GHOSTLABS_CYCLE_BLOCK_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'GHOSTLABS_CYCLE_BLOCK_PLUGIN_SLUG', plugin_basename( __FILE__ ) );
 
-// Boot the plugin. The bootstrap lives in shared/ and is identical for every tier.
 require_once GHOSTLABS_CYCLE_BLOCK_PLUGIN_PATH . 'bootstrap.php';

@@ -10,33 +10,23 @@ use GHOSTLABS\CYCLE_BLOCK\Services\EntryHistory;
 use GHOSTLABS\CYCLE_BLOCK\Services\RandomizationStrategy;
 use GHOSTLABS\CYCLE_BLOCK\Services\Transients;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class CycleHandler implements CycleStrategy
 {
     private int $postId;
-    /** @var array<string, mixed> */
+    
     private array $blockAttributes;
     private DBService $DBService;
-    /**
-     * Entry ids only, in display order. array_map over the block's entries builds it,
-     * and every later reshuffle goes through shuffle/array_slice/array_values, all of
-     * which reindex — so it stays a list.
-     *
-     * @var list<string>
-     */
+    
     private array $entries;
     private ?string $postStatus;
 
-    /**
-     * @param array<string, mixed> $blockAttributes
-     */
     public function __construct(int $postId, array $blockAttributes, ?string $postStatus = null )
     {
         $this->postId = $postId;
         $this->blockAttributes = $blockAttributes;
 
-        // Built defensively rather than reading ['entries'] straight: parse_blocks does
-        // not apply block.json defaults, so a block saved without entries has no key at
-        // all and this used to be where that fataled. array_values keeps it a list.
         $this->entries = array_values(array_map(
             static fn(array $entry): string => (string) ( $entry['id'] ?? '' ),
             array_filter(
@@ -64,9 +54,6 @@ class CycleHandler implements CycleStrategy
         return $this;
     }
 
-    /**
-     * @param list<string>|null $entries
-     */
     public function runStrategy(?array $entries = null): CycleHandler
     {
         $entries = $entries ?? $this->entries;
@@ -98,14 +85,8 @@ class CycleHandler implements CycleStrategy
 
         if( !$lastEntry ) return $this;
 
-        // ?? null: parse_blocks applies no defaults, so `update` can be absent
-        // entirely. Absent means "not instant", the same as any non-zero interval.
         $offset = ($this->blockAttributes['update']['interval'] ?? null) === 0 ? 0 : 1;
 
-        // array_search returns the key, which is only an int while $this->entries
-        // stays the list built in the constructor. Anything else — false for "not
-        // found", or a string key if that ever stops being a list — is not something
-        // arithmetic can be done to, so treat it as "start from the beginning".
         $key = array_search($lastEntry['entry_id'], $this->entries);
         $key = is_int($key) ? $key : 0;
 

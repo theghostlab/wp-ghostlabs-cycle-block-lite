@@ -4,6 +4,8 @@ namespace GHOSTLABS\CYCLE_BLOCK\Services;
 
 use GHOSTLABS\CYCLE_BLOCK\Config\PluginConfig;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class Variations
 {
     static private function transient(int $postId, string $blockId): string
@@ -22,9 +24,6 @@ class Variations
         set_transient( self::transient($postId, $blockId), $currentId, HOUR_IN_SECONDS );
     }
 
-    /**
-     * @return string The chosen starting entry id, or '' when none is set.
-     */
     static public function getStartingPosition(int $postId, string $blockId)
     {
         $transient = self::transient($postId, $blockId);

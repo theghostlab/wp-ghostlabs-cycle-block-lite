@@ -3,7 +3,6 @@
     position: relative;
     display: grid;
 
-    /*border: 1px dashed lightskyblue;*/
 }
 
 .theghostlab-cycle > .block-editor-inner-blocks > .block-editor-block-list__layout {
@@ -62,18 +61,6 @@
 
 .theghostlab-cycle-controls button:hover,
 .theghostlab-cycle-controls button:focus-visible {
-    /* Both halves must win together. Core's .components-button.is-secondary:hover
-       out-specifies this selector and paints a 4% accent wash as the background —
-       which left the !important white text below sitting on a near-white surface,
-       invisible.
-
-       darker-20, not the plain accent: the shuffle/repeat toggles idle at the
-       filled accent when on, so hover has to land on a clearly deeper shade —
-       and the lift + shadow make the state read even where blues run close.
-
-       :focus-visible gets the identical treatment: the affordance keyboard
-       users see must match what hover shows a mouse. Core's focus ring still
-       draws on top — this adds to it, never replaces it. */
     background-color: var(--wp-admin-theme-color-darker-20, #183ad6) !important;
     color: var(--wp--preset--color--white, #FFFFFF) !important;
     box-shadow: 0 2px 8px rgba(24, 58, 214, 0.35);
@@ -83,8 +70,6 @@
 
 .theghostlab-cycle-controls button:hover .theghostlab-toggle-off svg,
 .theghostlab-cycle-controls button:focus-visible .theghostlab-toggle-off svg {
-    /* The preset var is theme-scoped and undefined in the admin parent document —
-       without the fallback the stroke computes to nothing. */
     stroke: var(--wp--preset--color--white, #FFFFFF) !important;
 }
 
@@ -132,4 +117,8 @@
         width: 16px;
         height: 16px;
     }
+}
+
+.theghostlab-cycle-schedule {
+    padding-bottom: 16px;
 }

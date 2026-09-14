@@ -4,9 +4,11 @@ namespace GHOSTLABS\CYCLE_BLOCK\Services;
 
 use GHOSTLABS\CYCLE_BLOCK\Config\PluginConfig;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class ActionsService
 {
-    /** @var \WP_Post|null */
+    
     protected $post;
     public function __construct()
     {
@@ -30,9 +32,7 @@ class ActionsService
         );
 
         foreach ($cycleBlocks as $block) {
-            // No blockId means no transient was ever keyed for it. parse_blocks does
-            // not apply block.json defaults, so the key can be missing entirely and
-            // testPreviewTransient(int, string) would fatal on the null.
+
             if (empty($block['attrs']['blockId'])) {
                 continue;
             }

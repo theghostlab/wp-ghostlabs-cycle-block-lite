@@ -2,13 +2,8 @@
 
 namespace GHOSTLABS\CYCLE_BLOCK\DTO\Input;
 
-/**
- * The admin-ajax payload shape shared by updateBlock and clearTestPreview.
- *
- * Null defaults are load-bearing: wp-shared's DTOMapper::validate() reads every
- * property directly, so an uninitialized typed property would throw Error on an
- * incomplete payload instead of producing a validation response.
- */
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class BlockRequestDto
 {
     public ?int $postId = null;

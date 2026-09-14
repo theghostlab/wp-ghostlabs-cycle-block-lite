@@ -6,8 +6,7 @@
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
-        "ext-mysqli": "*",
-        "ghostlabs/wp-kit": "^1.0"
+        "ext-mysqli": "*"
     },
     "autoload": {
         "psr-4": {
@@ -16,12 +15,5 @@
     },
     "config": {
         "sort-packages": true
-    },
-    "repositories": [
-        {
-            "name": "wp-kit",
-            "type": "vcs",
-            "url": "https://github.com/theghostlab/ghostlabs-wp-kit"
-        }
-    ]
+    }
 }

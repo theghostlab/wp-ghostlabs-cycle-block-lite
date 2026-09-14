@@ -7,26 +7,15 @@ use Exception;
 use GHOSTLABS\CYCLE_BLOCK\Constants\Formats;
 use GHOSTLABS\CYCLE_BLOCK\Config\PluginConfig;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class PreviewService
 {
-    /**
-     * The block's editor attributes. Typed loosely on purpose: parse_blocks does not
-     * apply block.json defaults, so which keys are present depends on what the editor
-     * actually serialised. Expect blockId, currentId, pastEntryId, entries, update
-     * {on, interval, frequency, date}, repeat and randomize {setting} — but check
-     * before reading rather than assuming.
-     *
-     * @var array<string, mixed>
-     */
+    
     private array $blockAttributes;
     private int $postId;
     private string $transient;
-    /**
-     * The in-transient stand-in for the three cycling tables, so previewing never
-     * touches live schedule state.
-     *
-     * @var array{frequency: list<array<string, mixed>>, queue: list<array<string, mixed>>, history: list<string>}
-     */
+    
     private array $previewDB = [
         'frequency' => [],
         'queue' => [],
@@ -37,9 +26,6 @@ class PreviewService
     private QueueService $q;
     private EntryService $entryService;
 
-    /**
-     * @param array<string, mixed> $blockAttributes
-     */
     public function __construct(int $postId, array $blockAttributes)
     {
         $this->blockAttributes   = $blockAttributes;
@@ -50,10 +36,6 @@ class PreviewService
         $this->transient         = $this->setTransient();
     }
 
-    /**
-     * @param array<string, mixed> $block
-     * @return array<string, mixed>
-     */
     public function firstRun(array $block): array
     {
         if( !empty($block['last_displayed']) ) return $block;
@@ -67,9 +49,6 @@ class PreviewService
         return $block;
     }
 
-    /**
-     * @return list<string> Entry ids already shown in this preview pass.
-     */
     public function getHistory(string $blockId): array
     {
         $collection = $this->getCollection();
@@ -84,9 +63,6 @@ class PreviewService
         return $collection['history'];
     }
 
-    /**
-     * @return void
-     */
     public function setHistory(string $dequeue)
     {
         $collection = $this->getCollection();
@@ -96,9 +72,6 @@ class PreviewService
         Transients::setCollection($this->transient, $collection);
     }
 
-    /**
-     * @return void
-     */
     public function clearHistory()
     {
         $collection = $this->getCollection();
@@ -108,10 +81,6 @@ class PreviewService
         Transients::setCollection($this->transient, $collection);
     }
 
-    /**
-     * @return array<string, mixed>
-     * @throws Exception
-     */
     public function getBlock(?string $blockId = null)
     {
         $_blockId = $blockId ?? $this->blockAttributes['blockId'];
@@ -137,10 +106,6 @@ class PreviewService
         return $result;
     }
 
-    /**
-     * @param array<string, mixed> $update
-     * @return void
-     */
     public function addFrequency(array $update = [])
     {
         $data = array_merge([
@@ -152,20 +117,11 @@ class PreviewService
         $this->insertOnUpdate('frequency', 'entry_id', $data['entry_id'], $data);
     }
 
-    /**
-     * @param array<string, mixed> $data
-     * @return void
-     */
     public function updateQueue(array $data)
     {
         $this->insertOnUpdate('queue', 'block_id', $data['block_id'], $data);
     }
 
-    /**
-     * @param mixed $value Value of $property identifying the record to replace.
-     * @param array<string, mixed> $obj
-     * @return void
-     */
     public function insertOnUpdate(string $table, string $property, $value, array $obj)
     {
         $collection = Transients::getCollection($this->transient);
@@ -193,9 +149,6 @@ class PreviewService
         Transients::setCollection($this->transient, $collection);
     }
 
-    /**
-     * @return array<string, mixed>
-     */
     public function fetchQueue(string $block_id)
     {
         $collection = Transients::getCollection($this->transient);
@@ -218,12 +171,6 @@ class PreviewService
         return $queue;
     }
 
-    /**
-     * A queue record for a block that has none in the database, so previewing a block
-     * whose queue row is missing rebuilds it instead of failing.
-     *
-     * @return array<string, mixed>
-     */
     private function emptyQueue(string $block_id): array
     {
         return [
@@ -234,9 +181,6 @@ class PreviewService
         ];
     }
 
-    /**
-     * @return array{frequency: list<array<string, mixed>>, queue: list<array<string, mixed>>, history: list<string>}
-     */
     private function initializeCollection(): array
     {
         $collection = $this->previewDB;
@@ -245,9 +189,6 @@ class PreviewService
         return $collection;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
     public function getCollection(): array
     {
         return Transients::getCollection($this->transient);
@@ -255,8 +196,7 @@ class PreviewService
 
     private function setTransient(): string
     {
-        // Keyed by (post, block) like the live schedule rows — previewing a
-        // duplicated post must not read or advance the other copy's preview state.
+
         return sprintf(
             '_%s_%s_preview_%d_%s',
             PluginConfig::$domain,

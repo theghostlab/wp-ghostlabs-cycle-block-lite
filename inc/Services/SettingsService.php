@@ -5,23 +5,16 @@ declare(strict_types=1);
 namespace GHOSTLABS\CYCLE_BLOCK\Services;
 
 use GHOSTLABS\CYCLE_BLOCK\Config\PluginConfig;
+use GHOSTLABS\CYCLE_BLOCK\Services\TierMatrix;
+use GHOSTLABS\CYCLE_BLOCK\Services\Upgrade\UpgradeEndpoints;
+use GHOSTLABS\CYCLE_BLOCK\Services\Upgrade\UpgradeSupport;
+use GHOSTLABS\CYCLE_BLOCK\Services\Upgrade\UpsellSource;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-/**
- * Settings → Cycle Block, free edition.
- *
- * The shared settings shell, with one tab: the upgrade path. This edition
- * stores no options, so there is nothing else to put here.
- *
- * It inlines only what that tab needs — the root element id and the REST
- * namespace. The shell also has built-in components this edition does not
- * register; leaving them out of the tab list is what keeps them dormant. See
- * settings.jsx for why omission alone is sufficient.
- */
 final class SettingsService
 {
-    /** The one admin screen this service owns. */
+    
     private const SCREEN_ID = 'settings_page_theghostlab-cycle-settings';
 
     public function page(): void
@@ -45,9 +38,6 @@ final class SettingsService
     {
         $screen = get_current_screen();
 
-        // get_current_screen() is null until WordPress has set one up.
-        // admin_enqueue_scripts normally runs after that, but not on every admin
-        // entry point, and reading ->id off null is fatal in PHP 8.
         if ($screen === null || $screen->id !== self::SCREEN_ID) {
             return;
         }
@@ -62,12 +52,6 @@ final class SettingsService
             true
         );
 
-        /**
-         * The app reads the global wp.i18n — esbuild bundles for real, so a
-         * bundled @wordpress/i18n would keep its own locale registry this call
-         * could never reach. The wp-i18n dependency above guarantees the global
-         * exists before the bundle runs.
-         */
         wp_set_script_translations(
             'theghostlab-cycle-app',
             'ghostlabs-cycle-block-lite',
@@ -81,7 +65,14 @@ final class SettingsService
                 wp_json_encode([
                     'rootElementId' => 'theghostlab-cycle-settings-root',
                     'restNamespace' => PluginConfig::restNameSpace(),
-                ])
+
+                    'upgrade'       => [
+                        'urls'    => self::buyUrls(),
+                        'inPlace' => UpgradeSupport::config(),
+                    ],
+
+                    'tiers'         => TierMatrix::capabilities(),
+                ], JSON_HEX_TAG | JSON_HEX_AMP)
             ),
             'before'
         );
@@ -91,6 +82,15 @@ final class SettingsService
             GHOSTLABS_CYCLE_BLOCK_PLUGIN_URL . 'assets/css/settings.css',
             [],
             PluginConfig::assetVersion('assets/css/settings.css')
+        );
+    }
+
+    private static function buyUrls(): array
+    {
+        return UpgradeEndpoints::buyProUrls(
+            [UpsellSource::Settings, UpsellSource::SettingsTable],
+            admin_url('options-general.php?page=' . PluginConfig::$settingsMenuSlug),
+            (string) wp_parse_url(get_site_url(), PHP_URL_HOST)
         );
     }
 }

@@ -38,14 +38,6 @@ const isChildBlockIdReserved = (blockId, clientId) => {
     return test.length > 1;
 };
 
-/**
- * The document the block canvas renders into.
- *
- * apiVersion 3 blocks render inside the editor-canvas iframe while their editor
- * scripts keep running in the parent frame, so the parent's `document` never
- * contains a #block-… node there. Non-iframed canvases still render into the
- * parent document, which the fallback covers.
- */
 const canvasDocument = () =>
     document.querySelector('iframe[name="editor-canvas"]')?.contentDocument ?? document;
 

@@ -31,6 +31,10 @@ const entrySelected = (attributes,postId) => async () => {
         obj[key] = value;
     }
 
+    if( !obj.startingPosition ) {
+        obj.startingPosition = obj.currentId;
+    }
+
     return {
         blockId: attributes.blockId,
         postId,
@@ -48,9 +52,6 @@ const memoizeSetEntry = debounce(memoize(entrySelectedArgs, ([attributes,postId]
             method: 'POST',
             data,
         }))
-        // .then( ({currentId}) => {
-        //     store.set('pastEntryId', currentId)
-        // })
         .then( response => {
 
             if( response?.status ) {
@@ -58,7 +59,6 @@ const memoizeSetEntry = debounce(memoize(entrySelectedArgs, ([attributes,postId]
                 store.set('startingPosition', response.status);
             }
 
-            //
         })
         .catch(err => {
             console.error("-> err", err);
@@ -67,7 +67,6 @@ const memoizeSetEntry = debounce(memoize(entrySelectedArgs, ([attributes,postId]
 }), 100);
 
 const capturePastedCycleBlocks = (e) => {
-    // console.log("PASTED!!!", e.clipboardData.getData("text"));
 
     const test = wp.blocks.parse(e.clipboardData.getData("text"));
 
@@ -85,14 +84,6 @@ const capturePastedCycleBlocks = (e) => {
 
 const pasteWiredWindows = new WeakSet();
 
-/**
- * Paste events fire in the window the caret lives in — under apiVersion 3 that
- * is the editor-canvas iframe, not the parent frame this module runs in. The
- * parent window is wired at load; each mounted cycle block wires its own
- * canvas window, so copy-pasting a cycle block within a post keeps being
- * detected. (A paste into a post that holds no cycle block yet has no wired
- * canvas — but then there is no sibling to collide with either.)
- */
 const watchPaste = (win) => {
     if( !win || pasteWiredWindows.has(win) ) return;
 
@@ -102,10 +93,6 @@ const watchPaste = (win) => {
 
 watchPaste(window);
 
-// Only serializable content belongs here — entries[] is saved into post
-// content. clientId (an editor-session handle) and preview (a React element,
-// which serialized as JSON junk and, on a failed validation, captured the
-// literal error text permanently) used to ride along; nothing ever read them.
 const generateEntries = ({childBlocks, entryIds}) => {
     return childBlocks
         .filter(({attributes}) => entryIds.includes(attributes.id))
@@ -152,8 +139,6 @@ export default function edit({ attributes, clientId, setAttributes, name, isSele
         ref: blockRef,
     });
 
-    // The block renders into the canvas document; its window is where paste
-    // events for the canvas fire. See watchPaste above.
     useEffect(() => {
         watchPaste(blockRef.current?.ownerDocument?.defaultView);
     }, []);
@@ -170,14 +155,6 @@ export default function edit({ attributes, clientId, setAttributes, name, isSele
 
     useEffect( () => {
 
-        // console.warn("NEW BLOCK")
-        //
-        // if( !attributes.blockId ){
-        //     setAttributes({blockId: ulid()});
-        //
-        //     console.warn("NEW BLOCK ID!!!!")
-        // }
-
         store.set("startingPosition", attributes.currentId)
 
         setAttributes({update: { ...attributes.update, on: wp.date.getDate().toISOString() }});
@@ -193,18 +170,11 @@ export default function edit({ attributes, clientId, setAttributes, name, isSele
 
         if ( isBlockIdReserved( blockId ) ) {
             // eslint-disable-next-line no-console
-            // console.log( `Block with id '${ blockId }' already exists. Regenerating...`, blockId );
             setAttributes({blockId: ulid()});
-            // console.log( `Regenerating...`, blockId );
 
             const newBlock = wp.data.select( 'core/block-editor' ).getBlock( clientId );
 
-            // const childBlocks = wp.data.select( 'core/block-editor' ).getBlocks( clientId )
-
             const newCurrentId = newBlock.innerBlocks[0].attributes.id
-            // console.log("=>(edit.js:177) newCurrentId", newCurrentId);
-            // console.log("=>(edit.js:175) newBlock", newBlock);
-            // console.log("=>(edit.js:175) childBlocks", childBlocks);
 
             apiFetch({
                 path: `/${theghostlab_cycle_vars.restNamespace}/block/update`,
@@ -219,43 +189,9 @@ export default function edit({ attributes, clientId, setAttributes, name, isSele
                     console.error(error)
                 })
 
-            //save.block?
         }
 
     },[blockId])
-
-    // useEffect( () => {
-    //
-    //     if( !store.get('hasSingleVariation') ) {
-    //         store.set('hasSingleVariation', 0);
-    //     }
-    //
-    //     if( !store.get('isSingleVariationSelected') ) {
-    //         store.set('isSingleVariationSelected', false);
-    //     }
-    //
-    //     if( isSelected ) {
-    //         const childBlocks = wp.data.select( 'core/block-editor' ).getBlocks( clientId )
-    //
-    //         store.set('hasSingleVariation', childBlocks.length)
-    //
-    //         if( store.get('hasSingleVariation') === 1 && !store.get('isSingleVariationSelected') ) {
-    //             wp.data.dispatch( 'core/block-editor' ).selectBlock(childBlocks[0].clientId)
-    //             store.set('isSingleVariationSelected', true)
-    //         }
-    //
-    //     } else {
-    //         const hasInnerBlockSelected = wp.data.select( 'core/block-editor' ).hasSelectedInnerBlock(clientId)
-    //
-    //         if( hasInnerBlockSelected ) {
-    //             store.set('isSingleVariationSelected', true);
-    //         } else {
-    //             store.set('hasSingleVariation', 0);
-    //             store.set('isSingleVariationSelected', false);
-    //         }
-    //     }
-    //
-    // },[isSelected]);
 
     useEffect( () => {
 
@@ -307,10 +243,6 @@ export default function edit({ attributes, clientId, setAttributes, name, isSele
 
     },[childBlocks]);
 
-    /**
-     * @see LogComponent.jsx
-     * @description find "entryQueryStringParameter"
-     */
     useEffect( () => {
 
         if (params.has('cycle-entry'))
@@ -326,7 +258,6 @@ export default function edit({ attributes, clientId, setAttributes, name, isSele
             wp.data.dispatch("core/block-editor").selectBlock(childBlock.clientId);
             wp.data.dispatch('core/edit-post').setIsListViewOpened(true);
 
-            // enumerateEntriesFromLogs(clientId);
         }
 
     },[params]);
@@ -388,10 +319,6 @@ export default function edit({ attributes, clientId, setAttributes, name, isSele
                     <button
                         className={"theghostlab-cycle__content-entry-appender components-button block-editor-inserter__toggle has-icon"}
                         onClick={insertContentEntryBlock(clientId)}
-                        // One label for name and tooltip — a name that differs
-                        // from what sighted users read breaks voice control,
-                        // and no aria-haspopup: this inserts directly, it
-                        // never opens a popup.
                         aria-label={__('Add variation', 'ghostlabs-cycle-block-lite')}
                         type={'button'}
                         title={__('Add variation', 'ghostlabs-cycle-block-lite')}

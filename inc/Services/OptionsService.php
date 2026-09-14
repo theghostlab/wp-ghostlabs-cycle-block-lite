@@ -7,14 +7,8 @@ namespace GHOSTLABS\CYCLE_BLOCK\Services;
 use GHOSTLABS\CYCLE_BLOCK\Config\PluginConfig;
 use GhostLabs\WPKit\Contracts\MutableOptionsServiceInterface;
 
-/**
- * Plugin settings, stored in one wp_options row.
- *
- * The shape is nested — `ghostlabs_cycle_block => ['ghostlabs-cycle-block' => [...]]`
- * — where the sibling plugins store a flat array. It stays that way: the plugin
- * has no migration routine, so flattening it would orphan every existing
- * install's stored settings the moment it upgraded.
- */
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class OptionsService implements MutableOptionsServiceInterface
 {
 	public function delete(string $key): ?bool {

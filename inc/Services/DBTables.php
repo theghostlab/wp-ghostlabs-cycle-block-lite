@@ -2,6 +2,8 @@
 
 namespace GHOSTLABS\CYCLE_BLOCK\Services;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class DBTables
 {
     static public function frequencyTable(): string {

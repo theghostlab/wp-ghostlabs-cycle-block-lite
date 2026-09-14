@@ -1,50 +1,5 @@
 {
-    "packages": [
-        {
-            "name": "ghostlabs/wp-kit",
-            "version": "v1.0.1",
-            "version_normalized": "1.0.1.0",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:theghostlab/ghostlabs-wp-kit.git",
-                "reference": "f4afbc395dacae599c4ed114f6a7271ed2a5ed2b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/theghostlab/ghostlabs-wp-kit/zipball/f4afbc395dacae599c4ed114f6a7271ed2a5ed2b",
-                "reference": "f4afbc395dacae599c4ed114f6a7271ed2a5ed2b",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1"
-            },
-            "require-dev": {
-                "php-stubs/wordpress-stubs": "^6.9",
-                "phpstan/phpstan": "^2.1",
-                "phpunit/phpunit": "^11.0"
-            },
-            "time": "2026-08-11T21:25:55+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "scripts": {
-                "test": [
-                    "phpunit"
-                ],
-                "analyse": [
-                    "phpstan analyse --memory-limit=1G"
-                ]
-            },
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "description": "Generic WordPress plumbing shared by GhostLabs plugins: DTO mapping, contracts, and REST settings scaffolding. No licence code.",
-            "support": {
-                "source": "https://github.com/theghostlab/ghostlabs-wp-kit/tree/v1.0.1",
-                "issues": "https://github.com/theghostlab/ghostlabs-wp-kit/issues"
-            },
-            "install-path": "../ghostlabs/wp-kit"
-        }
-    ],
+    "packages": [],
     "dev": false,
     "dev-package-names": []
 }

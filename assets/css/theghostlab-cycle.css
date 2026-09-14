@@ -7,7 +7,7 @@
 }
 
 .ghostlabs-cycle-single-preview::after {
-    content: 'Cycle Preview: ' attr(data-variation-name) ' ';
+    content: var(--ghostlabs-cycle-preview-label) ' ' attr(data-variation-name) ' ';
     background-color: var(--ghostlabs-cycle-color-preview);
     position: absolute;
     top: -32px;

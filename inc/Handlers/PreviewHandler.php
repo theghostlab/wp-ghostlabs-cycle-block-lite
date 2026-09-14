@@ -12,11 +12,14 @@ use GHOSTLABS\CYCLE_BLOCK\Services\FrontEndServiceInterface;
 use GHOSTLABS\CYCLE_BLOCK\Services\IntervalFrequency;
 use GHOSTLABS\CYCLE_BLOCK\Services\PreviewService;
 use GHOSTLABS\CYCLE_BLOCK\Services\QueueService;
+use GHOSTLABS\CYCLE_BLOCK\Services\DebugLog;
+
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 class PreviewHandler implements FrontEndServiceInterface
 {
     private int $postId;
-    /** @var array<string, mixed> */
+    
     private array $blockAttributes;
     private EntryService $entryService;
     private PreviewService $previewService;
@@ -24,9 +27,6 @@ class PreviewHandler implements FrontEndServiceInterface
     private IntervalFrequency $intervalFrequency;
     private QueueService $queue;
 
-    /**
-     * @param array<string, mixed> $blockAttributes
-     */
     public function __construct(int $postId, array $blockAttributes)
     {
         $this->postId = $postId;
@@ -53,7 +53,11 @@ class PreviewHandler implements FrontEndServiceInterface
 
             $block = $this->previewService->getBlock();
 
-            if(isset($_GET['ghostlabs_testing']) && $_GET['ghostlabs_testing'] !== $block['block_id']) {
+            $testing = isset($_GET['ghostlabs_testing'])
+                ? sanitize_text_field(wp_unslash($_GET['ghostlabs_testing']))
+                : null;
+
+            if($testing !== null && $testing !== $block['block_id']) {
                 $isPreview = false;
             }
 
@@ -75,7 +79,6 @@ class PreviewHandler implements FrontEndServiceInterface
 
             $intervals = $this->intervalFrequency->generateIntervals($block['last_displayed'], $blockSettings, $isPreview);
 
-            /** @var SplQueue<string>|null $splQ **/
             $splQ = QueueService::deserialize($queue['queue'] ?? null);
 
             if( !$splQ instanceof SplQueue ) {
@@ -133,10 +136,8 @@ class PreviewHandler implements FrontEndServiceInterface
             return empty($latestEntry) ? $block['entry_id'] : $latestEntry;
             
         } catch (Throwable $e) {
-            // Logged, never echoed — same contract as FrontEndService::play():
-            // an echo here lands in the preview page. Null lets the render
-            // callback fall back to the block's own content.
-            error_log('[Cycle Block] preview: ' . $e->getMessage());
+
+            DebugLog::write('preview: ' . $e->getMessage());
         }
 
         return null;

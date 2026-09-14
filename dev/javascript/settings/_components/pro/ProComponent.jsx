@@ -1,101 +1,63 @@
-import {
-	Panel,
-	PanelContainer,
-	PanelHeader,
-	PanelTitle,
-} from '../ui';
+import HeroBand from './HeroBand';
+import ComparisonTable from './ComparisonTable';
 
-// The GLOBAL wp.i18n, never an import — esbuild bundles for real, and a bundled
-// @wordpress/i18n keeps its own empty locale registry that
-// wp_set_script_translations() can never reach.
 const { __ } = window.wp.i18n;
 
-const FEATURES = [
-	{
-		title: __( 'Custom Events', 'ghostlabs-cycle-block-lite' ),
-		body: __(
-			'A view and a click event per variation, sent to Google Analytics with your own parameters, so you can see which variation actually performs.',
-			'ghostlabs-cycle-block-lite'
-		),
-	},
-	{
-		title: __( 'Custom Events Logs', 'ghostlabs-cycle-block-lite' ),
-		body: __(
-			'An internal log of every event, grouped by post and variation, readable right here in the settings — no analytics account required to check that tracking is working.',
-			'ghostlabs-cycle-block-lite'
-		),
-	},
-	{
-		title: __( 'Custom event parameters', 'ghostlabs-cycle-block-lite' ),
-		body: __(
-			'Attach your own keys and values to every event, so the data arriving in your analytics matches how you already name campaigns and placements.',
-			'ghostlabs-cycle-block-lite'
-		),
-	},
-	{
-		title: __( 'Priority support', 'ghostlabs-cycle-block-lite' ),
-		body: __(
-			'Direct support from the people who build the plugin, rather than the community forum.',
-			'ghostlabs-cycle-block-lite'
-		),
-	},
-];
+const BUY_PRO_URL =
+	window.GHOSTLABS_CYCLE_BLOCK_CONFIG?.upgrade?.urls?.[ 'settings-table' ];
 
-/**
- * The free edition's only settings tab.
- *
- * There is nothing to configure — the free tier stores no options — so this is
- * the upgrade path, which per the portfolio strategy is the only revenue
- * mechanism a free install has.
- *
- * Deliberately plain: a heading, a list, and one real link. No countdown, no
- * dismissible banner, no admin notice anywhere else in wp-admin. On a listing
- * with zero ratings the first few reviews decide everything, and "nags you"
- * is the cheapest one-star there is.
- */
 const ProComponent = () => (
-	<PanelContainer>
-		<PanelHeader>
-			{ /*
-			  * PanelTitle, not `<Panel title=…>`. Panel is a plain
-			  * div and forwards unknown props as HTML attributes, so a `title`
-			  * there renders a hover tooltip and no heading at all — the tab
-			  * would have had no heading in its accessibility tree.
-			  */ }
-			<PanelTitle>
-				{ __( 'Cycle Block Pro', 'ghostlabs-cycle-block-lite' ) }
-			</PanelTitle>
-		</PanelHeader>
-		<Panel>
-		<p className="mb-4">
-			{ __(
-				'Everything in the free edition — every interval, shuffle, sequence, repeat and editor preview — plus per-variation analytics.',
-				'ghostlabs-cycle-block-lite'
-			) }
-		</p>
+	<>
+		<HeroBand />
 
-		<dl className="mb-6">
-			{ FEATURES.map( ( { title, body } ) => (
-				<div key={ title } className="mb-4">
-					<dt className="font-semibold">{ title }</dt>
-					<dd className="m-0">{ body }</dd>
+		<div
+				data-gl-card
+				className="overflow-hidden rounded-[10px] border border-gray-200 bg-white shadow-[0_12px_32px_rgba(44,26,67,0.08)]"
+			>
+				<ComparisonTable />
+
+				<div className="flex items-center justify-between gap-6 border-t border-gray-100 bg-gray-50 px-8 py-5">
+					<div>
+						<p className="text-sm font-semibold text-gray-900">
+							{ __(
+								'Ready when you are',
+								'ghostlabs-cycle-block-lite'
+							) }
+						</p>
+						<p className="mt-0.5 text-sm text-gray-500">
+							{ __(
+								'Pricing and the full feature tour live on the product page.',
+								'ghostlabs-cycle-block-lite'
+							) }
+						</p>
+					</div>
+
+					{ BUY_PRO_URL && (
+					<a
+						data-gl-table-cta
+						className="shrink-0 rounded-md bg-primary-500 px-6 py-3 text-base font-semibold text-white transition hover:bg-primary-400"
+						href={ BUY_PRO_URL }
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						{ __(
+							'See Cycle Block Pro',
+							'ghostlabs-cycle-block-lite'
+						) }
+						{ }
+						<span className="sr-only">
+							{ ' ' }
+							{ __(
+								'(opens in a new tab)',
+								'ghostlabs-cycle-block-lite'
+							) }
+						</span>
+						<span aria-hidden="true"> →</span>
+					</a>
+					) }
 				</div>
-			) ) }
-		</dl>
-
-		<a
-			className="button button-primary"
-			href="https://theghostlab.io/cycle-block-pro"
-			target="_blank"
-			rel="noopener noreferrer"
-		>
-			{ /* The "(opens in a new tab)" is part of the accessible name on
-			     purpose: target=_blank without it is a WCAG 3.2.5 failure, and
-			     the logs tab's external links already follow this pattern. */ }
-			{ __( 'See Cycle Block Pro (opens in a new tab)', 'ghostlabs-cycle-block-lite' ) }
-		</a>
-		</Panel>
-	</PanelContainer>
+		</div>
+	</>
 );
 
 export default ProComponent;

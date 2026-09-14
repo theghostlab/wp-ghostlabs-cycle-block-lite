@@ -23,8 +23,6 @@ const haveEntriesBeenAdded = ({store, entries, entriesStatus, childBlocks, track
 
     if( entries.length > previousEntryLength ) {
         const lastEntry = entries[entries.length - 1];
-        // Looked up by entry id, not clientId — entries[] is saved post content
-        // and must not carry editor-session handles.
         const cycleEntry = childBlocks.find( ({attributes}) => attributes.id === lastEntry.id );
         const tmp = trackLastSelected(entries, entriesStatus, cycleEntry);
         entriesStatusFiltered = tmp.filter(entryStatus => entries.some(entry => entry.id === entryStatus.id));
@@ -40,14 +38,9 @@ const insertContentEntryBlock = clientId => () => {
 
     wp.data.dispatch("core/block-editor").insertBlock(block, innerCount, clientId);
 
-    // Optional chained: the node lives in the canvas document, and a lookup that
-    // misses must degrade to skipping the scroll — not throw away the insert the
-    // dispatch above already made.
     blockNode(clientId)?.scrollIntoView({ behavior: "smooth", block: "start"});
 }
 
-// sprintf, not a template literal inside __() — a runtime-composed msgid is
-// invisible to string extraction and can never be translated.
 const setEntryLabel = (clientId, index) => sprintf(__('Variation %d', 'ghostlabs-cycle-block-lite'), index + 1);
 
 const trackLastSelected = (entries, entriesStatus, cycleEntry) => {
@@ -62,7 +55,6 @@ const trackLastSelected = (entries, entriesStatus, cycleEntry) => {
 
     const newObj = {id, lastSelected: true};
 
-    // let updatedArray = [];
     let updatedArray = [...entriesStatus];
 
     if( !updatedArray.length ) {

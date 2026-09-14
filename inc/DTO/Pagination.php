@@ -2,13 +2,8 @@
 
 namespace GHOSTLABS\CYCLE_BLOCK\DTO;
 
-/**
- * The LIMIT window for a paged read through DBService::selectAll().
- *
- * Values are clamped at construction so an interpolated "LIMIT %d, %d" can never
- * see a negative offset or a zero page size — either would make MySQL reject the
- * statement outright.
- */
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class Pagination
 {
     public int $startingLimit = 0;

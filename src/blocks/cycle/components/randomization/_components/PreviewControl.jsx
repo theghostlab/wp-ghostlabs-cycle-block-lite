@@ -12,22 +12,6 @@ const appendParamsToUrl = ( url, params ) => {
 	return urlObject.toString();
 };
 
-/**
- * Opens the post's preview with `?ghostlabs_testing=<blockId>`, which takes the
- * transient-backed PreviewHandler path — cycling on every refresh without
- * touching the live schedule.
- *
- * Shipped by every edition.
- *
- * Two details that look incidental and are not:
- *
- * The whole chain lives in `onClick`. Keyboard activation fires `click` but never
- * `mousedown`, so a clear-and-save parked on mousedown silently skipped for
- * keyboard users and previewed stale state — the defect this replaced.
- *
- * The preview link is re-read *after* the save, because a fresh draft has none
- * until the first save mints one; the render-time prop is only a fallback.
- */
 const PreviewControl = ( { blockId, postId, parentBlockId, previewLink } ) => (
 	<>
 		<Button

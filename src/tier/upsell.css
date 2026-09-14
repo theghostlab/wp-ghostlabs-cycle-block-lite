@@ -1,0 +1,111 @@
+/**
+ * The free tier's two editor upsell surfaces.
+ *
+ * Free-only by construction: this file is imported by the tier modules behind
+ * `@tier/cycle/schedule-notice` and `@tier/cycle-entry/custom-events-panel`, so
+ * webpack folds it into the free bundle's extracted CSS and Pro — whose answer
+ * to both seams is a null component and a real feature — never sees it.
+ */
+
+/**
+ * GhostLabs purple on the notice's border, and nowhere else.
+ *
+ * `#7446B0` is `primary-400` from the marketing palette — see
+ * `free-only/tailwind.config.js`, which is the source of truth for the scale.
+ * Hard-coded because that scale is Tailwind's and the block editor's CSS is not
+ * built through Tailwind; if the palette moves, this moves with it.
+ *
+ * Set through core's own custom property rather than a `border-color`
+ * declaration, so the notice keeps whatever border width and radius the design
+ * system gives it.
+ *
+ * ⚠️ The compound selector is load-bearing. `.components-notice` defines this
+ * property on the same element at the same specificity, so a bare class would be
+ * decided by stylesheet order alone — which is a coin toss the day someone
+ * reorders an enqueue.
+ */
+.components-notice.theghostlab-cycle-upsell-notice {
+	--wp-components-notice-border-color: #7446b0;
+}
+
+/**
+ * The notice's own gap to the help text above it.
+ *
+ * `.components-notice` ships with no margin because core renders notices inside
+ * a `NoticeList`, which supplies the gaps; here it stands alone in a panel.
+ *
+ * ⚠️ Top only. The floor beneath it belongs to `.theghostlab-cycle-schedule` in
+ * shared — the panel owns its own bottom padding, so the notice does not have to
+ * know whether it is the last thing in it. Restoring a bottom margin here stacks
+ * with that padding and opens a 32px hole, which is exactly what it did for one
+ * build.
+ */
+.theghostlab-cycle-upsell-notice {
+	margin-block: 16px 0;
+}
+
+/* `Notice` renders children into a grid cell, so the paragraphs' own margins are
+   the only thing separating them, and the last one would otherwise add a gap
+   below the copy that the padding already provides. */
+.theghostlab-cycle-upsell-notice p {
+	margin: 0 0 8px;
+}
+
+.theghostlab-cycle-upsell-notice p:last-child {
+	margin-bottom: 0;
+}
+
+/**
+ * ⚠️ **The upgrade links carry no colour of their own, deliberately.**
+ *
+ * They were GhostLabs purple for one afternoon and are not any more: the accent
+ * belongs on the notice's border, and the link belongs to the admin. Inheriting
+ * makes it WordPress's own primary blue *and* follows whatever admin colour
+ * scheme the site runs, which a hard-coded hex cannot.
+ *
+ * Do not add a `color` rule here. A link that ignores the user's colour scheme
+ * is the one thing in this panel that would look like it came from somewhere
+ * other than WordPress.
+ */
+
+/**
+ * The Cycle field, while it holds a schedule this edition refused.
+ *
+ * `CycleSettings` adds this class once the option has gone `disabled`, so the
+ * field dims at the same moment the offer is withdrawn — the click lands at full
+ * strength first, then the control visibly stops claiming the choice.
+ *
+ * ⚠️ **Everything here is set on the container, and none of it can be set on the
+ * `<select>`.** That is not a style preference, it is the only thing that works:
+ *
+ * - the select's own colour is `color: currentcolor`, declared by an emotion
+ *   rule that repeats its class three times for a specificity of (0,3,0). A
+ *   `.theghostlab-cycle-select--refused select { color }` rule is (0,1,1) and
+ *   loses silently — it applies, it just never wins. Colouring the container
+ *   instead means `currentcolor` resolves to ours;
+ * - the chevron is an SVG with `fill="currentColor"`, so it follows the same
+ *   inheritance and needs no rule of its own;
+ * - the border lives on `.components-input-control__backdrop`, also behind a
+ *   tripled emotion selector, but it reads
+ *   `var(--wp-components-color-gray-600, …)`. Custom properties inherit and
+ *   resolve at use, so defining one here wins without any specificity contest.
+ *
+ * ⚠️ **`#949494` on the border is a floor, not a preference.** The approved
+ * mockup draws it lighter, around `#dcdcdc`, which measures roughly 1.5:1 on
+ * white; `#949494` is 3.03:1 and is the lightest value that still satisfies
+ * WCAG 1.4.11 for the boundary of a control that is *still operable*. The select
+ * is not disabled — the author has to be able to pick something else — so its
+ * edge has to stay findable.
+ *
+ * `#757575` on the text is 4.61:1, clears AA, and is already the muted tone this
+ * panel uses for help text. Core's `#949494` for genuinely disabled text is
+ * 2.85:1 and would fail for a value the reader still has to read.
+ *
+ * ⚠️ Colour is emphasis, never the signal — WCAG 1.4.1. The notice names the
+ * schedule chosen *and* the one still running, and that is what carries the
+ * meaning for anyone who cannot see the difference.
+ */
+.theghostlab-cycle-select--refused .components-input-control__container {
+	color: #757575;
+	--wp-components-color-gray-600: #949494;
+}

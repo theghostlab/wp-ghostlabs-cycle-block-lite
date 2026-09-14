@@ -4,10 +4,8 @@ namespace GHOSTLABS\CYCLE_BLOCK\Services;
 
 use GHOSTLABS\CYCLE_BLOCK\Config\PluginConfig;
 
-/**
- * Which entries a block has already shown this pass. Keyed by (post, block) —
- * a duplicated post clones the blockId, and schedule state is per post.
- */
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class EntryHistory
 {
     static private function transient(int $postId, string $blockId): string
@@ -39,9 +37,6 @@ class EntryHistory
         set_transient( self::transient($postId, $blockId), $cache, HOUR_IN_SECONDS );
     }
 
-    /**
-     * @return array<int, string> Entry ids already shown this pass.
-     */
     static public function getCache(int $postId, string $blockId)
     {
         $transient = self::transient($postId, $blockId);
