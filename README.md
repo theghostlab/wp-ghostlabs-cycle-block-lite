@@ -8,20 +8,23 @@ it does, see [`readme.txt`](readme.txt) here or the listing there.
 Rotate content variations on a schedule — daily, weekly or monthly. Rendered server-side, so
 there's no flicker or layout shift.
 
-Requires **WordPress 6.4+** and **PHP 8.1+**. Licensed **GPL-2.0-or-later**.
+Requires **WordPress 6.8+** and **PHP 8.1+**. Licensed **GPL-2.0-or-later**.
 
 ---
 
 ## What this repository contains
 
-The plugin exactly as distributed at the version the newest tag names, **plus** the uncompiled
-sources behind its compiled assets — the `src/` the blocks are built from and the
-`dev/javascript/` the settings screen is built from. The published bundles are compiled from
+The plugin's source at the version the newest tag names — the same PHP that ships — **plus** the
+uncompiled sources behind its compiled assets: the `src/` the blocks are built from and the
+`dev/javascript/` the settings screen is built from. The bundles committed here are compiled from
 these files, in this layout, so a rebuild here reproduces them byte for byte rather than merely
 producing something equivalent.
 
-The code ships without prose comments and without minification, on purpose: what you read here
-is what runs on a site.
+The code ships unminified, and stripped of prose comments except where a comment does a job: the
+plugin header WordPress reads the plugin's identity from, `translators:` notes the i18n tooling
+needs, `phpcs:` and `phpstan-` annotations, third-party licence banners — and the whole
+whole upgrade path under `inc/Services/Upgrade/`, which keeps its comments deliberately, because
+it is the flow worth reading closely.
 
 | Path | What it is |
 |---|---|

@@ -10,7 +10,7 @@ const ctx = await esbuild.context( {
 	bundle: true,
 	outbase: 'dev/javascript',
 	outdir: 'assets/js',
-	minify: false,
+	minify: process.env.GHOSTLABS_MINIFY === '1',
 	sourcemap: ! isProduction,
 	treeShaking: true,
 	pure: [ 'console.log' ],

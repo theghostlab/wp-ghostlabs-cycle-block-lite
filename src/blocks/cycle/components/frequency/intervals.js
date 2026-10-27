@@ -1,4 +1,4 @@
-import {__, sprintf} from '@wordpress/i18n';
+import {__} from '@wordpress/i18n';
 
 export const ANNUALLY = {
     value: '1-y',
@@ -45,76 +45,7 @@ export const INSTANTLY = {
     label: () => __("~ Instantly", 'ghostlabs-cycle-block-lite')
 };
 
-const SECONDS = {
-    y: 31536000,
-    m: 2592000,
-    d: 86400,
-    h: 3600,
-    i: 60,
-    s: 1
-};
-
-const seconds = value => {
-    const match = /^(\d+)-([a-z])$/.exec(value ?? '');
-
-    return match && SECONDS[match[2]] !== undefined
-        ? Number(match[1]) * SECONDS[match[2]]
-        : null;
-};
-
-export const proSchedule = interval => ({
-    ...interval,
-    name: interval.label,
-    /* translators: %s: the name of a cycle schedule, e.g. "Annually". */
-    label: () => sprintf(__('%s (Pro-Only)', 'ghostlabs-cycle-block-lite'), interval.label()),
-    pro: true
-});
-
-export const intervalOptions = (intervals, disabled = []) => intervals.map(({value, label}) => ({
+export const intervalOptions = intervals => intervals.map(({value, label}) => ({
     label: label(),
-    value,
-    ...(disabled.includes(value) ? {disabled: true} : {})
+    value
 }));
-
-export const isProSchedule = (value, intervals) =>
-    Boolean(intervals.find(interval => interval.value === value)?.pro);
-
-export const scheduleName = (value, intervals) => {
-    const interval = intervals.find(entry => entry.value === value);
-
-    return interval ? (interval.name ?? interval.label)() : value;
-};
-
-export const nearestHonoured = (value, intervals) => {
-    const target = seconds(value);
-
-    if (target === null) {
-        return value;
-    }
-
-    let best = null;
-
-    for (const interval of intervals) {
-        if (interval.pro) {
-            continue;
-        }
-
-        const candidate = seconds(interval.value);
-
-        if (candidate === null) {
-            continue;
-        }
-
-        const distance = Math.abs(candidate - target);
-
-        if (
-            best === null ||
-            distance < best.distance ||
-            (distance === best.distance && candidate > best.seconds)
-        ) {
-            best = {value: interval.value, distance, seconds: candidate};
-        }
-    }
-
-    return best ? best.value : value;
-};

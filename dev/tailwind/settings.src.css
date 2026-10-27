@@ -23,6 +23,12 @@
 }
 
 @layer components {
+	[data-gl-handoff] summary::-webkit-details-marker {
+		display: none;
+	}
+}
+
+@layer components {
 
 	.iss-panel-container {
 		@apply mx-5 lg:mx-20 my-14 max-w-screen-lg;

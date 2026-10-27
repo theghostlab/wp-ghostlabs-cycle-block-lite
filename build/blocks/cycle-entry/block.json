@@ -4,11 +4,11 @@
   "name": "theghostlab/cycle-entry",
   "title": "Variation",
   "category": "text",
-  "icon": "page",
+  "icon": "admin-page",
   "parent": [
     "theghostlab/cycle"
   ],
-  "description": "",
+  "description": "One version of the content a Cycle block rotates through. Anything can go inside — headings, images, buttons, other blocks.",
   "keywords": [
     "content",
     "random",

@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 157
+/***/ 371
 (__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -386,27 +386,25 @@ const blockNode = clientId => canvasDocument().getElementById(`block-${clientId}
  * shared's `theghostlab_cycle_editor_vars` filter (see
  * `FreeBoot::defineEditorUpgradeVar`).
  *
- * ⚠️ **No literal fallback, deliberately.** The editor's upsell used to hard-code
- * the marketing URL, and a hard-coded URL cannot carry the checkout-return
- * contract — `?upgrade_return=…&domain=…` — that lets the licence server send the
- * buyer back to a screen which claims the licence and installs Pro in place. The
- * link looked correct and quietly dropped the one thing that makes the in-place
- * upgrade work from here. A fallback would reintroduce exactly that: a URL that
- * renders, resolves, and loses the purchase.
+ * ⚠️ **No literal fallback, deliberately.** A hard-coded URL carries no `from`,
+ * so it renders, resolves, and files the sale under no surface at all — the
+ * failure attribution exists to prevent, and one nothing on screen would show.
+ * Callers render nothing rather than guess.
  *
- * Callers render nothing rather than guess. A guessed destination is worse than
- * none: it is the case where the buyer pays and the site never finds out.
+ * ✅ *(was 🔴)* Until 2026-10-08 the URL also carried the checkout-return
+ * contract (`upgrade_return`, `domain`), so the licence server could send the
+ * buyer back to finish an in-place upgrade. WordPress.org refused that upgrade,
+ * and PHP builds the link with `from=` alone now.
  *
  * ## ⚠️ One URL per surface, and the key IS the `from` value
  *
- * The editor holds two upsell surfaces — the schedule notice, shown when a
- * schedule is refused, and the Custom Events panel, which someone opened out of
- * curiosity. Those are different buying moments, and the ranking this plugin's
- * surfaces were built on assumes the first converts harder *without evidence*.
- * They cannot be told apart in the conversion data unless they leave with
- * different URLs, so PHP builds one per surface and this reads them by name.
+ * The editor has one upsell surface, the Custom Events panel. It held a second
+ * until 2026-10-26 — the schedule notice, retired with the Upsell select — and
+ * two surfaces cannot be told apart in the conversion data unless they leave
+ * with different URLs, so PHP builds one per surface and this reads them by
+ * name.
  *
- * The key is the `from` value itself (`'editor-schedule'`), not a friendlier
+ * The key is the `from` value itself (`'editor-events'`), not a friendlier
  * alias, so the vocabulary exists once — as data, in PHP's `UpsellSource` — and
  * there is no second name here to drift from it.
  *
@@ -428,58 +426,7 @@ const buyProUrl = surface => {
   return (_window$theghostlab_c = window.theghostlab_cycle_vars?.upgrade?.urls?.[surface]) !== null && _window$theghostlab_c !== void 0 ? _window$theghostlab_c : null;
 };
 /* harmony default export */ const upgrade_url = ((/* unused pure expression or super */ null && (buyProUrl)));
-;// ./src/tier/upgrade-availability.js
-/**
- * Whether the in-place upgrade can actually run on this site, for this user.
- *
- * Decided in PHP (`Services\Upgrade\UpgradeSupport`) and inlined through
- * shared's `theghostlab_cycle_editor_vars` filter, for the same reason the
- * checkout URL is: the question has no client-side answer. `is_multisite()` has
- * no JS equivalent, and neither does `current_user_can( 'install_plugins' )`.
- *
- * ⚠️ **This gates a CLAIM, not a link.** The editor's two upsell surfaces used
- * to label their link "Upgrade — installs in place" unconditionally. On a
- * multisite network that is false, and it is false in the most expensive
- * possible place: it is the sentence that persuades someone to click through to
- * checkout. They paid for a one-click swap that this build refuses to perform.
- *
- * ⚠️ **Absent means available.** The only way the var goes missing is a stale
- * bundle meeting a newer PHP or the reverse, and single-site installs — where
- * the claim is true — are the overwhelming majority. A missing key must not
- * strip the in-place promise from the sites that actually have it.
- *
- * Read off `window` rather than as a bare global: the var is assigned as a
- * window property, and a script-scoped `const` would satisfy a bare read while
- * leaving `window.…` undefined — the trap that silently disabled Pro's
- * withdrawn-licence check for as long as it existed.
- *
- * @return {boolean} Whether "installs in place" is true here.
- */
-const inPlaceAvailable = () => window.theghostlab_cycle_vars?.upgrade?.inPlace?.available !== false;
-/* harmony default export */ const upgrade_availability = ((/* unused pure expression or super */ null && (inPlaceAvailable)));
-;// ./src/tier/upgrade-label.js
-
-
-
-/**
- * The label on the editor's two checkout links.
- *
- * ⚠️ **Resolved at call time, never hoisted to a module constant.** `__()` has to
- * run at render or it bakes in whichever locale registered first — the trap
- * `intervals.js`, `TierMatrix` and `UpgradePanel` all carry.
- *
- * ⚠️ **"Installs in place" is a promise, and it is the last thing read before a
- * purchase.** Where the swap cannot run — any multisite network, or any editor
- * whose user cannot install plugins — the link still goes to checkout, because
- * nothing about a network stops somebody buying Cycle Block Pro. What changes is
- * that it stops promising a mechanism this build will then refuse.
- *
- * @return {string} The link text.
- */
-const upgradeLabel = () => inPlaceAvailable() ? (0,external_wp_i18n_namespaceObject.__)('Upgrade — installs in place', 'ghostlabs-cycle-block-lite') : (0,external_wp_i18n_namespaceObject.__)('Upgrade to Cycle Block Pro', 'ghostlabs-cycle-block-lite');
-/* harmony default export */ const upgrade_label = ((/* unused pure expression or super */ null && (upgradeLabel)));
 ;// ./src/tier/cycle-entry/custom-events-panel.js
-
 
 
 
@@ -497,7 +444,7 @@ const CustomEventsPanel = () => {
     isDismissible: false
   }, (0,external_React_namespaceObject.createElement)("p", null, (0,external_React_namespaceObject.createElement)("strong", null, (0,external_wp_i18n_namespaceObject.__)('Upgrading changes nothing else.', 'ghostlabs-cycle-block-lite')), ' ', (0,external_wp_i18n_namespaceObject.__)('Every block, schedule and setting stays exactly as it is.', 'ghostlabs-cycle-block-lite')), href && (0,external_React_namespaceObject.createElement)("p", null, (0,external_React_namespaceObject.createElement)(external_wp_components_namespaceObject.ExternalLink, {
     href: href
-  }, upgradeLabel()))));
+  }, (0,external_wp_i18n_namespaceObject.__)('Upgrade to Cycle Block Pro', 'ghostlabs-cycle-block-lite')))));
 };
 /* harmony default export */ const custom_events_panel = (CustomEventsPanel);
 ;// ./src/blocks/cycle-entry/edit.js
@@ -634,16 +581,56 @@ const block_namespaceObject = /*#__PURE__*/JSON.parse('{"UU":"theghostlab/cycle-
 
 (0,external_wp_blocks_namespaceObject.registerBlockType)(block_namespaceObject.UU, {
   icon: (0,external_React_namespaceObject.createElement)("svg", {
+    viewBox: "0 0 44 44",
+    fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
-    viewBox: "0 0 24 24",
-    width: "48",
-    height: "48",
     "aria-hidden": "true",
     focusable: "false"
-  }, (0,external_React_namespaceObject.createElement)("path", {
-    d: "M15.5 7.5h-7V9h7V7.5Zm-7 3.5h7v1.5h-7V11Zm7 3.5h-7V16h7v-1.5Z"
-  }), (0,external_React_namespaceObject.createElement)("path", {
-    d: "M17 4H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2ZM7 5.5h10a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5H7a.5.5 0 0 1-.5-.5V6a.5.5 0 0 1 .5-.5Z"
+  }, (0,external_React_namespaceObject.createElement)("rect", {
+    x: "15",
+    y: "6",
+    width: "20",
+    height: "26",
+    rx: "2.5",
+    stroke: "#1E1E1E",
+    strokeWidth: "2.6"
+  }), (0,external_React_namespaceObject.createElement)("rect", {
+    x: "11",
+    y: "10",
+    width: "20",
+    height: "26",
+    rx: "2.5",
+    stroke: "#1E1E1E",
+    strokeWidth: "2.6",
+    fill: "#FFFFFF"
+  }), (0,external_React_namespaceObject.createElement)("rect", {
+    x: "7",
+    y: "14",
+    width: "20",
+    height: "26",
+    rx: "2.5",
+    fill: "#1E1E1E"
+  }), (0,external_React_namespaceObject.createElement)("rect", {
+    x: "11",
+    y: "20",
+    width: "12",
+    height: "2.6",
+    rx: "1.3",
+    fill: "#FFFFFF"
+  }), (0,external_React_namespaceObject.createElement)("rect", {
+    x: "11",
+    y: "25.5",
+    width: "12",
+    height: "2.6",
+    rx: "1.3",
+    fill: "#FFFFFF"
+  }), (0,external_React_namespaceObject.createElement)("rect", {
+    x: "11",
+    y: "31",
+    width: "7",
+    height: "2.6",
+    rx: "1.3",
+    fill: "#FFFFFF"
   })),
   edit: edit,
   save: save
@@ -795,7 +782,7 @@ const block_namespaceObject = /*#__PURE__*/JSON.parse('{"UU":"theghostlab/cycle-
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	let __webpack_exports__ = __webpack_require__.O(undefined, [24], () => (__webpack_require__(157)))
+/******/ 	let __webpack_exports__ = __webpack_require__.O(undefined, [24], () => (__webpack_require__(371)))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

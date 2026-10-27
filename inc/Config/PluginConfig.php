@@ -2,6 +2,7 @@
 
 namespace GHOSTLABS\CYCLE_BLOCK\Config;
 
+use GHOSTLABS\CYCLE_BLOCK\Boot\TierBootFactory;
 use GHOSTLABS\CYCLE_BLOCK\Services\SourceRoots;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -18,7 +19,10 @@ class PluginConfig
     public static string $_domain = "ghostlabs";
     public static string $_slug = 'cycle-block';
     
-    public static string $_tier = GHOSTLABS_CYCLE_BLOCK_EDITION;
+    public static function tier(): string
+    {
+        return TierBootFactory::current()->restSegment();
+    }
 
     static public function instantInit(int $postId, string $blockId) : string {
         return sprintf('_theghostlab_cycle_instant_init_%d_%s', $postId, $blockId);
@@ -36,10 +40,6 @@ class PluginConfig
         return '_theghostlab_cycle_upgrade_pending';
     }
 
-    static public function upgradeLockTransient(): string {
-        return '_theghostlab_cycle_upgrade_lock';
-    }
-
     static public function assetVersion(string $relativePath): string {
 
         $asset = SourceRoots::asset($relativePath);
@@ -55,6 +55,6 @@ class PluginConfig
     }
 
     public static function restNameSpace(): string {
-        return sprintf("%s/%s/%s/%s", self::$_domain, self::$_slug, self::$_tier, self::$restVersion);
+        return sprintf("%s/%s/%s/%s", self::$_domain, self::$_slug, self::tier(), self::$restVersion);
     }
 }

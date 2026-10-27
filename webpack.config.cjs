@@ -2,6 +2,44 @@ const path = require( 'path' );
 const fs = require( 'fs' );
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 
+const MINIFY = process.env.GHOSTLABS_MINIFY === '1';
+
+const withSassOutputStyle = ( rules ) =>
+	rules.map( ( rule ) => {
+		if ( Array.isArray( rule.oneOf ) ) {
+			return { ...rule, oneOf: withSassOutputStyle( rule.oneOf ) };
+		}
+
+		if ( ! Array.isArray( rule.use ) ) {
+			return rule;
+		}
+
+		return {
+			...rule,
+			use: rule.use.map( ( entry ) => {
+				const loader = typeof entry === 'string' ? entry : entry?.loader;
+
+				if ( ! loader || ! loader.includes( 'sass-loader' ) ) {
+					return entry;
+				}
+
+				const base = typeof entry === 'string' ? { loader: entry } : entry;
+				const options = base.options ?? {};
+
+				return {
+					...base,
+					options: {
+						...options,
+						sassOptions: {
+							...options.sassOptions,
+							outputStyle: MINIFY ? 'compressed' : 'expanded',
+						},
+					},
+				};
+			} ),
+		};
+	} );
+
 const SOURCE_ROOTS = [
 	path.resolve( __dirname, 'src' ),
 	path.resolve( __dirname, '../shared/src' ),
@@ -68,7 +106,11 @@ module.exports = {
 	entry,
 	optimization: {
 		...defaultConfig.optimization,
-		minimize: false,
+		minimize: MINIFY,
+	},
+	module: {
+		...defaultConfig.module,
+		rules: withSassOutputStyle( defaultConfig.module.rules ),
 	},
 	resolve: {
 		...defaultConfig.resolve,

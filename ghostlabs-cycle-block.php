@@ -28,8 +28,8 @@
  * Plugin Name:       Cycle Block
  * Plugin URI:        https://theghostlab.io/cycle-block
  * Description:       Rotate content variations on a schedule — daily, weekly or monthly. Rendered server-side, so there's no flicker or layout shift.
- * Version:           2.0.2
- * Requires at least: 6.4
+ * Version:           2.1.0
+ * Requires at least: 6.8
  * Requires PHP:      8.1
  * Author:            GhostLabs
  * Author URI:        https://theghostlab.io
@@ -43,7 +43,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'GHOSTLABS_CYCLE_BLOCK_EDITION', 'free' );
-define( 'GHOSTLABS_CYCLE_BLOCK_VERSION', '2.0.2' );
+define( 'GHOSTLABS_CYCLE_BLOCK_BOOT', 'GHOSTLABS\\CYCLE_BLOCK\\Boot\\FreeBoot' );
+define( 'GHOSTLABS_CYCLE_BLOCK_VERSION', '2.1.0' );
 define( 'GHOSTLABS_CYCLE_BLOCK_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'GHOSTLABS_CYCLE_BLOCK_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'GHOSTLABS_CYCLE_BLOCK_PLUGIN_SLUG', plugin_basename( __FILE__ ) );

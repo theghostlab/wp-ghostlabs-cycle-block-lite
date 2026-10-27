@@ -7,6 +7,8 @@ use DatePeriod;
 use DateTimeImmutable;
 use Exception;
 use Generator;
+use GHOSTLABS\CYCLE_BLOCK\Boot\TierBootFactory;
+use GHOSTLABS\CYCLE_BLOCK\Contracts\ScheduleSetInterface;
 use GHOSTLABS\CYCLE_BLOCK\DTO\Row\BlockSettingsRow;
 use GHOSTLABS\CYCLE_BLOCK\DTO\Row\FrequencyRow;
 
@@ -16,27 +18,18 @@ class IntervalFrequency
 {
     
     private array $blockAttributes;
-    
-    private array $designators = [
-        'y' => 'P%dY',
-        'm' => 'P%dM',
-        'd' => 'P%dD',
-        'h' => 'PT%dH',
-        'i' => 'PT%dM',
-        's' => 'PT%dS',
-    ];
     private int $postId;
     private DBService $DBService;
     private Utils $utils;
-    private TierSchedules $schedules;
+    private ScheduleSetInterface $schedules;
 
-    public function __construct(int $postId, array $blockAttributes, ?TierSchedules $schedules = null)
+    public function __construct(int $postId, array $blockAttributes, ?ScheduleSetInterface $schedules = null)
     {
         $this->blockAttributes  = $blockAttributes;
         $this->postId           = $postId;
         $this->DBService        = new DBService();
         $this->utils            = new Utils();
-        $this->schedules        = $schedules ?? new TierSchedules();
+        $this->schedules        = $schedules ?? TierBootFactory::current()->schedules();
     }
 
     public function setFrequency(?string $blockId = null): void
@@ -87,16 +80,13 @@ class IntervalFrequency
     {
         if( $blockSettings === null ) return null;
 
-        $frequency = $blockSettings->update_frequency ?? '';
-
-        if( !isset($this->designators[$frequency]) ) return null;
-
-        [$count, $frequency] = $this->schedules->clampParts(
+        $designator = $this->schedules->duration(sprintf(
+            '%s-%s',
             (string) ($blockSettings->update_interval ?? ''),
-            $frequency
-        );
+            (string) ($blockSettings->update_frequency ?? '')
+        ));
 
-        $designator = sprintf($this->designators[$frequency], $count);
+        if( $designator === null ) return null;
 
         if( $isPreview ) {
             $designator = "PT0S";

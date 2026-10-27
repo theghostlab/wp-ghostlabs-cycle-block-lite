@@ -1,2 +1,430 @@
-.components-notice.theghostlab-cycle-upsell-notice{--wp-components-notice-border-color:#7446b0}.theghostlab-cycle-upsell-notice{margin-block:16px 0}.theghostlab-cycle-upsell-notice p{margin:0 0 8px}.theghostlab-cycle-upsell-notice p:last-child{margin-bottom:0}.theghostlab-cycle-select--refused .components-input-control__container{color:#757575;--wp-components-color-gray-600:#949494}
-.theghostlab-cycle__button{border:1px solid}.ghostlabs-cycle-block__event{background-color:oklch(.9551 0 0);border-radius:.25rem;padding-block:.375rem;padding-inline:.5rem .375rem}.ghostlabs-cycle-block__event-list-item{span{display:block}.title{font-size:1.3em;font-weight:500;max-width:16ch}}.ghostlabs-event-modal{border-radius:12px;max-width:calc(100vw - 32px);overflow:hidden;width:800px}.ghostlabs-event-modal .components-modal__header{display:none}.ghostlabs-event-modal .components-modal__content{margin:0;padding:0}.ghostlabs-event-modal__layout{align-items:stretch;display:flex;min-height:100%}.ghostlabs-event-modal__rail{background:#1e1e1e;color:#fff;display:flex;flex:0 0 300px;flex-direction:column;gap:20px;padding:28px}.ghostlabs-event-modal__eyebrow{color:#9ba0a6;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase}.ghostlabs-event-modal__names{display:flex;flex-direction:column;gap:8px}.ghostlabs-event-modal__rail code{background:none;font-family:ui-monospace,JetBrains Mono,Menlo,Consolas,monospace;overflow-wrap:anywhere;padding:0}.ghostlabs-event-modal__name{color:#fff;font-size:15px;font-weight:700}.ghostlabs-event-modal__name.is-placeholder{color:#9ba0a6;font-weight:400}.ghostlabs-event-modal__click-name{align-items:center;display:flex;flex-wrap:wrap;gap:8px}.ghostlabs-event-modal__click-name code{color:#9ba0a6;font-size:13px}.ghostlabs-event-modal__tag{background:#333;border-radius:4px;color:#9ba0a6;font-family:ui-monospace,JetBrains Mono,Menlo,Consolas,monospace;font-size:11px;padding:3px 8px;white-space:nowrap}.ghostlabs-event-modal__rail-divider{border:0;border-top:1px solid #3f3f3f;margin:0;width:100%}.ghostlabs-event-modal__meta{display:flex;flex-direction:column;gap:2px;margin:0}.ghostlabs-event-modal__meta dt{color:#9ba0a6;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}.ghostlabs-event-modal__meta dd{color:#fff;font-family:ui-monospace,JetBrains Mono,Menlo,Consolas,monospace;font-size:13px;margin:0 0 12px;overflow-wrap:anywhere}.ghostlabs-event-modal__meta dd:last-child{margin-bottom:0}.ghostlabs-event-modal__behaviors{display:flex;flex-direction:column;gap:12px}.ghostlabs-event-modal__behaviors .components-toggle-control .components-base-control__field label{color:#fff;font-size:14px;font-weight:600}.ghostlabs-event-modal__pane{background:#fff;display:flex;flex:1 1 auto;flex-direction:column;gap:16px;min-width:0;padding:28px}.ghostlabs-event-modal__header{align-items:center;display:flex;justify-content:space-between}.ghostlabs-event-modal__header h1{color:#1e1e1e;font-size:24px;font-weight:700;margin:0;padding:0}.ghostlabs-event-modal__close.components-button{color:#757575;font-size:16px;height:32px;justify-content:center;width:32px}.ghostlabs-event-modal__lede{color:#757575;font-size:14px;margin:-8px 0 0}.ghostlabs-event-modal__field .components-base-control__label{color:#757575;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}.ghostlabs-event-modal__params-head{align-items:center;display:flex;gap:8px;margin-top:4px}.ghostlabs-event-modal__params-head h2{color:#1e1e1e;font-size:16px;font-weight:700;margin:0;padding:0}.ghostlabs-event-modal__badge{align-items:center;background:#613a93;border-radius:10px;color:#fff;display:inline-flex;font-size:12px;font-weight:700;height:20px;justify-content:center;min-width:20px}.ghostlabs-event-modal__card{border:1px solid #ddd;border-radius:8px;overflow:hidden}.ghostlabs-event-modal__card-band{background:#f3f4f5;display:grid;grid-template-columns:200px 1fr;padding:8px 14px}.ghostlabs-event-modal__card-band span{color:#757575;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}.ghostlabs-event-modal__card-row{align-items:center;border-top:1px solid #eee;display:grid;grid-template-columns:200px 1fr auto;padding:10px 14px}.ghostlabs-event-modal__card-row code{background:none;color:#1e1e1e;font-family:ui-monospace,JetBrains Mono,Menlo,Consolas,monospace;font-size:13px;overflow-wrap:anywhere;padding:0}.ghostlabs-event-modal__remove.components-button{color:#757575;height:24px;justify-content:center;width:24px}.ghostlabs-event-modal__card-add{align-items:center;border-top:1px solid #ddd;display:flex;gap:8px;padding:12px 14px}.ghostlabs-event-modal__card-add .components-base-control{flex:1 1 auto}.ghostlabs-event-modal__add.components-button{color:var(--wp-admin-theme-color,#3858e9);font-weight:600}.ghostlabs-event-modal__note{background:#f0f6fc;border-left:4px solid var(--wp-admin-theme-color,#3858e9);color:#1e1e1e;font-size:13px;padding:10px 14px}.ghostlabs-event-modal__footer{align-items:center;border-top:1px solid #ddd;display:flex;gap:12px;justify-content:flex-end;margin:8px -28px -28px;padding:16px 28px}.ghostlabs-event-modal__cancel.components-button{color:var(--wp-admin-theme-color,#3858e9);font-size:16px;height:44px}.ghostlabs-event-modal__submit.components-button{background:var(--wp-admin-theme-color,#3858e9);border-radius:8px;color:#fff;font-size:16px;height:44px;padding:0 20px}.ghostlabs-event-modal__submit.components-button:disabled{color:#fff;opacity:.5}.ghostlabs-event-modal__submit.components-button:hover:not(:disabled){background:var(--wp-admin-theme-color-darker-10,#2145e6);color:#fff}@media (max-width:860px){.ghostlabs-event-modal__layout{flex-direction:column}.ghostlabs-event-modal__rail{flex-basis:auto}}.ghostlabs-event-modal__behaviors .components-form-toggle:not(.is-checked) .components-form-toggle__track{background-color:#55585d;border-color:transparent}.ghostlabs-event-modal__behaviors .components-form-toggle.is-checked .components-form-toggle__track{background-color:var(--wp-admin-theme-color,#3858e9);border-color:transparent}.ghostlabs-event-modal__behaviors .components-form-toggle .components-form-toggle__thumb{background-color:#fff;border-color:transparent}
+/**
+ * The free tier's editor upsell surface: the Custom Events panel.
+ *
+ * Free-only by construction: this file is imported by the tier module behind
+ * `@tier/cycle-entry/custom-events-panel`, so
+ * webpack folds it into this edition's extracted CSS. The `@tier` alias resolves
+ * at build time, so no other edition's bundle can pull it in.
+ */
+
+/**
+ * GhostLabs purple on the notice's border, and nowhere else.
+ *
+ * `#7446B0` is `primary-400` from the marketing palette — see
+ * `free-only/tailwind.config.js`, which is the source of truth for the scale.
+ * Hard-coded because that scale is Tailwind's and the block editor's CSS is not
+ * built through Tailwind; if the palette moves, this moves with it.
+ *
+ * Set through core's own custom property rather than a `border-color`
+ * declaration, so the notice keeps whatever border width and radius the design
+ * system gives it.
+ *
+ * ⚠️ The compound selector is load-bearing. `.components-notice` defines this
+ * property on the same element at the same specificity, so a bare class would be
+ * decided by stylesheet order alone — which is a coin toss the day someone
+ * reorders an enqueue.
+ */
+.components-notice.theghostlab-cycle-upsell-notice {
+	--wp-components-notice-border-color: #7446b0;
+}
+
+/**
+ * The notice's own gap to the help text above it.
+ *
+ * `.components-notice` ships with no margin because core renders notices inside
+ * a `NoticeList`, which supplies the gaps; here it stands alone in a panel.
+ *
+ * ⚠️ Top only. The floor beneath it belongs to `.theghostlab-cycle-schedule` in
+ * shared — the panel owns its own bottom padding, so the notice does not have to
+ * know whether it is the last thing in it. Restoring a bottom margin here stacks
+ * with that padding and opens a 32px hole, which is exactly what it did for one
+ * build.
+ */
+.theghostlab-cycle-upsell-notice {
+	margin-block: 16px 0;
+}
+
+/* `Notice` renders children into a grid cell, so the paragraphs' own margins are
+   the only thing separating them, and the last one would otherwise add a gap
+   below the copy that the padding already provides. */
+.theghostlab-cycle-upsell-notice p {
+	margin: 0 0 8px;
+}
+
+.theghostlab-cycle-upsell-notice p:last-child {
+	margin-bottom: 0;
+}
+
+/**
+ * ⚠️ **The upgrade links carry no colour of their own, deliberately.**
+ *
+ * They were GhostLabs purple for one afternoon and are not any more: the accent
+ * belongs on the notice's border, and the link belongs to the admin. Inheriting
+ * makes it WordPress's own primary blue *and* follows whatever admin colour
+ * scheme the site runs, which a hard-coded hex cannot.
+ *
+ * Do not add a `color` rule here. A link that ignores the user's colour scheme
+ * is the one thing in this panel that would look like it came from somewhere
+ * other than WordPress.
+ */
+
+.theghostlab-cycle__button{
+    border: 1px solid currentColor;
+}
+
+.ghostlabs-cycle-block__event {
+    padding-inline: .5rem .375rem;
+    padding-block: .375rem;
+    background-color: oklch(0.9551 0 0);
+    border-radius: .25rem;
+}
+
+.ghostlabs-cycle-block__event-list-item {
+
+    span {
+        display: block;
+    }
+
+    .title {
+        max-width: 16ch;
+        font-size: 1.3em;
+        font-weight: 500;
+    }
+}
+
+.ghostlabs-event-modal {
+    width: 800px;
+    max-width: calc(100vw - 32px);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.ghostlabs-event-modal .components-modal__header {
+    display: none;
+}
+
+.ghostlabs-event-modal .components-modal__content {
+    padding: 0;
+    margin: 0;
+}
+
+.ghostlabs-event-modal__layout {
+    display: flex;
+    align-items: stretch;
+    min-height: 100%;
+}
+
+.ghostlabs-event-modal__rail {
+    flex: 0 0 300px;
+    background: #1e1e1e;
+    color: #ffffff;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ghostlabs-event-modal__eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #9ba0a6;
+}
+
+.ghostlabs-event-modal__names {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ghostlabs-event-modal__rail code {
+    background: none;
+    padding: 0;
+    font-family: ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace;
+    overflow-wrap: anywhere;
+}
+
+.ghostlabs-event-modal__name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.ghostlabs-event-modal__name.is-placeholder {
+    color: #9ba0a6;
+    font-weight: 400;
+}
+
+.ghostlabs-event-modal__click-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ghostlabs-event-modal__click-name code {
+    font-size: 13px;
+    color: #9ba0a6;
+}
+
+.ghostlabs-event-modal__tag {
+    font-family: ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: #9ba0a6;
+    background: #333333;
+    border-radius: 4px;
+    padding: 3px 8px;
+    white-space: nowrap;
+}
+
+.ghostlabs-event-modal__rail-divider {
+    width: 100%;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid #3f3f3f;
+}
+
+.ghostlabs-event-modal__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+}
+
+.ghostlabs-event-modal__meta dt {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #9ba0a6;
+}
+
+.ghostlabs-event-modal__meta dd {
+    font-family: ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: #ffffff;
+    margin: 0 0 12px;
+    overflow-wrap: anywhere;
+}
+
+.ghostlabs-event-modal__meta dd:last-child {
+    margin-bottom: 0;
+}
+
+.ghostlabs-event-modal__behaviors {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ghostlabs-event-modal__behaviors .components-toggle-control .components-base-control__field label {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ghostlabs-event-modal__pane {
+    flex: 1 1 auto;
+    background: #ffffff;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+
+.ghostlabs-event-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ghostlabs-event-modal__header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e1e1e;
+    margin: 0;
+    padding: 0;
+}
+
+.ghostlabs-event-modal__close.components-button {
+    color: #757575;
+    font-size: 16px;
+    height: 32px;
+    width: 32px;
+    justify-content: center;
+}
+
+.ghostlabs-event-modal__lede {
+    font-size: 14px;
+    color: #757575;
+    margin: -8px 0 0;
+}
+
+.ghostlabs-event-modal__field .components-base-control__label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #757575;
+}
+
+.ghostlabs-event-modal__params-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.ghostlabs-event-modal__params-head h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e1e1e;
+    margin: 0;
+    padding: 0;
+}
+
+.ghostlabs-event-modal__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background: #613A93;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.ghostlabs-event-modal__card {
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.ghostlabs-event-modal__card-band {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    background: #f3f4f5;
+    padding: 8px 14px;
+}
+
+.ghostlabs-event-modal__card-band span {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #757575;
+}
+
+.ghostlabs-event-modal__card-row {
+    display: grid;
+    grid-template-columns: 200px 1fr auto;
+    align-items: center;
+    padding: 10px 14px;
+    border-top: 1px solid #eeeeee;
+}
+
+.ghostlabs-event-modal__card-row code {
+    background: none;
+    padding: 0;
+    font-family: ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: #1e1e1e;
+    overflow-wrap: anywhere;
+}
+
+.ghostlabs-event-modal__remove.components-button {
+    color: #757575;
+    height: 24px;
+    width: 24px;
+    justify-content: center;
+}
+
+.ghostlabs-event-modal__card-add {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 12px 14px;
+    border-top: 1px solid #dddddd;
+}
+
+.ghostlabs-event-modal__card-add .components-base-control {
+    flex: 1 1 auto;
+}
+
+.ghostlabs-event-modal__add.components-button {
+    color: var(--wp-admin-theme-color, #3858e9);
+    font-weight: 600;
+}
+
+.ghostlabs-event-modal__note {
+    background: #f0f6fc;
+    border-left: 4px solid var(--wp-admin-theme-color, #3858e9);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #1e1e1e;
+}
+
+.ghostlabs-event-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin: 8px -28px -28px;
+    padding: 16px 28px;
+    border-top: 1px solid #dddddd;
+}
+
+.ghostlabs-event-modal__cancel.components-button {
+    color: var(--wp-admin-theme-color, #3858e9);
+    font-size: 16px;
+    height: 44px;
+}
+
+.ghostlabs-event-modal__submit.components-button {
+    background: var(--wp-admin-theme-color, #3858e9);
+    color: #ffffff;
+    font-size: 16px;
+    height: 44px;
+    padding: 0 20px;
+    border-radius: 8px;
+}
+
+.ghostlabs-event-modal__submit.components-button:disabled {
+    opacity: 0.5;
+    color: #ffffff;
+}
+
+.ghostlabs-event-modal__submit.components-button:hover:not(:disabled) {
+    background: var(--wp-admin-theme-color-darker-10, #2145e6);
+    color: #ffffff;
+}
+
+@media (max-width: 860px) {
+    .ghostlabs-event-modal__layout {
+        flex-direction: column;
+    }
+
+    .ghostlabs-event-modal__rail {
+        flex-basis: auto;
+    }
+}
+
+.ghostlabs-event-modal__behaviors .components-form-toggle:not(.is-checked) .components-form-toggle__track {
+    background-color: #55585d;
+    border-color: transparent;
+}
+
+.ghostlabs-event-modal__behaviors .components-form-toggle.is-checked .components-form-toggle__track {
+    background-color: var(--wp-admin-theme-color, #3858e9);
+    border-color: transparent;
+}
+
+.ghostlabs-event-modal__behaviors .components-form-toggle .components-form-toggle__thumb {
+    background-color: #ffffff;
+    border-color: transparent;
+}
+

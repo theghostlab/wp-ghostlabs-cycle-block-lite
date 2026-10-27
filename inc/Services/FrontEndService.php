@@ -67,6 +67,10 @@ class FrontEndService implements FrontEndServiceInterface
 
             $next = $intervals->current();
 
+            if( $next === null ) {
+                return $block['entry_id'];
+            }
+
             if( $splQ->count() === 0 ) {
 
                 EntryHistory::clearCache($this->postId, $this->blockAttributes['blockId']);

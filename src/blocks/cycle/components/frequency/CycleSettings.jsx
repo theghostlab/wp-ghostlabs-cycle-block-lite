@@ -1,96 +1,42 @@
 import {__} from '@wordpress/i18n';
 import {Flex, FlexBlock, Panel, PanelRow, SelectControl} from '@wordpress/components';
-import {useEffect, useRef, useState} from '@wordpress/element';
-import {intervalOptions, isProSchedule, nearestHonoured, scheduleName} from './intervals';
+import {intervalOptions} from './intervals';
 
 import tierIntervals from "@tier/cycle/frequency-options";
 
-import ScheduleNotice from "@tier/cycle/schedule-notice";
-
-const REFUSAL_DELAY = 200;
+import ScheduleUpsell from "@tier/cycle/schedule-upsell";
 
 const parseCycle = value => value.split('-');
 
 const storedCycle = ({interval, frequency}) => `${interval}-${frequency}`;
 
+const UNSET = '';
+
 export default ({attributes, setAttributes}) => {
 
     const stored = storedCycle(attributes.update);
 
-    const running = isProSchedule(stored, tierIntervals)
-        ? nearestHonoured(stored, tierIntervals)
-        : stored;
+    const known = tierIntervals.some(interval => interval.value === stored);
 
-    const [pending, setPending] = useState(null);
-
-    const [refused, setRefused] = useState(null);
-
-    const [notice, setNotice] = useState(
-        () => isProSchedule(stored, tierIntervals) ? {picked: stored, isStored: true} : null
-    );
-
-    const timer = useRef(null);
-
-    useEffect(() => () => clearTimeout(timer.current), []);
-
-    const pointerDriven = useRef(false);
-
-    const releaseFocus = field => {
-        if (!pointerDriven.current) return;
-
-        if (!field || document.activeElement !== field) return;
-
-        field.blur();
-    };
-
-    const refuse = (value, field) => {
-        setPending(value);
-        setNotice({picked: value, isStored: false});
-
-        setRefused(null);
-
-        clearTimeout(timer.current);
-
-        timer.current = setTimeout(() => {
-            setRefused(value);
-            releaseFocus(field);
-        }, REFUSAL_DELAY);
-    };
-
-    const showingRefused = refused !== null && pending === refused;
+    const options = known
+        ? intervalOptions(tierIntervals)
+        : [
+            {label: __("Choose a schedule", 'ghostlabs-cycle-block-lite'), value: UNSET, disabled: true},
+            ...intervalOptions(tierIntervals)
+        ];
 
     return (
         <Panel className="theghostlab-cycle-schedule">
             <PanelRow>
                 <Flex>
-                    <FlexBlock
-                        onPointerDownCapture={ () => { pointerDriven.current = true; } }
-                        onKeyDownCapture={ () => { pointerDriven.current = false; } }
-                    >
+                    <FlexBlock>
                         <SelectControl
                             __next40pxDefaultSize
                             label={__("Cycle", 'ghostlabs-cycle-block-lite')}
-                            className={ showingRefused ? 'theghostlab-cycle-select--refused' : undefined }
-                            value={ pending ?? stored }
-                            options={ intervalOptions(tierIntervals, refused ? [refused] : []) }
-                            onChange={ (value, extra) => {
-
-                                const field = extra?.event?.target ?? document.activeElement;
-
-                                if ( isProSchedule(value, tierIntervals) ) {
-                                    refuse(
-                                        value,
-                                        field instanceof HTMLSelectElement ? field : null
-                                    );
-
-                                    return;
-                                }
-
-                                clearTimeout(timer.current);
-                                setPending(null);
-                                setNotice(null);
-
-                                setRefused(null);
+                            value={ known ? stored : UNSET }
+                            options={ options }
+                            onChange={ value => {
+                                if ( value === UNSET ) return;
 
                                 const [i, f] = parseCycle(value);
 
@@ -103,20 +49,16 @@ export default ({attributes, setAttributes}) => {
                                     }
                                 });
                             }}
-                            help={__(`Set when to display another variation.`, 'ghostlabs-cycle-block-lite')}
+                            help={ known
+                                ? __("Set when to display another variation.", 'ghostlabs-cycle-block-lite')
+                                : __("This block is not rotating. Choose a schedule to start it.", 'ghostlabs-cycle-block-lite')
+                            }
                         />
                     </FlexBlock>
                 </Flex>
             </PanelRow>
             { }
-            { notice && (
-                <ScheduleNotice
-                    picked={ scheduleName(notice.picked, tierIntervals) }
-                    running={ scheduleName(running, tierIntervals) }
-                    isStored={ notice.isStored }
-                    onDismiss={ () => setNotice(null) }
-                />
-            ) }
+            <ScheduleUpsell />
         </Panel>
     )
 }

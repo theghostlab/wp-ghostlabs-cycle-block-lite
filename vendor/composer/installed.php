@@ -3,7 +3,7 @@
         'name' => 'ghostlabs/cycle-block-lite',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'aecd278ebf388a9c26239a6f96a72d7034523799',
+        'reference' => '041546931884f15e4128e4c54dc62710837bc648',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'ghostlabs/cycle-block-lite' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'aecd278ebf388a9c26239a6f96a72d7034523799',
+            'reference' => '041546931884f15e4128e4c54dc62710837bc648',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

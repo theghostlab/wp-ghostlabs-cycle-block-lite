@@ -3,27 +3,25 @@
  * shared's `theghostlab_cycle_editor_vars` filter (see
  * `FreeBoot::defineEditorUpgradeVar`).
  *
- * ⚠️ **No literal fallback, deliberately.** The editor's upsell used to hard-code
- * the marketing URL, and a hard-coded URL cannot carry the checkout-return
- * contract — `?upgrade_return=…&domain=…` — that lets the licence server send the
- * buyer back to a screen which claims the licence and installs Pro in place. The
- * link looked correct and quietly dropped the one thing that makes the in-place
- * upgrade work from here. A fallback would reintroduce exactly that: a URL that
- * renders, resolves, and loses the purchase.
+ * ⚠️ **No literal fallback, deliberately.** A hard-coded URL carries no `from`,
+ * so it renders, resolves, and files the sale under no surface at all — the
+ * failure attribution exists to prevent, and one nothing on screen would show.
+ * Callers render nothing rather than guess.
  *
- * Callers render nothing rather than guess. A guessed destination is worse than
- * none: it is the case where the buyer pays and the site never finds out.
+ * ✅ *(was 🔴)* Until 2026-10-08 the URL also carried the checkout-return
+ * contract (`upgrade_return`, `domain`), so the licence server could send the
+ * buyer back to finish an in-place upgrade. WordPress.org refused that upgrade,
+ * and PHP builds the link with `from=` alone now.
  *
  * ## ⚠️ One URL per surface, and the key IS the `from` value
  *
- * The editor holds two upsell surfaces — the schedule notice, shown when a
- * schedule is refused, and the Custom Events panel, which someone opened out of
- * curiosity. Those are different buying moments, and the ranking this plugin's
- * surfaces were built on assumes the first converts harder *without evidence*.
- * They cannot be told apart in the conversion data unless they leave with
- * different URLs, so PHP builds one per surface and this reads them by name.
+ * The editor has one upsell surface, the Custom Events panel. It held a second
+ * until 2026-10-26 — the schedule notice, retired with the Upsell select — and
+ * two surfaces cannot be told apart in the conversion data unless they leave
+ * with different URLs, so PHP builds one per surface and this reads them by
+ * name.
  *
- * The key is the `from` value itself (`'editor-schedule'`), not a friendlier
+ * The key is the `from` value itself (`'editor-events'`), not a friendlier
  * alias, so the vocabulary exists once — as data, in PHP's `UpsellSource` — and
  * there is no second name here to drift from it.
  *

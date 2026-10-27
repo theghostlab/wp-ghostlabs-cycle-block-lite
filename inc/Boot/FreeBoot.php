@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace GHOSTLABS\CYCLE_BLOCK\Boot;
 
-use GHOSTLABS\CYCLE_BLOCK\Config\PluginConfig;
 use GHOSTLABS\CYCLE_BLOCK\Contracts\GateInterface;
+use GHOSTLABS\CYCLE_BLOCK\Contracts\ScheduleSetInterface;
 use GHOSTLABS\CYCLE_BLOCK\Contracts\TierBootInterface;
 use GHOSTLABS\CYCLE_BLOCK\Gate\OpenGate;
+use GHOSTLABS\CYCLE_BLOCK\Services\FreeSchedules;
 use GHOSTLABS\CYCLE_BLOCK\Services\Loader;
-use GHOSTLABS\CYCLE_BLOCK\Services\RestRoutes\UpgradeRoutes;
 use GHOSTLABS\CYCLE_BLOCK\Services\SettingsService;
 use GHOSTLABS\CYCLE_BLOCK\Services\Upgrade\UpgradeEndpoints;
-use GHOSTLABS\CYCLE_BLOCK\Services\Upgrade\UpgradeSupport;
 use GHOSTLABS\CYCLE_BLOCK\Services\Upgrade\UpsellSource;
 use GHOSTLABS\CYCLE_BLOCK\Services\UpgradePluginMeta;
 
@@ -28,10 +27,8 @@ final class FreeBoot implements TierBootInterface
     public function boot(Loader $loader): void
     {
         $this->defineSettingsScreen();
-        $this->defineUpgradeRoutes();
         $this->defineEditorUpgradeVar();
         $this->definePluginRowUpgradeLink();
-        $this->relaxTransportSecurityInDevelopment();
     }
 
     private function definePluginRowUpgradeLink(): void
@@ -48,27 +45,10 @@ final class FreeBoot implements TierBootInterface
         add_filter('theghostlab_cycle_editor_vars', static function (array $vars): array {
 
             $vars['upgrade'] = [
-                'urls' => UpgradeEndpoints::buyProUrls(
-                    [UpsellSource::EditorSchedule, UpsellSource::EditorEvents],
-                    admin_url('options-general.php?page=' . PluginConfig::$settingsMenuSlug),
-                    (string) wp_parse_url(get_site_url(), PHP_URL_HOST)
-                ),
-
-                'inPlace' => ['available' => UpgradeSupport::available() && UpgradeSupport::canInstall()],
+                'urls' => UpgradeEndpoints::buyProUrls([UpsellSource::EditorEvents, UpsellSource::EditorCycleNotice]),
             ];
 
             return $vars;
-        });
-    }
-
-    private function relaxTransportSecurityInDevelopment(): void
-    {
-    }
-
-    private function defineUpgradeRoutes(): void
-    {
-        add_action('rest_api_init', static function (): void {
-            (new UpgradeRoutes())->routes();
         });
     }
 
@@ -87,9 +67,14 @@ final class FreeBoot implements TierBootInterface
         return [];
     }
 
-    public function allowedSchedules(): array
+    public function schedules(): ScheduleSetInterface
     {
-        return ['1-m', '7-d', '1-d'];
+        return new FreeSchedules();
+    }
+
+    public function restSegment(): string
+    {
+        return 'free';
     }
 
     private function defineSettingsScreen(): void

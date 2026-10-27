@@ -1,7 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { PanelBody, ExternalLink, Notice } from '@wordpress/components';
 import { buyProUrl } from '../upgrade-url';
-import { upgradeLabel } from '../upgrade-label';
 import '../upsell.css';
 
 const CustomEventsPanel = () => {
@@ -42,7 +41,10 @@ const CustomEventsPanel = () => {
 					<p>
 						{ }
 						<ExternalLink href={ href }>
-							{ upgradeLabel() }
+							{ __(
+								'Upgrade to Cycle Block Pro',
+								'ghostlabs-cycle-block-lite'
+							) }
 						</ExternalLink>
 					</p>
 				) }

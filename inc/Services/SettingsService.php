@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace GHOSTLABS\CYCLE_BLOCK\Services;
 
+use Closure;
 use GHOSTLABS\CYCLE_BLOCK\Config\PluginConfig;
 use GHOSTLABS\CYCLE_BLOCK\Services\TierMatrix;
+use GHOSTLABS\CYCLE_BLOCK\Services\Upgrade\AccountEndpoints;
 use GHOSTLABS\CYCLE_BLOCK\Services\Upgrade\UpgradeEndpoints;
-use GHOSTLABS\CYCLE_BLOCK\Services\Upgrade\UpgradeSupport;
 use GHOSTLABS\CYCLE_BLOCK\Services\Upgrade\UpsellSource;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -16,6 +17,13 @@ final class SettingsService
 {
     
     private const SCREEN_ID = 'settings_page_theghostlab-cycle-settings';
+
+    private readonly Closure $canUpload;
+
+    public function __construct(?Closure $canUpload = null)
+    {
+        $this->canUpload = $canUpload ?? static fn(): bool => current_user_can('upload_plugins');
+    }
 
     public function page(): void
     {
@@ -47,7 +55,8 @@ final class SettingsService
         wp_enqueue_script(
             'theghostlab-cycle-app',
             GHOSTLABS_CYCLE_BLOCK_PLUGIN_URL . 'assets/js/settings/settings-bundle.js',
-            ['wp-element', 'wp-api-fetch', 'wp-data', 'wp-i18n'],
+
+            ['wp-element', 'wp-i18n'],
             PluginConfig::assetVersion('assets/js/settings/settings-bundle.js'),
             true
         );
@@ -64,11 +73,13 @@ final class SettingsService
                 'window.GHOSTLABS_CYCLE_BLOCK_CONFIG = %s;',
                 wp_json_encode([
                     'rootElementId' => 'theghostlab-cycle-settings-root',
-                    'restNamespace' => PluginConfig::restNameSpace(),
 
                     'upgrade'       => [
-                        'urls'    => self::buyUrls(),
-                        'inPlace' => UpgradeSupport::config(),
+                        'urls'       => self::buyUrls(),
+                        'accountUrl' => AccountEndpoints::accountUrl(),
+                        'uploadUrl'  => ($this->canUpload)()
+                            ? network_admin_url('plugin-install.php?tab=upload')
+                            : null,
                     ],
 
                     'tiers'         => TierMatrix::capabilities(),
@@ -87,10 +98,6 @@ final class SettingsService
 
     private static function buyUrls(): array
     {
-        return UpgradeEndpoints::buyProUrls(
-            [UpsellSource::Settings, UpsellSource::SettingsTable],
-            admin_url('options-general.php?page=' . PluginConfig::$settingsMenuSlug),
-            (string) wp_parse_url(get_site_url(), PHP_URL_HOST)
-        );
+        return UpgradeEndpoints::buyProUrls([UpsellSource::Settings, UpsellSource::SettingsTable]);
     }
 }

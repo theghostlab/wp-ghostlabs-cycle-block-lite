@@ -428,97 +428,44 @@ const INSTANTLY = {
   value: '0-s',
   label: () => (0,external_wp_i18n_namespaceObject.__)("~ Instantly", 'ghostlabs-cycle-block-lite')
 };
-const SECONDS = {
-  y: 31536000,
-  m: 2592000,
-  d: 86400,
-  h: 3600,
-  i: 60,
-  s: 1
-};
-const seconds = value => {
-  const match = /^(\d+)-([a-z])$/.exec(value !== null && value !== void 0 ? value : '');
-  return match && SECONDS[match[2]] !== undefined ? Number(match[1]) * SECONDS[match[2]] : null;
-};
-const proSchedule = interval => ({
-  ...interval,
-  name: interval.label,
-  /* translators: %s: the name of a cycle schedule, e.g. "Annually". */
-  label: () => (0,external_wp_i18n_namespaceObject.sprintf)((0,external_wp_i18n_namespaceObject.__)('%s (Pro-Only)', 'ghostlabs-cycle-block-lite'), interval.label()),
-  pro: true
-});
-const intervalOptions = (intervals, disabled = []) => intervals.map(({
+const intervalOptions = intervals => intervals.map(({
   value,
   label
 }) => ({
   label: label(),
-  value,
-  ...(disabled.includes(value) ? {
-    disabled: true
-  } : {})
+  value
 }));
-const isProSchedule = (value, intervals) => Boolean(intervals.find(interval => interval.value === value)?.pro);
-const scheduleName = (value, intervals) => {
-  var _interval$name;
-  const interval = intervals.find(entry => entry.value === value);
-  return interval ? ((_interval$name = interval.name) !== null && _interval$name !== void 0 ? _interval$name : interval.label)() : value;
-};
-const nearestHonoured = (value, intervals) => {
-  const target = seconds(value);
-  if (target === null) {
-    return value;
-  }
-  let best = null;
-  for (const interval of intervals) {
-    if (interval.pro) {
-      continue;
-    }
-    const candidate = seconds(interval.value);
-    if (candidate === null) {
-      continue;
-    }
-    const distance = Math.abs(candidate - target);
-    if (best === null || distance < best.distance || distance === best.distance && candidate > best.seconds) {
-      best = {
-        value: interval.value,
-        distance,
-        seconds: candidate
-      };
-    }
-  }
-  return best ? best.value : value;
-};
 ;// ./src/tier/cycle/frequency-options.js
 
-const FREE_INTERVALS = [proSchedule(ANNUALLY), proSchedule(QUARTERLY), MONTHLY, proSchedule(BI_WEEKLY), WEEKLY, DAILY, proSchedule(HOURLY), proSchedule(EVERY_MINUTE), proSchedule(INSTANTLY)];
+const FREE_INTERVALS = [MONTHLY, WEEKLY, DAILY];
 /* harmony default export */ const frequency_options = (FREE_INTERVALS);
+;// external ["wp","preferences"]
+const external_wp_preferences_namespaceObject = window["wp"]["preferences"];
 ;// ./src/tier/upgrade-url.js
 /**
  * The checkout link for one upsell surface, built by PHP and inlined through
  * shared's `theghostlab_cycle_editor_vars` filter (see
  * `FreeBoot::defineEditorUpgradeVar`).
  *
- * ⚠️ **No literal fallback, deliberately.** The editor's upsell used to hard-code
- * the marketing URL, and a hard-coded URL cannot carry the checkout-return
- * contract — `?upgrade_return=…&domain=…` — that lets the licence server send the
- * buyer back to a screen which claims the licence and installs Pro in place. The
- * link looked correct and quietly dropped the one thing that makes the in-place
- * upgrade work from here. A fallback would reintroduce exactly that: a URL that
- * renders, resolves, and loses the purchase.
+ * ⚠️ **No literal fallback, deliberately.** A hard-coded URL carries no `from`,
+ * so it renders, resolves, and files the sale under no surface at all — the
+ * failure attribution exists to prevent, and one nothing on screen would show.
+ * Callers render nothing rather than guess.
  *
- * Callers render nothing rather than guess. A guessed destination is worse than
- * none: it is the case where the buyer pays and the site never finds out.
+ * ✅ *(was 🔴)* Until 2026-10-08 the URL also carried the checkout-return
+ * contract (`upgrade_return`, `domain`), so the licence server could send the
+ * buyer back to finish an in-place upgrade. WordPress.org refused that upgrade,
+ * and PHP builds the link with `from=` alone now.
  *
  * ## ⚠️ One URL per surface, and the key IS the `from` value
  *
- * The editor holds two upsell surfaces — the schedule notice, shown when a
- * schedule is refused, and the Custom Events panel, which someone opened out of
- * curiosity. Those are different buying moments, and the ranking this plugin's
- * surfaces were built on assumes the first converts harder *without evidence*.
- * They cannot be told apart in the conversion data unless they leave with
- * different URLs, so PHP builds one per surface and this reads them by name.
+ * The editor has one upsell surface, the Custom Events panel. It held a second
+ * until 2026-10-26 — the schedule notice, retired with the Upsell select — and
+ * two surfaces cannot be told apart in the conversion data unless they leave
+ * with different URLs, so PHP builds one per surface and this reads them by
+ * name.
  *
- * The key is the `from` value itself (`'editor-schedule'`), not a friendlier
+ * The key is the `from` value itself (`'editor-events'`), not a friendlier
  * alias, so the vocabulary exists once — as data, in PHP's `UpsellSource` — and
  * there is no second name here to drift from it.
  *
@@ -540,94 +487,71 @@ const buyProUrl = surface => {
   return (_window$theghostlab_c = window.theghostlab_cycle_vars?.upgrade?.urls?.[surface]) !== null && _window$theghostlab_c !== void 0 ? _window$theghostlab_c : null;
 };
 /* harmony default export */ const upgrade_url = ((/* unused pure expression or super */ null && (buyProUrl)));
-;// ./src/tier/upgrade-availability.js
+;// ./src/tier/cycle/schedule-upsell.js
+
+
+
+
+
+
+
+
+
 /**
- * Whether the in-place upgrade can actually run on this site, for this user.
+ * The free tier's answer to `@tier/cycle/schedule-upsell`: an Upsell notice under
+ * the Cycle select naming the schedules Cycle Block Pro adds (owner, 2026-10-26).
  *
- * Decided in PHP (`Services\Upgrade\UpgradeSupport`) and inlined through
- * shared's `theghostlab_cycle_editor_vars` filter, for the same reason the
- * checkout URL is: the question has no client-side answer. `is_multisite()` has
- * no JS equivalent, and neither does `current_user_can( 'install_plugins' )`.
+ * It points out and never refuses. The select beside it offers only this
+ * build's three schedules, and nothing in it is disabled or marked: a disabled,
+ * suffixed option reads as a locked feature to a WordPress.org reviewer
+ * (Guideline 5), and the command center's *Locked features* gate refuses it.
+ * Below the field and its help text, never above, so it does not displace the
+ * control or read as a gate.
  *
- * ⚠️ **This gates a CLAIM, not a link.** The editor's two upsell surfaces used
- * to label their link "Upgrade — installs in place" unconditionally. On a
- * multisite network that is false, and it is false in the most expensive
- * possible place: it is the sentence that persuades someone to click through to
- * checkout. They paid for a one-click swap that this build refuses to perform.
+ * ⚠️ **The dismissal persists per user**, in `core/preferences`, which WordPress
+ * keeps in user meta for the block editor. `isDismissible` on its own hides the
+ * notice for one render and wires the close button to nothing, and a notice that
+ * comes back is the top named grievance with upsells.
  *
- * ⚠️ **Absent means available.** The only way the var goes missing is a stale
- * bundle meeting a newer PHP or the reverse, and single-site installs — where
- * the claim is true — are the overwhelming majority. A missing key must not
- * strip the in-place promise from the sites that actually have it.
+ * ⚠️ `spokenMessage=""` because this is standing copy, not a response to
+ * anything the author did: the default speaks it into the live region every time
+ * the block is selected.
  *
- * Read off `window` rather than as a bare global: the var is assigned as a
- * window property, and a script-scoped `const` would satisfy a bare read while
- * leaving `window.…` undefined — the trap that silently disabled Pro's
- * withdrawn-licence check for as long as it existed.
- *
- * @return {boolean} Whether "installs in place" is true here.
+ * ⚠️ **Keep `PRO_SCHEDULES` in step with `TierMatrix`.** `ScheduleParityTest`
+ * parses it and fails if it names a different set from the paid edition's.
  */
-const inPlaceAvailable = () => window.theghostlab_cycle_vars?.upgrade?.inPlace?.available !== false;
-/* harmony default export */ const upgrade_availability = ((/* unused pure expression or super */ null && (inPlaceAvailable)));
-;// ./src/tier/upgrade-label.js
-
-
+const SCOPE = 'ghostlabs/cycle-block';
+const DISMISSED = 'cycleNoticeDismissed';
+const PRO_SCHEDULES = [ANNUALLY, QUARTERLY, BI_WEEKLY, HOURLY, EVERY_MINUTE, INSTANTLY];
 
 /**
- * The label on the editor's two checkout links.
- *
- * ⚠️ **Resolved at call time, never hoisted to a module constant.** `__()` has to
- * run at render or it bakes in whichever locale registered first — the trap
- * `intervals.js`, `TierMatrix` and `UpgradePanel` all carry.
- *
- * ⚠️ **"Installs in place" is a promise, and it is the last thing read before a
- * purchase.** Where the swap cannot run — any multisite network, or any editor
- * whose user cannot install plugins — the link still goes to checkout, because
- * nothing about a network stops somebody buying Cycle Block Pro. What changes is
- * that it stops promising a mechanism this build will then refuse.
- *
- * @return {string} The link text.
+ * "Annually, Quarterly, … and Instantly", joined the way the site's language
+ * joins a list. The labels' leading "~" marks an approximate schedule in the
+ * select and reads as noise in a sentence.
  */
-const upgradeLabel = () => inPlaceAvailable() ? (0,external_wp_i18n_namespaceObject.__)('Upgrade — installs in place', 'ghostlabs-cycle-block-lite') : (0,external_wp_i18n_namespaceObject.__)('Upgrade to Cycle Block Pro', 'ghostlabs-cycle-block-lite');
-/* harmony default export */ const upgrade_label = ((/* unused pure expression or super */ null && (upgradeLabel)));
-;// ./src/tier/cycle/schedule-notice.js
-
-
-
-
-
-
-
-const honouredNames = () => frequency_options.filter(interval => !interval.pro).map(interval => {
-  var _interval$name;
-  return ((_interval$name = interval.name) !== null && _interval$name !== void 0 ? _interval$name : interval.label)();
-}).reverse().join(', ');
-const ScheduleNotice = ({
-  picked,
-  running,
-  isStored,
-  onDismiss
-}) => {
-  const href = buyProUrl('editor-schedule');
-
-  /* translators: %s: the name of a cycle schedule, e.g. "Hourly". */
-  const headline = (0,external_wp_i18n_namespaceObject.sprintf)((0,external_wp_i18n_namespaceObject.__)('%s is a Pro schedule.', 'ghostlabs-cycle-block-lite'), picked);
-  const range = (0,external_wp_i18n_namespaceObject.sprintf)(/* translators: %s: a list of cycle schedule names, e.g. "Monthly, Weekly, Daily". */
-  (0,external_wp_i18n_namespaceObject.__)('Free cycles %s.', 'ghostlabs-cycle-block-lite'), honouredNames());
-  const outcome = isStored ? (0,external_wp_i18n_namespaceObject.sprintf)(/* translators: %s: the name of a cycle schedule, e.g. "Weekly". */
-  (0,external_wp_i18n_namespaceObject.__)('This block keeps that setting, and cycles %s here.', 'ghostlabs-cycle-block-lite'), running) : (0,external_wp_i18n_namespaceObject.sprintf)(/* translators: %s: the name of a cycle schedule, e.g. "Weekly". */
-  (0,external_wp_i18n_namespaceObject.__)('Your cycle is still %s — nothing changed.', 'ghostlabs-cycle-block-lite'), running);
+const scheduleNames = () => new Intl.ListFormat(document.documentElement.lang || 'en', {
+  type: 'conjunction'
+}).format(PRO_SCHEDULES.map(schedule => schedule.label().replace(/^~\s*/, '')));
+const ScheduleUpsell = () => {
+  const dismissed = (0,external_wp_data_namespaceObject.useSelect)(select => select(external_wp_preferences_namespaceObject.store).get(SCOPE, DISMISSED), []);
+  const {
+    set
+  } = (0,external_wp_data_namespaceObject.useDispatch)(external_wp_preferences_namespaceObject.store);
+  if (dismissed) {
+    return null;
+  }
+  const href = buyProUrl('editor-cycle-notice');
   return (0,external_React_namespaceObject.createElement)(external_wp_components_namespaceObject.Notice, {
     className: "theghostlab-cycle-upsell-notice",
     status: "info",
-    politeness: "polite",
-    spokenMessage: `${headline} ${range} ${outcome}`,
-    onRemove: onDismiss
-  }, (0,external_React_namespaceObject.createElement)("p", null, (0,external_React_namespaceObject.createElement)("strong", null, headline)), (0,external_React_namespaceObject.createElement)("p", null, `${range} ${outcome}`), href && (0,external_React_namespaceObject.createElement)("p", null, (0,external_React_namespaceObject.createElement)(external_wp_components_namespaceObject.ExternalLink, {
+    spokenMessage: "",
+    onRemove: () => set(SCOPE, DISMISSED, true)
+  }, (0,external_React_namespaceObject.createElement)("p", null, (0,external_wp_i18n_namespaceObject.sprintf)(/* translators: %s: a list of cycle schedule names, e.g. "Annually, Quarterly and Hourly". */
+  (0,external_wp_i18n_namespaceObject.__)('Cycle Block Pro adds %s.', 'ghostlabs-cycle-block-lite'), scheduleNames())), href && (0,external_React_namespaceObject.createElement)("p", null, (0,external_React_namespaceObject.createElement)(external_wp_components_namespaceObject.ExternalLink, {
     href: href
-  }, upgradeLabel())));
+  }, (0,external_wp_i18n_namespaceObject.__)('See Cycle Block Pro', 'ghostlabs-cycle-block-lite'))));
 };
-/* harmony default export */ const schedule_notice = (ScheduleNotice);
+/* harmony default export */ const schedule_upsell = (ScheduleUpsell);
 ;// ./src/blocks/cycle/components/frequency/CycleSettings.jsx
 
 
@@ -635,73 +559,32 @@ const ScheduleNotice = ({
 
 
 
-
-const REFUSAL_DELAY = 200;
 const parseCycle = value => value.split('-');
 const storedCycle = ({
   interval,
   frequency
 }) => `${interval}-${frequency}`;
+const UNSET = '';
 /* harmony default export */ const CycleSettings = (({
   attributes,
   setAttributes
 }) => {
   const stored = storedCycle(attributes.update);
-  const running = isProSchedule(stored, frequency_options) ? nearestHonoured(stored, frequency_options) : stored;
-  const [pending, setPending] = (0,external_wp_element_namespaceObject.useState)(null);
-  const [refused, setRefused] = (0,external_wp_element_namespaceObject.useState)(null);
-  const [notice, setNotice] = (0,external_wp_element_namespaceObject.useState)(() => isProSchedule(stored, frequency_options) ? {
-    picked: stored,
-    isStored: true
-  } : null);
-  const timer = (0,external_wp_element_namespaceObject.useRef)(null);
-  (0,external_wp_element_namespaceObject.useEffect)(() => () => clearTimeout(timer.current), []);
-  const pointerDriven = (0,external_wp_element_namespaceObject.useRef)(false);
-  const releaseFocus = field => {
-    if (!pointerDriven.current) return;
-    if (!field || document.activeElement !== field) return;
-    field.blur();
-  };
-  const refuse = (value, field) => {
-    setPending(value);
-    setNotice({
-      picked: value,
-      isStored: false
-    });
-    setRefused(null);
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      setRefused(value);
-      releaseFocus(field);
-    }, REFUSAL_DELAY);
-  };
-  const showingRefused = refused !== null && pending === refused;
+  const known = frequency_options.some(interval => interval.value === stored);
+  const options = known ? intervalOptions(frequency_options) : [{
+    label: (0,external_wp_i18n_namespaceObject.__)("Choose a schedule", 'ghostlabs-cycle-block-lite'),
+    value: UNSET,
+    disabled: true
+  }, ...intervalOptions(frequency_options)];
   return (0,external_React_namespaceObject.createElement)(external_wp_components_namespaceObject.Panel, {
     className: "theghostlab-cycle-schedule"
-  }, (0,external_React_namespaceObject.createElement)(external_wp_components_namespaceObject.PanelRow, null, (0,external_React_namespaceObject.createElement)(external_wp_components_namespaceObject.Flex, null, (0,external_React_namespaceObject.createElement)(external_wp_components_namespaceObject.FlexBlock, {
-    onPointerDownCapture: () => {
-      pointerDriven.current = true;
-    },
-    onKeyDownCapture: () => {
-      pointerDriven.current = false;
-    }
-  }, (0,external_React_namespaceObject.createElement)(external_wp_components_namespaceObject.SelectControl, {
+  }, (0,external_React_namespaceObject.createElement)(external_wp_components_namespaceObject.PanelRow, null, (0,external_React_namespaceObject.createElement)(external_wp_components_namespaceObject.Flex, null, (0,external_React_namespaceObject.createElement)(external_wp_components_namespaceObject.FlexBlock, null, (0,external_React_namespaceObject.createElement)(external_wp_components_namespaceObject.SelectControl, {
     __next40pxDefaultSize: true,
     label: (0,external_wp_i18n_namespaceObject.__)("Cycle", 'ghostlabs-cycle-block-lite'),
-    className: showingRefused ? 'theghostlab-cycle-select--refused' : undefined,
-    value: pending !== null && pending !== void 0 ? pending : stored,
-    options: intervalOptions(frequency_options, refused ? [refused] : []),
-    onChange: (value, extra) => {
-      var _extra$event$target;
-      const field = (_extra$event$target = extra?.event?.target) !== null && _extra$event$target !== void 0 ? _extra$event$target : document.activeElement;
-      if (isProSchedule(value, frequency_options)) {
-        refuse(value, field instanceof HTMLSelectElement ? field : null);
-        return;
-      }
-      clearTimeout(timer.current);
-      setPending(null);
-      setNotice(null);
-      setRefused(null);
+    value: known ? stored : UNSET,
+    options: options,
+    onChange: value => {
+      if (value === UNSET) return;
       const [i, f] = parseCycle(value);
       setAttributes({
         update: {
@@ -712,13 +595,8 @@ const storedCycle = ({
         }
       });
     },
-    help: (0,external_wp_i18n_namespaceObject.__)(`Set when to display another variation.`, 'ghostlabs-cycle-block-lite')
-  })))), notice && (0,external_React_namespaceObject.createElement)(schedule_notice, {
-    picked: scheduleName(notice.picked, frequency_options),
-    running: scheduleName(running, frequency_options),
-    isStored: notice.isStored,
-    onDismiss: () => setNotice(null)
-  }));
+    help: known ? (0,external_wp_i18n_namespaceObject.__)("Set when to display another variation.", 'ghostlabs-cycle-block-lite') : (0,external_wp_i18n_namespaceObject.__)("This block is not rotating. Choose a schedule to start it.", 'ghostlabs-cycle-block-lite')
+  })))), (0,external_React_namespaceObject.createElement)(schedule_upsell, null));
 });
 __webpack_require__.dn(CycleSettings);
 ;// ./src/blocks/cycle/components/randomization/_components/ShuffleToggle.jsx

@@ -2,10 +2,10 @@
 Contributors: ghostlabs
 Donate link: https://theghostlab.io
 Tags: content rotation, scheduled content, testimonials, gutenberg, rotating content
-Requires at least: 6.4
+Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.0.2
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,7 +31,9 @@ the whole setup.
 * **Repeat**, or stop on the last variation once the cycle has run through.
 * **Preview from the editor**, stepping through every variation without waiting for the schedule
   and without disturbing what visitors see.
-* **Unlimited variations** per block, and as many blocks as you like per page.
+* **No configured limit on variations** per block, and as many blocks as you like per page. The
+  rotation queue is stored in a single database column, which puts a practical ceiling of roughly
+  1,600 variations on one block — far past any real use.
 
 **Rendered on the server, which matters more than it sounds**
 
@@ -53,7 +55,7 @@ The variation is chosen before the page is sent to the browser. Only one is ever
   schedule instead of sharing one.
 * If anything goes wrong — a missing schedule, a plugin conflict — the block falls back to
   showing its content rather than breaking the page.
-* Built to WCAG 2.2 AA and fully translatable.
+* Built against WCAG 2.2 AA and fully translatable.
 
 == Installation ==
 
@@ -114,27 +116,22 @@ on PHP 7.4, which has been unsupported since 2022.
 
 = I bought Cycle Block Pro. How do I switch this site to it? =
 
-On a single site, open Settings → Cycle Block, click "Have a license?", and paste the license key from your receipt
-email. The plugin verifies the key, installs Cycle Block Pro, and deactivates itself — your
-blocks, schedules and settings carry over untouched, and your key carries over with them, so you
-never enter it twice. If any step fails, nothing on your site has changed, and you can always
-install Cycle Block Pro manually from your account page instead.
-
-On a WordPress multisite network the in-place switch does not run, and the settings screen says so
-rather than asking for a key: a network administrator installs Cycle Block Pro from the network
-admin, and the license key is entered on each site. Your blocks, schedules and settings carry over
-untouched either way.
+Cycle Block Pro is a separate plugin. Download it from your account, upload it with WordPress's
+plugin uploader, and activate it. Activating Cycle Block Pro switches this plugin off, and your
+blocks, schedules and settings carry over untouched. Then enter your license key in Cycle Block
+Pro's own settings. Settings → Cycle Block lists each step, with links to your account and to the
+uploader.
 
 == External services ==
 
-This plugin contacts GhostLabs' licensing service in exactly one situation: when you start the
-upgrade to Cycle Block Pro from the settings screen — by submitting a license key, or by clicking
-"Complete upgrade" after a purchase. It sends the license key you entered (or the one-time claim
-token from your purchase), this site's domain name, the plugin's slug and the edition being
-requested, so the service can verify the license and deliver the Cycle Block Pro package. Nothing is sent on any other page
-load, and nothing is ever sent without that explicit action.
+This plugin contacts no external service. It sends nothing from the front end your visitors see,
+nothing from the admin, and nothing in the background: it has no update check, no scheduled task
+and no analytics.
 
-The service is operated by GhostLabs. [Terms of service](https://theghostlab.io/terms-of-service) ·
+The settings screen links to your GhostLabs account page, at enter.theghostlab.io, where Cycle
+Block Pro is downloaded. That page opens in your browser only when you click the link.
+
+[Terms of service](https://theghostlab.io/terms-of-service) ·
 [Privacy policy](https://theghostlab.io/privacy-policy)
 
 == Source code ==
@@ -144,23 +141,50 @@ together at:
 
 https://github.com/theghostlab/wp-ghostlabs-cycle-block-lite
 
-That repository contains this plugin exactly as distributed, plus the uncompiled `src/` and
-`dev/` behind its bundles and the configuration used to build them. Every dependency is a
-public package, and the one GhostLabs library the plugin uses is carried as readable source
-inside it (`lib/wp-kit/`, GPL-2.0-or-later) — so `composer install && pnpm install && pnpm run
-build` needs no credentials of any kind and reproduces the shipped `build/`, `assets/js/` and
-`assets/css/settings.css` byte for byte.
+That repository contains this plugin's source at the version the newest tag names — the same PHP
+that ships — plus the uncompiled `src/` and `dev/` behind its bundles and the configuration used
+to build them. Every dependency is a public package, and the one GhostLabs library the plugin uses
+is carried as readable source inside it (`lib/wp-kit/`, GPL-2.0-or-later) — so `composer install
+&& pnpm install && pnpm run build` needs no credentials of any kind and reproduces that
+repository's `build/`, `assets/js/` and `assets/css/settings.css` byte for byte.
 
 == Screenshots ==
 
 1. Three versions of one hero, written once and named. Pick the schedule — daily, weekly or monthly — choose shuffle or sequence, repeat or stop on the last one, and preview every variation from the editor without waiting for the clock.
 2. A variation is ordinary block content — a Cover, headings, buttons, columns, anything — so it inherits your theme. The Custom Events panel shows what Pro adds: a view event, and an optional click event, for every event you define, sent to Google Analytics 4, Matomo, Plausible or Umami.
 3. Chosen on the server before the page is sent. One variation is in the HTML, so there is no flicker, no layout shift, and no hidden duplicate content for search engines to find.
-4. Nine schedules in the list; this edition honours three. Pick a Pro one and the block says so, names the schedule it is still cycling on, and changes nothing.
-5. Settings → Cycle Block: where your controls live, the license entry, and what Pro adds beside what you already have.
-6. Upgrade in place on a single-site install. Paste a license key and the site switches to Pro with every block, schedule and setting exactly as it was.
+4. Turn shuffle off and the variations run in sequence, in the order they sit in List View. Here, one a day, starting again once the last has shown.
+5. Settings → Cycle Block: where your settings live, how to switch to Pro if you already own it, and what Pro adds beside what you already have.
+6. Already own Cycle Block Pro? Download it from your account, upload it with WordPress's plugin uploader, activate it and enter your license key in its settings. It switches this plugin off, and every block, schedule and setting stays exactly as it was.
 
 == Changelog ==
+
+= 2.1.0 =
+* This edition now carries only the schedules it runs: daily, weekly and monthly. The six it used
+  to list and then decline are gone from the list, and this edition no longer runs them. A block
+  saved by Cycle Block Pro on one of them stays on the variation it is showing and keeps its
+  schedule, and the block's settings ask you to choose a schedule to start it rotating here.
+* Requires WordPress 6.8 or newer, raised from the 6.4 declared in 2.0.2. Nothing had been tested
+  below 6.8, so 6.4 promised support for four WordPress releases that were never exercised. Sites
+  on an older version are not offered this update and keep running the version they have.
+* The Variation block now has an icon and a description on the WordPress.org plugin page. It had
+  neither: the description was empty, and the icon named something WordPress does not ship, so
+  nothing was drawn. The editor was never affected and showed the right glyph throughout.
+* The plugin ships minified JavaScript and CSS, so it is a smaller download and a smaller
+  install. Nothing about how your content rotates changes, and no setting moves.
+* The published source repository still ships its JavaScript and CSS readable and unminified,
+  and still rebuilds the bundles it carries byte for byte. That repository is the readable
+  source this listing links, and reading it is how the compiled files here can be checked.
+* Corrected the description inside the plugin's composer.json, which named a rotation schedule
+  this edition did not run.
+* Corrected two sentences that described the source repository as holding the plugin exactly as
+  distributed. It holds the same PHP, plus the uncompiled sources behind the bundles; the
+  compiled files are built separately for each, which is why only the repository's own bundles
+  are the ones it reproduces byte for byte.
+* Corrected three descriptions to match what the plugin actually does: variations per block are
+  bounded by the database column rather than unlimited, the accessibility line reads "built
+  against WCAG 2.2 AA", and the note about comments names the paths that keep theirs.
+* Various updates and bug fixes
 
 = 2.0.2 =
 The relaunch release. WordPress.org last published 1.0.4, so everything listed under 1.2.0 and
@@ -171,7 +195,7 @@ The relaunch release. WordPress.org last published 1.0.4, so everything listed u
 * A security review against the OWASP Top 10 and an accessibility review to WCAG 2.2 AA, with
   every finding fixed.
 * Multisite: the in-place upgrade is offered only where it can actually be performed.
-* The JavaScript and CSS ship readable and unminified, and the published source repository
+* The published source repository ships its JavaScript and CSS readable and unminified, and
   rebuilds them byte for byte.
 
 = 1.2.0 =
@@ -199,6 +223,11 @@ The relaunch release. WordPress.org last published 1.0.4, so everything listed u
 * **Requires PHP 8.1** (previously 7.4).
 
 == Upgrade Notice ==
+
+= 2.1.0 =
+Requires WordPress 6.8 or newer; sites on an older version will not be offered this update. Your
+blocks, schedules and settings are unchanged; a block on a schedule this edition doesn't have stops
+rotating until you choose one.
 
 = 2.0.2 =
 Requires PHP 8.1 or newer; sites on an older version will not be offered this update. Adds the

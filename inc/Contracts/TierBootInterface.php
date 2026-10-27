@@ -17,7 +17,9 @@ interface TierBootInterface
 
     public function schemaStatements(string $tablePrefix, string $charsetCollate): array;
 
-    public function allowedSchedules(): array;
+    public function schedules(): ScheduleSetInterface;
+
+    public function restSegment(): string;
 
     public function translationsDir(): ?string;
 

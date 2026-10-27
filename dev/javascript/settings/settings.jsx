@@ -2,14 +2,10 @@ import { createRoot } from 'react-dom/client';
 import OrientationCard from './_components/OrientationCard';
 import ProComponent from './_components/pro/ProComponent';
 import UpgradePanel from './_components/upgrade/UpgradePanel';
-import UpgradeUnavailablePanel from './_components/upgrade/UpgradeUnavailablePanel';
 
 const { __ } = window.wp.i18n;
 
-const { rootElementId, restNamespace, upgrade } =
-	window.GHOSTLABS_CYCLE_BLOCK_CONFIG;
-
-const inPlace = upgrade?.inPlace ?? { available: true, state: 'available', message: '' };
+const { rootElementId, upgrade } = window.GHOSTLABS_CYCLE_BLOCK_CONFIG;
 
 const SettingsScreen = () => (
 	<div id="ghostlabs">
@@ -33,11 +29,10 @@ const SettingsScreen = () => (
 			<OrientationCard />
 
 			{ }
-			{ inPlace.available ? (
-				<UpgradePanel restNamespace={ restNamespace } />
-			) : (
-				<UpgradeUnavailablePanel inPlace={ inPlace } />
-			) }
+			<UpgradePanel
+				accountUrl={ upgrade?.accountUrl }
+				uploadUrl={ upgrade?.uploadUrl }
+			/>
 
 			<ProComponent />
 		</div>

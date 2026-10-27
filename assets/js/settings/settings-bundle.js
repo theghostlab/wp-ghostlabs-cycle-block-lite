@@ -233,7 +233,7 @@
               warnNoop(publicInstance, "setState");
             }
           };
-          var assign2 = Object.assign;
+          var assign = Object.assign;
           var emptyObject = {};
           {
             Object.freeze(emptyObject);
@@ -284,7 +284,7 @@
           }
           var pureComponentPrototype = PureComponent.prototype = new ComponentDummy();
           pureComponentPrototype.constructor = PureComponent;
-          assign2(pureComponentPrototype, Component.prototype);
+          assign(pureComponentPrototype, Component.prototype);
           pureComponentPrototype.isPureReactComponent = true;
           function createRef() {
             var refObject = {
@@ -296,7 +296,7 @@
             return refObject;
           }
           var isArrayImpl = Array.isArray;
-          function isArray2(a) {
+          function isArray(a) {
             return isArrayImpl(a);
           }
           function typeName(value) {
@@ -471,7 +471,7 @@
               }
             }
           }
-          var ReactElement = function(type, key, ref, self2, source, owner, props) {
+          var ReactElement = function(type, key, ref, self, source, owner, props) {
             var element = {
               // This tag allows us to uniquely identify this as a React Element
               $$typeof: REACT_ELEMENT_TYPE,
@@ -495,7 +495,7 @@
                 configurable: false,
                 enumerable: false,
                 writable: false,
-                value: self2
+                value: self
               });
               Object.defineProperty(element, "_source", {
                 configurable: false,
@@ -510,12 +510,12 @@
             }
             return element;
           };
-          function createElement2(type, config, children) {
+          function createElement(type, config, children) {
             var propName;
             var props = {};
             var key = null;
             var ref = null;
-            var self2 = null;
+            var self = null;
             var source = null;
             if (config != null) {
               if (hasValidRef(config)) {
@@ -530,7 +530,7 @@
                 }
                 key = "" + config.key;
               }
-              self2 = config.__self === void 0 ? null : config.__self;
+              self = config.__self === void 0 ? null : config.__self;
               source = config.__source === void 0 ? null : config.__source;
               for (propName in config) {
                 if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
@@ -572,7 +572,7 @@
                 }
               }
             }
-            return ReactElement(type, key, ref, self2, source, ReactCurrentOwner.current, props);
+            return ReactElement(type, key, ref, self, source, ReactCurrentOwner.current, props);
           }
           function cloneAndReplaceKey(oldElement, newKey) {
             var newElement = ReactElement(oldElement.type, newKey, oldElement.ref, oldElement._self, oldElement._source, oldElement._owner, oldElement.props);
@@ -583,10 +583,10 @@
               throw new Error("React.cloneElement(...): The argument must be a React element, but you passed " + element + ".");
             }
             var propName;
-            var props = assign2({}, element.props);
+            var props = assign({}, element.props);
             var key = element.key;
             var ref = element.ref;
-            var self2 = element._self;
+            var self = element._self;
             var source = element._source;
             var owner = element._owner;
             if (config != null) {
@@ -624,7 +624,7 @@
               }
               props.children = childArray;
             }
-            return ReactElement(element.type, key, ref, self2, source, owner, props);
+            return ReactElement(element.type, key, ref, self, source, owner, props);
           }
           function isValidElement(object) {
             return typeof object === "object" && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
@@ -647,14 +647,14 @@
           function escapeUserProvidedKey(text) {
             return text.replace(userProvidedKeyEscapeRegex, "$&/");
           }
-          function getElementKey(element, index2) {
+          function getElementKey(element, index) {
             if (typeof element === "object" && element !== null && element.key != null) {
               {
                 checkKeyStringCoercion(element.key);
               }
               return escape("" + element.key);
             }
-            return index2.toString(36);
+            return index.toString(36);
           }
           function mapIntoArray(children, array, escapedPrefix, nameSoFar, callback) {
             var type = typeof children;
@@ -682,7 +682,7 @@
               var _child = children;
               var mappedChild = callback(_child);
               var childKey = nameSoFar === "" ? SEPARATOR + getElementKey(_child, 0) : nameSoFar;
-              if (isArray2(mappedChild)) {
+              if (isArray(mappedChild)) {
                 var escapedChildKey = "";
                 if (childKey != null) {
                   escapedChildKey = escapeUserProvidedKey(childKey) + "/";
@@ -717,7 +717,7 @@
             var nextName;
             var subtreeCount = 0;
             var nextNamePrefix = nameSoFar === "" ? SEPARATOR : nameSoFar + SUBSEPARATOR;
-            if (isArray2(children)) {
+            if (isArray(children)) {
               for (var i = 0; i < children.length; i++) {
                 child = children[i];
                 nextName = nextNamePrefix + getElementKey(child, i);
@@ -773,7 +773,7 @@
               forEachFunc.apply(this, arguments);
             }, forEachContext);
           }
-          function toArray2(children) {
+          function toArray(children) {
             return mapChildren(children, function(child) {
               return child;
             }) || [];
@@ -784,7 +784,7 @@
             }
             return children;
           }
-          function createContext2(defaultValue) {
+          function createContext(defaultValue) {
             var context = {
               $$typeof: REACT_CONTEXT_TYPE,
               // As a workaround to support multiple concurrent renderers, we categorize
@@ -971,7 +971,7 @@
             }
             return lazyType;
           }
-          function forwardRef2(render) {
+          function forwardRef(render) {
             {
               if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
                 error("forwardRef requires a render function but received a `memo` component. Instead of forwardRef(memo(...)), use memo(forwardRef(...)).");
@@ -1032,7 +1032,7 @@
             }
             return false;
           }
-          function memo2(type, compare) {
+          function memo(type, compare) {
             {
               if (!isValidElementType(type)) {
                 error("memo: The first argument must be a component. Instead received: %s", type === null ? "null" : typeof type);
@@ -1070,7 +1070,7 @@
             }
             return dispatcher;
           }
-          function useContext2(Context) {
+          function useContext(Context) {
             var dispatcher = resolveDispatcher();
             {
               if (Context._context !== void 0) {
@@ -1084,7 +1084,7 @@
             }
             return dispatcher.useContext(Context);
           }
-          function useState3(initialState) {
+          function useState(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
@@ -1092,11 +1092,11 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useReducer(reducer, initialArg, init);
           }
-          function useRef2(initialValue) {
+          function useRef(initialValue) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect3(create, deps) {
+          function useEffect(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
@@ -1104,11 +1104,11 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useInsertionEffect(create, deps);
           }
-          function useLayoutEffect2(create, deps) {
+          function useLayoutEffect(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useLayoutEffect(create, deps);
           }
-          function useCallback2(callback, deps) {
+          function useCallback(callback, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useCallback(callback, deps);
           }
@@ -1138,7 +1138,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useId();
           }
-          function useSyncExternalStore2(subscribe, getSnapshot, getServerSnapshot) {
+          function useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
           }
@@ -1192,25 +1192,25 @@
                   writable: true
                 };
                 Object.defineProperties(console, {
-                  log: assign2({}, props, {
+                  log: assign({}, props, {
                     value: prevLog
                   }),
-                  info: assign2({}, props, {
+                  info: assign({}, props, {
                     value: prevInfo
                   }),
-                  warn: assign2({}, props, {
+                  warn: assign({}, props, {
                     value: prevWarn
                   }),
-                  error: assign2({}, props, {
+                  error: assign({}, props, {
                     value: prevError
                   }),
-                  group: assign2({}, props, {
+                  group: assign({}, props, {
                     value: prevGroup
                   }),
-                  groupCollapsed: assign2({}, props, {
+                  groupCollapsed: assign({}, props, {
                     value: prevGroupCollapsed
                   }),
-                  groupEnd: assign2({}, props, {
+                  groupEnd: assign({}, props, {
                     value: prevGroupEnd
                   })
                 });
@@ -1507,7 +1507,7 @@
             if (typeof node !== "object") {
               return;
             }
-            if (isArray2(node)) {
+            if (isArray(node)) {
               for (var i = 0; i < node.length; i++) {
                 var child = node[i];
                 if (isValidElement(child)) {
@@ -1597,7 +1597,7 @@
               var typeString;
               if (type === null) {
                 typeString = "null";
-              } else if (isArray2(type)) {
+              } else if (isArray(type)) {
                 typeString = "array";
               } else if (type !== void 0 && type.$$typeof === REACT_ELEMENT_TYPE) {
                 typeString = "<" + (getComponentNameFromType(type.type) || "Unknown") + " />";
@@ -1609,7 +1609,7 @@
                 error("React.createElement: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", typeString, info);
               }
             }
-            var element = createElement2.apply(this, arguments);
+            var element = createElement.apply(this, arguments);
             if (element == null) {
               return element;
             }
@@ -1852,7 +1852,7 @@
             map: mapChildren,
             forEach: forEachChildren,
             count: countChildren,
-            toArray: toArray2,
+            toArray,
             only: onlyChild
           };
           exports.Children = Children;
@@ -1865,30 +1865,30 @@
           exports.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactSharedInternals;
           exports.act = act;
           exports.cloneElement = cloneElement$1;
-          exports.createContext = createContext2;
+          exports.createContext = createContext;
           exports.createElement = createElement$1;
           exports.createFactory = createFactory;
           exports.createRef = createRef;
-          exports.forwardRef = forwardRef2;
+          exports.forwardRef = forwardRef;
           exports.isValidElement = isValidElement;
           exports.lazy = lazy;
-          exports.memo = memo2;
+          exports.memo = memo;
           exports.startTransition = startTransition;
           exports.unstable_act = act;
-          exports.useCallback = useCallback2;
-          exports.useContext = useContext2;
+          exports.useCallback = useCallback;
+          exports.useContext = useContext;
           exports.useDebugValue = useDebugValue;
           exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect3;
+          exports.useEffect = useEffect;
           exports.useId = useId;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useInsertionEffect = useInsertionEffect;
-          exports.useLayoutEffect = useLayoutEffect2;
+          exports.useLayoutEffect = useLayoutEffect;
           exports.useMemo = useMemo;
           exports.useReducer = useReducer;
-          exports.useRef = useRef2;
-          exports.useState = useState3;
-          exports.useSyncExternalStore = useSyncExternalStore2;
+          exports.useRef = useRef;
+          exports.useState = useState;
+          exports.useSyncExternalStore = useSyncExternalStore;
           exports.useTransition = useTransition;
           exports.version = ReactVersion;
           if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop === "function") {
@@ -1925,9 +1925,9 @@
           var enableProfiling = false;
           var frameYieldMs = 5;
           function push(heap, node) {
-            var index2 = heap.length;
+            var index = heap.length;
             heap.push(node);
-            siftUp(heap, node, index2);
+            siftUp(heap, node, index);
           }
           function peek(heap) {
             return heap.length === 0 ? null : heap[0];
@@ -1945,42 +1945,42 @@
             return first;
           }
           function siftUp(heap, node, i) {
-            var index2 = i;
-            while (index2 > 0) {
-              var parentIndex = index2 - 1 >>> 1;
+            var index = i;
+            while (index > 0) {
+              var parentIndex = index - 1 >>> 1;
               var parent = heap[parentIndex];
               if (compare(parent, node) > 0) {
                 heap[parentIndex] = node;
-                heap[index2] = parent;
-                index2 = parentIndex;
+                heap[index] = parent;
+                index = parentIndex;
               } else {
                 return;
               }
             }
           }
           function siftDown(heap, node, i) {
-            var index2 = i;
+            var index = i;
             var length = heap.length;
             var halfLength = length >>> 1;
-            while (index2 < halfLength) {
-              var leftIndex = (index2 + 1) * 2 - 1;
+            while (index < halfLength) {
+              var leftIndex = (index + 1) * 2 - 1;
               var left = heap[leftIndex];
               var rightIndex = leftIndex + 1;
               var right = heap[rightIndex];
               if (compare(left, node) < 0) {
                 if (rightIndex < length && compare(right, left) < 0) {
-                  heap[index2] = right;
+                  heap[index] = right;
                   heap[rightIndex] = node;
-                  index2 = rightIndex;
+                  index = rightIndex;
                 } else {
-                  heap[index2] = left;
+                  heap[index] = left;
                   heap[leftIndex] = node;
-                  index2 = leftIndex;
+                  index = leftIndex;
                 }
               } else if (rightIndex < length && compare(right, node) < 0) {
-                heap[index2] = right;
+                heap[index] = right;
                 heap[rightIndex] = node;
-                index2 = rightIndex;
+                index = rightIndex;
               } else {
                 return;
               }
@@ -2383,9 +2383,9 @@
           if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
             __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
           }
-          var React3 = require_react();
+          var React2 = require_react();
           var Scheduler = require_scheduler();
-          var ReactSharedInternals = React3.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React2.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           var suppressWarning = false;
           function setSuppressWarning(newSuppressWarning) {
             {
@@ -3208,7 +3208,7 @@
             }
             return null;
           }
-          var assign2 = Object.assign;
+          var assign = Object.assign;
           var disabledDepth = 0;
           var prevLog;
           var prevInfo;
@@ -3259,25 +3259,25 @@
                   writable: true
                 };
                 Object.defineProperties(console, {
-                  log: assign2({}, props, {
+                  log: assign({}, props, {
                     value: prevLog
                   }),
-                  info: assign2({}, props, {
+                  info: assign({}, props, {
                     value: prevInfo
                   }),
-                  warn: assign2({}, props, {
+                  warn: assign({}, props, {
                     value: prevWarn
                   }),
-                  error: assign2({}, props, {
+                  error: assign({}, props, {
                     value: prevError
                   }),
-                  group: assign2({}, props, {
+                  group: assign({}, props, {
                     value: prevGroup
                   }),
-                  groupCollapsed: assign2({}, props, {
+                  groupCollapsed: assign({}, props, {
                     value: prevGroupCollapsed
                   }),
-                  groupEnd: assign2({}, props, {
+                  groupEnd: assign({}, props, {
                     value: prevGroupEnd
                   })
                 });
@@ -3833,7 +3833,7 @@
           function getHostProps(element, props) {
             var node = element;
             var checked = props.checked;
-            var hostProps = assign2({}, props, {
+            var hostProps = assign({}, props, {
               defaultChecked: void 0,
               defaultValue: void 0,
               value: void 0,
@@ -3992,7 +3992,7 @@
             {
               if (props.value == null) {
                 if (typeof props.children === "object" && props.children !== null) {
-                  React3.Children.forEach(props.children, function(child) {
+                  React2.Children.forEach(props.children, function(child) {
                     if (child == null) {
                       return;
                     }
@@ -4023,7 +4023,7 @@
             }
           }
           var isArrayImpl = Array.isArray;
-          function isArray2(a) {
+          function isArray(a) {
             return isArrayImpl(a);
           }
           var didWarnValueDefaultValue$1;
@@ -4046,7 +4046,7 @@
                 if (props[propName] == null) {
                   continue;
                 }
-                var propNameIsArray = isArray2(props[propName]);
+                var propNameIsArray = isArray(props[propName]);
                 if (props.multiple && !propNameIsArray) {
                   error("The `%s` prop supplied to <select> must be an array if `multiple` is true.%s", propName, getDeclarationErrorAddendum());
                 } else if (!props.multiple && propNameIsArray) {
@@ -4093,7 +4093,7 @@
             }
           }
           function getHostProps$1(element, props) {
-            return assign2({}, props, {
+            return assign({}, props, {
               value: void 0
             });
           }
@@ -4150,7 +4150,7 @@
             if (props.dangerouslySetInnerHTML != null) {
               throw new Error("`dangerouslySetInnerHTML` does not make sense on <textarea>.");
             }
-            var hostProps = assign2({}, props, {
+            var hostProps = assign({}, props, {
               value: void 0,
               defaultValue: void 0,
               children: toString(node._wrapperState.initialValue)
@@ -4177,7 +4177,7 @@
                   if (defaultValue != null) {
                     throw new Error("If you supply `defaultValue` on a <textarea>, do not pass children.");
                   }
-                  if (isArray2(children)) {
+                  if (isArray(children)) {
                     if (children.length > 1) {
                       throw new Error("<textarea> can only have at most one child.");
                     }
@@ -4583,7 +4583,7 @@
             wbr: true
             // NOTE: menuitem's close tag should be omitted, but that causes problems.
           };
-          var voidElementTags = assign2({
+          var voidElementTags = assign({
             menuitem: true
           }, omittedCloseTags);
           var HTML = "__html";
@@ -6031,7 +6031,7 @@
             }
             try {
               if (enableSchedulingProfiler) {
-                internals = assign2({}, internals, {
+                internals = assign({}, internals, {
                   getLaneLabelMap,
                   injectProfilingHooks
                 });
@@ -6155,7 +6155,7 @@
             {
               var map = /* @__PURE__ */ new Map();
               var lane = 1;
-              for (var index3 = 0; index3 < TotalLanes; index3++) {
+              for (var index2 = 0; index2 < TotalLanes; index2++) {
                 var label = getLabelForLane(lane);
                 map.set(lane, label);
                 lane *= 2;
@@ -6352,14 +6352,14 @@
             16
           );
           var clz32 = Math.clz32 ? Math.clz32 : clz32Fallback;
-          var log2 = Math.log;
+          var log = Math.log;
           var LN2 = Math.LN2;
           function clz32Fallback(x) {
             var asUint = x >>> 0;
             if (asUint === 0) {
               return 32;
             }
-            return 31 - (log2(asUint) / LN2 | 0) | 0;
+            return 31 - (log(asUint) / LN2 | 0) | 0;
           }
           var TotalLanes = 31;
           var NoLanes = (
@@ -6658,9 +6658,9 @@
               var entanglements = root2.entanglements;
               var lanes = nextLanes & entangledLanes;
               while (lanes > 0) {
-                var index3 = pickArbitraryLaneIndex(lanes);
-                var lane = 1 << index3;
-                nextLanes |= entanglements[index3];
+                var index2 = pickArbitraryLaneIndex(lanes);
+                var lane = 1 << index2;
+                nextLanes |= entanglements[index2];
                 lanes &= ~lane;
               }
             }
@@ -6670,9 +6670,9 @@
             var eventTimes = root2.eventTimes;
             var mostRecentEventTime = NoTimestamp;
             while (lanes > 0) {
-              var index3 = pickArbitraryLaneIndex(lanes);
-              var lane = 1 << index3;
-              var eventTime = eventTimes[index3];
+              var index2 = pickArbitraryLaneIndex(lanes);
+              var lane = 1 << index2;
+              var eventTime = eventTimes[index2];
               if (eventTime > mostRecentEventTime) {
                 mostRecentEventTime = eventTime;
               }
@@ -6731,12 +6731,12 @@
             var expirationTimes = root2.expirationTimes;
             var lanes = pendingLanes;
             while (lanes > 0) {
-              var index3 = pickArbitraryLaneIndex(lanes);
-              var lane = 1 << index3;
-              var expirationTime = expirationTimes[index3];
+              var index2 = pickArbitraryLaneIndex(lanes);
+              var lane = 1 << index2;
+              var expirationTime = expirationTimes[index2];
               if (expirationTime === NoTimestamp) {
                 if ((lane & suspendedLanes) === NoLanes || (lane & pingedLanes) !== NoLanes) {
-                  expirationTimes[index3] = computeExpirationTime(lane, currentTime);
+                  expirationTimes[index2] = computeExpirationTime(lane, currentTime);
                 }
               } else if (expirationTime <= currentTime) {
                 root2.expiredLanes |= lane;
@@ -6846,8 +6846,8 @@
               root2.pingedLanes = NoLanes;
             }
             var eventTimes = root2.eventTimes;
-            var index3 = laneToIndex(updateLane);
-            eventTimes[index3] = eventTime;
+            var index2 = laneToIndex(updateLane);
+            eventTimes[index2] = eventTime;
           }
           function markRootSuspended(root2, suspendedLanes) {
             root2.suspendedLanes |= suspendedLanes;
@@ -6855,9 +6855,9 @@
             var expirationTimes = root2.expirationTimes;
             var lanes = suspendedLanes;
             while (lanes > 0) {
-              var index3 = pickArbitraryLaneIndex(lanes);
-              var lane = 1 << index3;
-              expirationTimes[index3] = NoTimestamp;
+              var index2 = pickArbitraryLaneIndex(lanes);
+              var lane = 1 << index2;
+              expirationTimes[index2] = NoTimestamp;
               lanes &= ~lane;
             }
           }
@@ -6877,11 +6877,11 @@
             var expirationTimes = root2.expirationTimes;
             var lanes = noLongerPendingLanes;
             while (lanes > 0) {
-              var index3 = pickArbitraryLaneIndex(lanes);
-              var lane = 1 << index3;
-              entanglements[index3] = NoLanes;
-              eventTimes[index3] = NoTimestamp;
-              expirationTimes[index3] = NoTimestamp;
+              var index2 = pickArbitraryLaneIndex(lanes);
+              var lane = 1 << index2;
+              entanglements[index2] = NoLanes;
+              eventTimes[index2] = NoTimestamp;
+              expirationTimes[index2] = NoTimestamp;
               lanes &= ~lane;
             }
           }
@@ -6890,14 +6890,14 @@
             var entanglements = root2.entanglements;
             var lanes = rootEntangledLanes;
             while (lanes) {
-              var index3 = pickArbitraryLaneIndex(lanes);
-              var lane = 1 << index3;
+              var index2 = pickArbitraryLaneIndex(lanes);
+              var lane = 1 << index2;
               if (
                 // Is this one of the newly entangled lanes?
                 lane & entangledLanes | // Is this lane transitively entangled with the newly entangled lanes?
-                entanglements[index3] & entangledLanes
+                entanglements[index2] & entangledLanes
               ) {
-                entanglements[index3] |= entangledLanes;
+                entanglements[index2] |= entangledLanes;
               }
               lanes &= ~lane;
             }
@@ -6953,9 +6953,9 @@
             }
             var pendingUpdatersLaneMap = root2.pendingUpdatersLaneMap;
             while (lanes > 0) {
-              var index3 = laneToIndex(lanes);
-              var lane = 1 << index3;
-              var updaters = pendingUpdatersLaneMap[index3];
+              var index2 = laneToIndex(lanes);
+              var lane = 1 << index2;
+              var updaters = pendingUpdatersLaneMap[index2];
               updaters.add(fiber);
               lanes &= ~lane;
             }
@@ -6967,9 +6967,9 @@
             var pendingUpdatersLaneMap = root2.pendingUpdatersLaneMap;
             var memoizedUpdaters = root2.memoizedUpdaters;
             while (lanes > 0) {
-              var index3 = laneToIndex(lanes);
-              var lane = 1 << index3;
-              var updaters = pendingUpdatersLaneMap[index3];
+              var index2 = laneToIndex(lanes);
+              var lane = 1 << index2;
+              var updaters = pendingUpdatersLaneMap[index2];
               if (updaters.size > 0) {
                 updaters.forEach(function(fiber) {
                   var alternate = fiber.alternate;
@@ -7670,7 +7670,7 @@
               this.isPropagationStopped = functionThatReturnsFalse;
               return this;
             }
-            assign2(SyntheticBaseEvent.prototype, {
+            assign(SyntheticBaseEvent.prototype, {
               preventDefault: function() {
                 this.defaultPrevented = true;
                 var event = this.nativeEvent;
@@ -7723,7 +7723,7 @@
             isTrusted: 0
           };
           var SyntheticEvent = createSyntheticEvent(EventInterface);
-          var UIEventInterface = assign2({}, EventInterface, {
+          var UIEventInterface = assign({}, EventInterface, {
             view: 0,
             detail: 0
           });
@@ -7743,7 +7743,7 @@
               lastMouseEvent = event;
             }
           }
-          var MouseEventInterface = assign2({}, UIEventInterface, {
+          var MouseEventInterface = assign({}, UIEventInterface, {
             screenX: 0,
             screenY: 0,
             clientX: 0,
@@ -7776,27 +7776,27 @@
             }
           });
           var SyntheticMouseEvent = createSyntheticEvent(MouseEventInterface);
-          var DragEventInterface = assign2({}, MouseEventInterface, {
+          var DragEventInterface = assign({}, MouseEventInterface, {
             dataTransfer: 0
           });
           var SyntheticDragEvent = createSyntheticEvent(DragEventInterface);
-          var FocusEventInterface = assign2({}, UIEventInterface, {
+          var FocusEventInterface = assign({}, UIEventInterface, {
             relatedTarget: 0
           });
           var SyntheticFocusEvent = createSyntheticEvent(FocusEventInterface);
-          var AnimationEventInterface = assign2({}, EventInterface, {
+          var AnimationEventInterface = assign({}, EventInterface, {
             animationName: 0,
             elapsedTime: 0,
             pseudoElement: 0
           });
           var SyntheticAnimationEvent = createSyntheticEvent(AnimationEventInterface);
-          var ClipboardEventInterface = assign2({}, EventInterface, {
+          var ClipboardEventInterface = assign({}, EventInterface, {
             clipboardData: function(event) {
               return "clipboardData" in event ? event.clipboardData : window.clipboardData;
             }
           });
           var SyntheticClipboardEvent = createSyntheticEvent(ClipboardEventInterface);
-          var CompositionEventInterface = assign2({}, EventInterface, {
+          var CompositionEventInterface = assign({}, EventInterface, {
             data: 0
           });
           var SyntheticCompositionEvent = createSyntheticEvent(CompositionEventInterface);
@@ -7887,7 +7887,7 @@
           function getEventModifierState(nativeEvent) {
             return modifierStateGetter;
           }
-          var KeyboardEventInterface = assign2({}, UIEventInterface, {
+          var KeyboardEventInterface = assign({}, UIEventInterface, {
             key: getEventKey,
             code: 0,
             location: 0,
@@ -7922,7 +7922,7 @@
             }
           });
           var SyntheticKeyboardEvent = createSyntheticEvent(KeyboardEventInterface);
-          var PointerEventInterface = assign2({}, MouseEventInterface, {
+          var PointerEventInterface = assign({}, MouseEventInterface, {
             pointerId: 0,
             width: 0,
             height: 0,
@@ -7935,7 +7935,7 @@
             isPrimary: 0
           });
           var SyntheticPointerEvent = createSyntheticEvent(PointerEventInterface);
-          var TouchEventInterface = assign2({}, UIEventInterface, {
+          var TouchEventInterface = assign({}, UIEventInterface, {
             touches: 0,
             targetTouches: 0,
             changedTouches: 0,
@@ -7946,13 +7946,13 @@
             getModifierState: getEventModifierState
           });
           var SyntheticTouchEvent = createSyntheticEvent(TouchEventInterface);
-          var TransitionEventInterface = assign2({}, EventInterface, {
+          var TransitionEventInterface = assign({}, EventInterface, {
             propertyName: 0,
             elapsedTime: 0,
             pseudoElement: 0
           });
           var SyntheticTransitionEvent = createSyntheticEvent(TransitionEventInterface);
-          var WheelEventInterface = assign2({}, MouseEventInterface, {
+          var WheelEventInterface = assign({}, MouseEventInterface, {
             deltaX: function(event) {
               return "deltaX" in event ? event.deltaX : (
                 // Fallback to `wheelDeltaX` for Webkit and normalize (right is positive).
@@ -9416,7 +9416,7 @@
               }
             }
           }
-          function createElement2(type, props, rootContainerElement, parentNamespace) {
+          function createElement(type, props, rootContainerElement, parentNamespace) {
             var isCustomComponentTag;
             var ownerDocument = getOwnerDocumentFromRootContainer(rootContainerElement);
             var domElement;
@@ -10001,7 +10001,7 @@
               dlItemTagAutoclosing: null
             };
             updatedAncestorInfo = function(oldInfo, tag) {
-              var ancestorInfo = assign2({}, oldInfo || emptyAncestorInfo);
+              var ancestorInfo = assign({}, oldInfo || emptyAncestorInfo);
               var info = {
                 tag
               };
@@ -10286,7 +10286,7 @@
               }
               parentNamespace = hostContextDev.namespace;
             }
-            var domElement = createElement2(type, props, rootContainerInstance, parentNamespace);
+            var domElement = createElement(type, props, rootContainerInstance, parentNamespace);
             precacheFiberNode(internalInstanceHandle, domElement);
             updateFiberProps(domElement, props);
             return domElement;
@@ -10841,36 +10841,36 @@
           {
             fiberStack = [];
           }
-          var index2 = -1;
+          var index = -1;
           function createCursor(defaultValue) {
             return {
               current: defaultValue
             };
           }
           function pop(cursor, fiber) {
-            if (index2 < 0) {
+            if (index < 0) {
               {
                 error("Unexpected pop.");
               }
               return;
             }
             {
-              if (fiber !== fiberStack[index2]) {
+              if (fiber !== fiberStack[index]) {
                 error("Unexpected Fiber popped.");
               }
             }
-            cursor.current = valueStack[index2];
-            valueStack[index2] = null;
+            cursor.current = valueStack[index];
+            valueStack[index] = null;
             {
-              fiberStack[index2] = null;
+              fiberStack[index] = null;
             }
-            index2--;
+            index--;
           }
           function push(cursor, value, fiber) {
-            index2++;
-            valueStack[index2] = cursor.current;
+            index++;
+            valueStack[index] = cursor.current;
             {
-              fiberStack[index2] = fiber;
+              fiberStack[index] = fiber;
             }
             cursor.current = value;
           }
@@ -10981,7 +10981,7 @@
                 var name = getComponentNameFromFiber(fiber) || "Unknown";
                 checkPropTypes(childContextTypes, childContext, "child context", name);
               }
-              return assign2({}, parentContext, childContext);
+              return assign({}, parentContext, childContext);
             }
           }
           function pushContextProvider(workInProgress2) {
@@ -11117,7 +11117,7 @@
             treeForkProvider = workInProgress2;
             treeForkCount = totalChildren;
           }
-          function pushTreeId(workInProgress2, totalChildren, index3) {
+          function pushTreeId(workInProgress2, totalChildren, index2) {
             warnIfNotHydrating();
             idStack[idStackIndex++] = treeContextId;
             idStack[idStackIndex++] = treeContextOverflow;
@@ -11127,7 +11127,7 @@
             var baseOverflow = treeContextOverflow;
             var baseLength = getBitLength(baseIdWithLeadingBit) - 1;
             var baseId = baseIdWithLeadingBit & ~(1 << baseLength);
-            var slot = index3 + 1;
+            var slot = index2 + 1;
             var length = getBitLength(totalChildren) + baseLength;
             if (length > 30) {
               var numberOfOverflowBits = baseLength - baseLength % 5;
@@ -12055,7 +12055,7 @@
                     return createChild(returnFiber, init(payload), lanes);
                   }
                 }
-                if (isArray2(newChild) || getIteratorFn(newChild)) {
+                if (isArray(newChild) || getIteratorFn(newChild)) {
                   var _created3 = createFiberFromFragment(newChild, returnFiber.mode, lanes, null);
                   _created3.return = returnFiber;
                   return _created3;
@@ -12099,7 +12099,7 @@
                     return updateSlot(returnFiber, oldFiber, init(payload), lanes);
                   }
                 }
-                if (isArray2(newChild) || getIteratorFn(newChild)) {
+                if (isArray(newChild) || getIteratorFn(newChild)) {
                   if (key !== null) {
                     return null;
                   }
@@ -12134,7 +12134,7 @@
                     var init = newChild._init;
                     return updateFromMap(existingChildren, returnFiber, newIdx, init(payload), lanes);
                 }
-                if (isArray2(newChild) || getIteratorFn(newChild)) {
+                if (isArray(newChild) || getIteratorFn(newChild)) {
                   var _matchedFiber3 = existingChildren.get(newIdx) || null;
                   return updateFragment2(returnFiber, _matchedFiber3, newChild, lanes, null);
                 }
@@ -12508,7 +12508,7 @@
                     var init = newChild._init;
                     return reconcileChildFibers2(returnFiber, currentFirstChild, init(payload), lanes);
                 }
-                if (isArray2(newChild)) {
+                if (isArray(newChild)) {
                   return reconcileChildrenArray(returnFiber, currentFirstChild, newChild, lanes);
                 }
                 if (getIteratorFn(newChild)) {
@@ -13058,7 +13058,7 @@
                 if (partialState === null || partialState === void 0) {
                   return prevState;
                 }
-                return assign2({}, prevState, partialState);
+                return assign({}, prevState, partialState);
               }
               case ForceUpdate: {
                 hasForceUpdate = true;
@@ -13423,7 +13423,7 @@
           }
           function checkDepsAreArrayDev(deps) {
             {
-              if (deps !== void 0 && deps !== null && !isArray2(deps)) {
+              if (deps !== void 0 && deps !== null && !isArray(deps)) {
                 error("%s received a final argument that is not an array (instead, received `%s`). When specified, the final argument must be an array.", currentHookNameInDev, typeof deps);
               }
             }
@@ -15320,7 +15320,7 @@
           }
           function resolveDefaultProps(Component, baseProps) {
             if (Component && Component.defaultProps) {
-              var props = assign2({}, baseProps);
+              var props = assign({}, baseProps);
               var defaultProps = Component.defaultProps;
               for (var propName in defaultProps) {
                 if (props[propName] === void 0) {
@@ -15395,7 +15395,7 @@
               }
               warnOnUndefinedDerivedState(ctor, partialState);
             }
-            var memoizedState = partialState === null || partialState === void 0 ? prevState : assign2({}, prevState, partialState);
+            var memoizedState = partialState === null || partialState === void 0 ? prevState : assign({}, prevState, partialState);
             workInProgress2.memoizedState = memoizedState;
             if (workInProgress2.lanes === NoLanes) {
               var updateQueue = workInProgress2.updateQueue;
@@ -15577,7 +15577,7 @@
                 error("%s: getSnapshotBeforeUpdate() is defined as a static method and will be ignored. Instead, declare it as an instance method.", name);
               }
               var _state = instance.state;
-              if (_state && (typeof _state !== "object" || isArray2(_state))) {
+              if (_state && (typeof _state !== "object" || isArray(_state))) {
                 error("%s.state: must be set to an object or null", name);
               }
               if (typeof instance.getChildContext === "function" && typeof ctor.childContextTypes !== "object") {
@@ -17419,13 +17419,13 @@
               }
             }
           }
-          function validateSuspenseListNestedChild(childSlot, index3) {
+          function validateSuspenseListNestedChild(childSlot, index2) {
             {
-              var isAnArray = isArray2(childSlot);
+              var isAnArray = isArray(childSlot);
               var isIterable = !isAnArray && typeof getIteratorFn(childSlot) === "function";
               if (isAnArray || isIterable) {
                 var type = isAnArray ? "array" : "iterable";
-                error("A nested %s was passed to row #%s in <SuspenseList />. Wrap it in an additional SuspenseList to configure its revealOrder: <SuspenseList revealOrder=...> ... <SuspenseList revealOrder=...>{%s}</SuspenseList> ... </SuspenseList>", type, index3, type);
+                error("A nested %s was passed to row #%s in <SuspenseList />. Wrap it in an additional SuspenseList to configure its revealOrder: <SuspenseList revealOrder=...> ... <SuspenseList revealOrder=...>{%s}</SuspenseList> ... </SuspenseList>", type, index2, type);
                 return false;
               }
             }
@@ -17434,7 +17434,7 @@
           function validateSuspenseListChildren(children, revealOrder) {
             {
               if ((revealOrder === "forwards" || revealOrder === "backwards") && children !== void 0 && children !== null && children !== false) {
-                if (isArray2(children)) {
+                if (isArray(children)) {
                   for (var i = 0; i < children.length; i++) {
                     if (!validateSuspenseListNestedChild(children[i], i)) {
                       return;
@@ -22844,30 +22844,30 @@
           var setErrorHandler = null;
           var setSuspenseHandler = null;
           {
-            var copyWithDeleteImpl = function(obj, path, index3) {
-              var key = path[index3];
-              var updated = isArray2(obj) ? obj.slice() : assign2({}, obj);
-              if (index3 + 1 === path.length) {
-                if (isArray2(updated)) {
+            var copyWithDeleteImpl = function(obj, path, index2) {
+              var key = path[index2];
+              var updated = isArray(obj) ? obj.slice() : assign({}, obj);
+              if (index2 + 1 === path.length) {
+                if (isArray(updated)) {
                   updated.splice(key, 1);
                 } else {
                   delete updated[key];
                 }
                 return updated;
               }
-              updated[key] = copyWithDeleteImpl(obj[key], path, index3 + 1);
+              updated[key] = copyWithDeleteImpl(obj[key], path, index2 + 1);
               return updated;
             };
             var copyWithDelete = function(obj, path) {
               return copyWithDeleteImpl(obj, path, 0);
             };
-            var copyWithRenameImpl = function(obj, oldPath, newPath, index3) {
-              var oldKey = oldPath[index3];
-              var updated = isArray2(obj) ? obj.slice() : assign2({}, obj);
-              if (index3 + 1 === oldPath.length) {
-                var newKey = newPath[index3];
+            var copyWithRenameImpl = function(obj, oldPath, newPath, index2) {
+              var oldKey = oldPath[index2];
+              var updated = isArray(obj) ? obj.slice() : assign({}, obj);
+              if (index2 + 1 === oldPath.length) {
+                var newKey = newPath[index2];
                 updated[newKey] = updated[oldKey];
-                if (isArray2(updated)) {
+                if (isArray(updated)) {
                   updated.splice(oldKey, 1);
                 } else {
                   delete updated[oldKey];
@@ -22878,7 +22878,7 @@
                   obj[oldKey],
                   oldPath,
                   newPath,
-                  index3 + 1
+                  index2 + 1
                 );
               }
               return updated;
@@ -22897,13 +22897,13 @@
               }
               return copyWithRenameImpl(obj, oldPath, newPath, 0);
             };
-            var copyWithSetImpl = function(obj, path, index3, value) {
-              if (index3 >= path.length) {
+            var copyWithSetImpl = function(obj, path, index2, value) {
+              if (index2 >= path.length) {
                 return value;
               }
-              var key = path[index3];
-              var updated = isArray2(obj) ? obj.slice() : assign2({}, obj);
-              updated[key] = copyWithSetImpl(obj[key], path, index3 + 1, value);
+              var key = path[index2];
+              var updated = isArray(obj) ? obj.slice() : assign({}, obj);
+              updated[key] = copyWithSetImpl(obj[key], path, index2 + 1, value);
               return updated;
             };
             var copyWithSet = function(obj, path, value) {
@@ -22923,7 +22923,7 @@
                 var newState = copyWithSet(hook.memoizedState, path, value);
                 hook.memoizedState = newState;
                 hook.baseState = newState;
-                fiber.memoizedProps = assign2({}, fiber.memoizedProps);
+                fiber.memoizedProps = assign({}, fiber.memoizedProps);
                 var root2 = enqueueConcurrentRenderForLane(fiber, SyncLane);
                 if (root2 !== null) {
                   scheduleUpdateOnFiber(root2, fiber, SyncLane, NoTimestamp);
@@ -22936,7 +22936,7 @@
                 var newState = copyWithDelete(hook.memoizedState, path);
                 hook.memoizedState = newState;
                 hook.baseState = newState;
-                fiber.memoizedProps = assign2({}, fiber.memoizedProps);
+                fiber.memoizedProps = assign({}, fiber.memoizedProps);
                 var root2 = enqueueConcurrentRenderForLane(fiber, SyncLane);
                 if (root2 !== null) {
                   scheduleUpdateOnFiber(root2, fiber, SyncLane, NoTimestamp);
@@ -22949,7 +22949,7 @@
                 var newState = copyWithRename(hook.memoizedState, oldPath, newPath);
                 hook.memoizedState = newState;
                 hook.baseState = newState;
-                fiber.memoizedProps = assign2({}, fiber.memoizedProps);
+                fiber.memoizedProps = assign({}, fiber.memoizedProps);
                 var root2 = enqueueConcurrentRenderForLane(fiber, SyncLane);
                 if (root2 !== null) {
                   scheduleUpdateOnFiber(root2, fiber, SyncLane, NoTimestamp);
@@ -23581,161 +23581,6 @@
     }
   });
 
-  // node_modules/.pnpm/use-sync-external-store@1.6.0_react@18.3.1/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js
-  var require_use_sync_external_store_shim_development = __commonJS({
-    "node_modules/.pnpm/use-sync-external-store@1.6.0_react@18.3.1/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js"(exports) {
-      "use strict";
-      (function() {
-        function is(x, y) {
-          return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
-        }
-        function useSyncExternalStore$2(subscribe, getSnapshot) {
-          didWarnOld18Alpha || void 0 === React3.startTransition || (didWarnOld18Alpha = true, console.error(
-            "You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release."
-          ));
-          var value = getSnapshot();
-          if (!didWarnUncachedGetSnapshot) {
-            var cachedValue = getSnapshot();
-            objectIs(value, cachedValue) || (console.error(
-              "The result of getSnapshot should be cached to avoid an infinite loop"
-            ), didWarnUncachedGetSnapshot = true);
-          }
-          cachedValue = useState3({
-            inst: { value, getSnapshot }
-          });
-          var inst = cachedValue[0].inst, forceUpdate = cachedValue[1];
-          useLayoutEffect2(
-            function() {
-              inst.value = value;
-              inst.getSnapshot = getSnapshot;
-              checkIfSnapshotChanged(inst) && forceUpdate({ inst });
-            },
-            [subscribe, value, getSnapshot]
-          );
-          useEffect3(
-            function() {
-              checkIfSnapshotChanged(inst) && forceUpdate({ inst });
-              return subscribe(function() {
-                checkIfSnapshotChanged(inst) && forceUpdate({ inst });
-              });
-            },
-            [subscribe]
-          );
-          useDebugValue(value);
-          return value;
-        }
-        function checkIfSnapshotChanged(inst) {
-          var latestGetSnapshot = inst.getSnapshot;
-          inst = inst.value;
-          try {
-            var nextValue = latestGetSnapshot();
-            return !objectIs(inst, nextValue);
-          } catch (error) {
-            return true;
-          }
-        }
-        function useSyncExternalStore$1(subscribe, getSnapshot) {
-          return getSnapshot();
-        }
-        "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-        var React3 = require_react(), objectIs = "function" === typeof Object.is ? Object.is : is, useState3 = React3.useState, useEffect3 = React3.useEffect, useLayoutEffect2 = React3.useLayoutEffect, useDebugValue = React3.useDebugValue, didWarnOld18Alpha = false, didWarnUncachedGetSnapshot = false, shim = "undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement ? useSyncExternalStore$1 : useSyncExternalStore$2;
-        exports.useSyncExternalStore = void 0 !== React3.useSyncExternalStore ? React3.useSyncExternalStore : shim;
-        "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
-      })();
-    }
-  });
-
-  // node_modules/.pnpm/use-sync-external-store@1.6.0_react@18.3.1/node_modules/use-sync-external-store/shim/index.js
-  var require_shim = __commonJS({
-    "node_modules/.pnpm/use-sync-external-store@1.6.0_react@18.3.1/node_modules/use-sync-external-store/shim/index.js"(exports, module) {
-      "use strict";
-      if (false) {
-        module.exports = null;
-      } else {
-        module.exports = require_use_sync_external_store_shim_development();
-      }
-    }
-  });
-
-  // node_modules/.pnpm/use-sync-external-store@1.6.0_react@18.3.1/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js
-  var require_with_selector_development = __commonJS({
-    "node_modules/.pnpm/use-sync-external-store@1.6.0_react@18.3.1/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js"(exports) {
-      "use strict";
-      (function() {
-        function is(x, y) {
-          return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
-        }
-        "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-        var React3 = require_react(), shim = require_shim(), objectIs = "function" === typeof Object.is ? Object.is : is, useSyncExternalStore2 = shim.useSyncExternalStore, useRef2 = React3.useRef, useEffect3 = React3.useEffect, useMemo = React3.useMemo, useDebugValue = React3.useDebugValue;
-        exports.useSyncExternalStoreWithSelector = function(subscribe, getSnapshot, getServerSnapshot, selector, isEqual) {
-          var instRef = useRef2(null);
-          if (null === instRef.current) {
-            var inst = { hasValue: false, value: null };
-            instRef.current = inst;
-          } else inst = instRef.current;
-          instRef = useMemo(
-            function() {
-              function memoizedSelector(nextSnapshot) {
-                if (!hasMemo) {
-                  hasMemo = true;
-                  memoizedSnapshot = nextSnapshot;
-                  nextSnapshot = selector(nextSnapshot);
-                  if (void 0 !== isEqual && inst.hasValue) {
-                    var currentSelection = inst.value;
-                    if (isEqual(currentSelection, nextSnapshot))
-                      return memoizedSelection = currentSelection;
-                  }
-                  return memoizedSelection = nextSnapshot;
-                }
-                currentSelection = memoizedSelection;
-                if (objectIs(memoizedSnapshot, nextSnapshot))
-                  return currentSelection;
-                var nextSelection = selector(nextSnapshot);
-                if (void 0 !== isEqual && isEqual(currentSelection, nextSelection))
-                  return memoizedSnapshot = nextSnapshot, currentSelection;
-                memoizedSnapshot = nextSnapshot;
-                return memoizedSelection = nextSelection;
-              }
-              var hasMemo = false, memoizedSnapshot, memoizedSelection, maybeGetServerSnapshot = void 0 === getServerSnapshot ? null : getServerSnapshot;
-              return [
-                function() {
-                  return memoizedSelector(getSnapshot());
-                },
-                null === maybeGetServerSnapshot ? void 0 : function() {
-                  return memoizedSelector(maybeGetServerSnapshot());
-                }
-              ];
-            },
-            [getSnapshot, getServerSnapshot, selector, isEqual]
-          );
-          var value = useSyncExternalStore2(subscribe, instRef[0], instRef[1]);
-          useEffect3(
-            function() {
-              inst.hasValue = true;
-              inst.value = value;
-            },
-            [value]
-          );
-          useDebugValue(value);
-          return value;
-        };
-        "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
-      })();
-    }
-  });
-
-  // node_modules/.pnpm/use-sync-external-store@1.6.0_react@18.3.1/node_modules/use-sync-external-store/shim/with-selector.js
-  var require_with_selector = __commonJS({
-    "node_modules/.pnpm/use-sync-external-store@1.6.0_react@18.3.1/node_modules/use-sync-external-store/shim/with-selector.js"(exports, module) {
-      "use strict";
-      if (false) {
-        module.exports = null;
-      } else {
-        module.exports = require_with_selector_development();
-      }
-    }
-  });
-
   // dev/javascript/settings/settings.jsx
   var import_client = __toESM(require_client());
 
@@ -23899,3702 +23744,69 @@
   var ProComponent_default = ProComponent;
 
   // dev/javascript/settings/_components/upgrade/UpgradePanel.jsx
-  var import_react4 = __toESM(require_react());
-
-  // node_modules/.pnpm/@xstate+react@6.1.0_@types+react@18.3.31_react@18.3.1_xstate@5.32.5/node_modules/@xstate/react/dist/xstate-react.esm.js
-  var React2 = __toESM(require_react());
-  var import_react2 = __toESM(require_react());
-
-  // node_modules/.pnpm/use-isomorphic-layout-effect@1.2.1_@types+react@18.3.31_react@18.3.1/node_modules/use-isomorphic-layout-effect/dist/use-isomorphic-layout-effect.browser.esm.js
-  var import_react = __toESM(require_react());
-  var index = import_react.useLayoutEffect;
-
-  // node_modules/.pnpm/xstate@5.32.5/node_modules/xstate/dist/xstate-dev.esm.js
-  function getGlobal() {
-    if (typeof globalThis !== "undefined") {
-      return globalThis;
-    }
-    if (typeof self !== "undefined") {
-      return self;
-    }
-    if (typeof window !== "undefined") {
-      return window;
-    }
-    if (typeof global !== "undefined") {
-      return global;
-    }
-  }
-  function getDevTools() {
-    const w = getGlobal();
-    if (w.__xstate__) {
-      return w.__xstate__;
-    }
-    return void 0;
-  }
-  var devToolsAdapter = (service) => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    const devTools = getDevTools();
-    if (devTools) {
-      devTools.register(service);
-    }
-  };
-
-  // node_modules/.pnpm/xstate@5.32.5/node_modules/xstate/dist/raise-5fb0c8ca.esm.js
-  var Mailbox = class {
-    constructor(_process) {
-      this._process = _process;
-      this._active = false;
-      this._current = null;
-      this._last = null;
-    }
-    start() {
-      this._active = true;
-      this.flush();
-    }
-    clear() {
-      if (this._current) {
-        this._current.next = null;
-        this._last = this._current;
-      }
-    }
-    enqueue(event) {
-      const enqueued = {
-        value: event,
-        next: null
-      };
-      if (this._current) {
-        this._last.next = enqueued;
-        this._last = enqueued;
-        return;
-      }
-      this._current = enqueued;
-      this._last = enqueued;
-      if (this._active) {
-        this.flush();
-      }
-    }
-    flush() {
-      while (this._current) {
-        const consumed = this._current;
-        this._process(consumed.value);
-        this._current = consumed.next;
-      }
-      this._last = null;
-    }
-  };
-  var STATE_DELIMITER = ".";
-  var TARGETLESS_KEY = "";
-  var NULL_EVENT = "";
-  var STATE_IDENTIFIER = "#";
-  var WILDCARD = "*";
-  var XSTATE_INIT = "xstate.init";
-  var XSTATE_ERROR = "xstate.error";
-  var XSTATE_STOP = "xstate.stop";
-  function createAfterEvent(delayRef, id) {
-    return {
-      type: `xstate.after.${delayRef}.${id}`
-    };
-  }
-  function createDoneStateEvent(id, output) {
-    return {
-      type: `xstate.done.state.${id}`,
-      output
-    };
-  }
-  function createDoneActorEvent(invokeId, output) {
-    return {
-      type: `xstate.done.actor.${invokeId}`,
-      output,
-      actorId: invokeId
-    };
-  }
-  function createErrorActorEvent(id, error) {
-    return {
-      type: `xstate.error.actor.${id}`,
-      error,
-      actorId: id
-    };
-  }
-  function createInitEvent(input) {
-    return {
-      type: XSTATE_INIT,
-      input
-    };
-  }
-  function reportUnhandledError(err) {
-    setTimeout(() => {
-      throw err;
-    });
-  }
-  var symbolObservable = (() => typeof Symbol === "function" && Symbol.observable || "@@observable")();
-  function matchesState(parentStateId, childStateId) {
-    const parentStateValue = toStateValue(parentStateId);
-    const childStateValue = toStateValue(childStateId);
-    if (typeof childStateValue === "string") {
-      if (typeof parentStateValue === "string") {
-        return childStateValue === parentStateValue;
-      }
-      return false;
-    }
-    if (typeof parentStateValue === "string") {
-      return parentStateValue in childStateValue;
-    }
-    return Object.keys(parentStateValue).every((key) => {
-      if (!(key in childStateValue)) {
-        return false;
-      }
-      return matchesState(parentStateValue[key], childStateValue[key]);
-    });
-  }
-  function toStatePath(stateId) {
-    if (isArray(stateId)) {
-      return stateId;
-    }
-    const result = [];
-    let segment = "";
-    for (let i = 0; i < stateId.length; i++) {
-      const char = stateId.charCodeAt(i);
-      switch (char) {
-        // \
-        case 92:
-          segment += stateId[i + 1];
-          i++;
-          continue;
-        // .
-        case 46:
-          result.push(segment);
-          segment = "";
-          continue;
-      }
-      segment += stateId[i];
-    }
-    result.push(segment);
-    return result;
-  }
-  function toStateValue(stateValue) {
-    if (isMachineSnapshot(stateValue)) {
-      return stateValue.value;
-    }
-    if (typeof stateValue !== "string") {
-      return stateValue;
-    }
-    const statePath = toStatePath(stateValue);
-    return pathToStateValue(statePath);
-  }
-  function pathToStateValue(statePath) {
-    if (statePath.length === 1) {
-      return statePath[0];
-    }
-    const value = {};
-    let marker = value;
-    for (let i = 0; i < statePath.length - 1; i++) {
-      if (i === statePath.length - 2) {
-        marker[statePath[i]] = statePath[i + 1];
-      } else {
-        const previous = marker;
-        marker = {};
-        previous[statePath[i]] = marker;
-      }
-    }
-    return value;
-  }
-  function mapValues(collection, iteratee) {
-    const result = {};
-    const collectionKeys = Object.keys(collection);
-    for (let i = 0; i < collectionKeys.length; i++) {
-      const key = collectionKeys[i];
-      result[key] = iteratee(collection[key], key, collection, i);
-    }
-    return result;
-  }
-  function toArrayStrict(value) {
-    if (isArray(value)) {
-      return value;
-    }
-    return [value];
-  }
-  function toArray(value) {
-    if (value === void 0) {
-      return [];
-    }
-    return toArrayStrict(value);
-  }
-  function resolveOutput(mapper, context, event, self2) {
-    if (typeof mapper === "function") {
-      return mapper({
-        context,
-        event,
-        self: self2
-      });
-    }
-    return mapper;
-  }
-  function isArray(value) {
-    return Array.isArray(value);
-  }
-  function isErrorActorEvent(event) {
-    return event.type.startsWith("xstate.error.actor");
-  }
-  function toTransitionConfigArray(configLike) {
-    return toArrayStrict(configLike).map((transitionLike) => {
-      if (typeof transitionLike === "undefined" || typeof transitionLike === "string") {
-        return {
-          target: transitionLike
-        };
-      }
-      return transitionLike;
-    });
-  }
-  function normalizeTarget(target) {
-    if (target === void 0 || target === TARGETLESS_KEY) {
-      return void 0;
-    }
-    return toArray(target);
-  }
-  function toObserver(nextHandler, errorHandler, completionHandler) {
-    const isObserver = typeof nextHandler === "object";
-    const self2 = isObserver ? nextHandler : void 0;
-    return {
-      next: (isObserver ? nextHandler.next : nextHandler)?.bind(self2),
-      error: (isObserver ? nextHandler.error : errorHandler)?.bind(self2),
-      complete: (isObserver ? nextHandler.complete : completionHandler)?.bind(self2)
-    };
-  }
-  function createInvokeId(stateNodeId, index2) {
-    return `${index2}.${stateNodeId}`;
-  }
-  function resolveReferencedActor(machine, src) {
-    const match = src.match(/^xstate\.invoke\.(\d+)\.(.*)/);
-    if (!match) {
-      return machine.implementations.actors[src];
-    }
-    const [, indexStr, nodeId] = match;
-    const node = machine.getStateNodeById(nodeId);
-    const invokeConfig = node.config.invoke;
-    return (Array.isArray(invokeConfig) ? invokeConfig[indexStr] : invokeConfig).src;
-  }
-  function matchesEventDescriptor(eventType, descriptor) {
-    if (descriptor === eventType) {
-      return true;
-    }
-    if (descriptor === WILDCARD) {
-      return true;
-    }
-    if (!descriptor.endsWith(".*")) {
-      return false;
-    }
-    const partialEventTokens = descriptor.split(".");
-    const eventTokens = eventType.split(".");
-    for (let tokenIndex = 0; tokenIndex < partialEventTokens.length; tokenIndex++) {
-      const partialEventToken = partialEventTokens[tokenIndex];
-      const eventToken = eventTokens[tokenIndex];
-      if (partialEventToken === "*") {
-        const isLastToken = tokenIndex === partialEventTokens.length - 1;
-        return isLastToken;
-      }
-      if (partialEventToken !== eventToken) {
-        return false;
-      }
-    }
-    return true;
-  }
-  function createScheduledEventId(actorRef, id) {
-    return `${actorRef.sessionId}.${id}`;
-  }
-  var idCounter = 0;
-  function createSystem(rootActor, options) {
-    const children = /* @__PURE__ */ new Map();
-    const keyedActors = /* @__PURE__ */ new Map();
-    const reverseKeyedActors = /* @__PURE__ */ new WeakMap();
-    const inspectionObservers = /* @__PURE__ */ new Set();
-    const timerMap = {};
-    const {
-      clock,
-      logger
-    } = options;
-    const scheduler = {
-      schedule: (source, target, event, delay, id = Math.random().toString(36).slice(2)) => {
-        const scheduledEvent = {
-          source,
-          target,
-          event,
-          delay,
-          id,
-          startedAt: Date.now()
-        };
-        const scheduledEventId = createScheduledEventId(source, id);
-        system._snapshot._scheduledEvents[scheduledEventId] = scheduledEvent;
-        const timeout = clock.setTimeout(() => {
-          delete timerMap[scheduledEventId];
-          delete system._snapshot._scheduledEvents[scheduledEventId];
-          system._relay(source, target, event);
-        }, delay);
-        timerMap[scheduledEventId] = timeout;
-      },
-      cancel: (source, id) => {
-        const scheduledEventId = createScheduledEventId(source, id);
-        const timeout = timerMap[scheduledEventId];
-        delete timerMap[scheduledEventId];
-        delete system._snapshot._scheduledEvents[scheduledEventId];
-        if (timeout !== void 0) {
-          clock.clearTimeout(timeout);
-        }
-      },
-      cancelAll: (actorRef) => {
-        for (const scheduledEventId in system._snapshot._scheduledEvents) {
-          const scheduledEvent = system._snapshot._scheduledEvents[scheduledEventId];
-          if (scheduledEvent.source === actorRef) {
-            scheduler.cancel(actorRef, scheduledEvent.id);
-          }
-        }
-      }
-    };
-    const sendInspectionEvent = (event) => {
-      if (!inspectionObservers.size) {
-        return;
-      }
-      const resolvedInspectionEvent = {
-        ...event,
-        rootId: rootActor.sessionId
-      };
-      inspectionObservers.forEach((observer) => observer.next?.(resolvedInspectionEvent));
-    };
-    const system = {
-      _snapshot: {
-        _scheduledEvents: (options?.snapshot && options.snapshot.scheduler) ?? {}
-      },
-      _bookId: () => `x:${idCounter++}`,
-      _register: (sessionId, actorRef) => {
-        children.set(sessionId, actorRef);
-        return sessionId;
-      },
-      _unregister: (actorRef) => {
-        children.delete(actorRef.sessionId);
-        const systemId = reverseKeyedActors.get(actorRef);
-        if (systemId !== void 0) {
-          keyedActors.delete(systemId);
-          reverseKeyedActors.delete(actorRef);
-        }
-      },
-      get: (systemId) => {
-        return keyedActors.get(systemId);
-      },
-      getAll: () => {
-        return Object.fromEntries(keyedActors.entries());
-      },
-      _set: (systemId, actorRef) => {
-        const existing = keyedActors.get(systemId);
-        if (existing && existing !== actorRef) {
-          throw new Error(`Actor with system ID '${systemId}' already exists.`);
-        }
-        keyedActors.set(systemId, actorRef);
-        reverseKeyedActors.set(actorRef, systemId);
-      },
-      inspect: (observerOrFn) => {
-        const observer = toObserver(observerOrFn);
-        inspectionObservers.add(observer);
-        return {
-          unsubscribe() {
-            inspectionObservers.delete(observer);
-          }
-        };
-      },
-      _sendInspectionEvent: sendInspectionEvent,
-      _relay: (source, target, event) => {
-        system._sendInspectionEvent({
-          type: "@xstate.event",
-          sourceRef: source,
-          actorRef: target,
-          event
-        });
-        target._send(event);
-      },
-      scheduler,
-      getSnapshot: () => {
-        return {
-          _scheduledEvents: {
-            ...system._snapshot._scheduledEvents
-          }
-        };
-      },
-      start: () => {
-        const scheduledEvents = system._snapshot._scheduledEvents;
-        system._snapshot._scheduledEvents = {};
-        for (const scheduledId in scheduledEvents) {
-          const {
-            source,
-            target,
-            event,
-            delay,
-            id
-          } = scheduledEvents[scheduledId];
-          scheduler.schedule(source, target, event, delay, id);
-        }
-      },
-      _clock: clock,
-      _logger: logger
-    };
-    return system;
-  }
-  var executingCustomAction = false;
-  var $$ACTOR_TYPE = 1;
-  var ProcessingStatus = /* @__PURE__ */ function(ProcessingStatus2) {
-    ProcessingStatus2[ProcessingStatus2["NotStarted"] = 0] = "NotStarted";
-    ProcessingStatus2[ProcessingStatus2["Running"] = 1] = "Running";
-    ProcessingStatus2[ProcessingStatus2["Stopped"] = 2] = "Stopped";
-    return ProcessingStatus2;
-  }({});
-  var defaultOptions = {
-    clock: {
-      setTimeout: (fn, ms) => {
-        return setTimeout(fn, ms);
-      },
-      clearTimeout: (id) => {
-        return clearTimeout(id);
-      }
-    },
-    logger: console.log.bind(console),
-    devTools: false
-  };
-  var Actor = class {
-    /**
-     * Creates a new actor instance for the given logic with the provided options,
-     * if any.
-     *
-     * @param logic The logic to create an actor from
-     * @param options Actor options
-     */
-    constructor(logic, options) {
-      this.logic = logic;
-      this._snapshot = void 0;
-      this.clock = void 0;
-      this.options = void 0;
-      this.id = void 0;
-      this.mailbox = new Mailbox(this._process.bind(this));
-      this.observers = /* @__PURE__ */ new Set();
-      this.eventListeners = /* @__PURE__ */ new Map();
-      this.logger = void 0;
-      this._processingStatus = ProcessingStatus.NotStarted;
-      this._parent = void 0;
-      this._syncSnapshot = void 0;
-      this.ref = void 0;
-      this._actorScope = void 0;
-      this.systemId = void 0;
-      this.sessionId = void 0;
-      this.system = void 0;
-      this._doneEvent = void 0;
-      this.src = void 0;
-      this._deferred = [];
-      const resolvedOptions = {
-        ...defaultOptions,
-        ...options
-      };
-      const {
-        clock,
-        logger,
-        parent,
-        syncSnapshot,
-        id,
-        systemId,
-        inspect
-      } = resolvedOptions;
-      this.system = parent ? parent.system : createSystem(this, {
-        clock,
-        logger
-      });
-      if (inspect && !parent) {
-        this.system.inspect(toObserver(inspect));
-      }
-      this.sessionId = this.system._bookId();
-      this.id = id ?? this.sessionId;
-      this.logger = options?.logger ?? this.system._logger;
-      this.clock = options?.clock ?? this.system._clock;
-      this._parent = parent;
-      this._syncSnapshot = syncSnapshot;
-      this.options = resolvedOptions;
-      this.src = resolvedOptions.src ?? logic;
-      this.ref = this;
-      this._actorScope = {
-        self: this,
-        id: this.id,
-        sessionId: this.sessionId,
-        logger: this.logger,
-        defer: (fn) => {
-          this._deferred.push(fn);
-        },
-        system: this.system,
-        stopChild: (child) => {
-          if (child._parent !== this) {
-            throw new Error(`Cannot stop child actor ${child.id} of ${this.id} because it is not a child`);
-          }
-          child._stop();
-        },
-        emit: (emittedEvent) => {
-          const listeners = this.eventListeners.get(emittedEvent.type);
-          const wildcardListener = this.eventListeners.get("*");
-          if (!listeners && !wildcardListener) {
-            return;
-          }
-          const allListeners = [...listeners ? listeners.values() : [], ...wildcardListener ? wildcardListener.values() : []];
-          for (const handler of allListeners) {
-            try {
-              handler(emittedEvent);
-            } catch (err) {
-              reportUnhandledError(err);
-            }
-          }
-        },
-        actionExecutor: (action) => {
-          const exec = () => {
-            this._actorScope.system._sendInspectionEvent({
-              type: "@xstate.action",
-              actorRef: this,
-              action: {
-                type: action.type,
-                params: action.params
-              }
-            });
-            if (!action.exec) {
-              return;
-            }
-            const saveExecutingCustomAction = executingCustomAction;
-            try {
-              executingCustomAction = true;
-              action.exec(action.info, action.params);
-            } finally {
-              executingCustomAction = saveExecutingCustomAction;
-            }
-          };
-          if (this._processingStatus === ProcessingStatus.Running) {
-            exec();
-          } else {
-            this._deferred.push(exec);
-          }
-        }
-      };
-      this.send = this.send.bind(this);
-      this.system._sendInspectionEvent({
-        type: "@xstate.actor",
-        actorRef: this
-      });
-      if (systemId) {
-        this.systemId = systemId;
-        this.system._set(systemId, this);
-      }
-      this._initState(options?.snapshot ?? options?.state);
-      if (systemId && this._snapshot.status !== "active") {
-        this.system._unregister(this);
-      }
-    }
-    _initState(persistedState) {
-      try {
-        this._snapshot = persistedState ? this.logic.restoreSnapshot ? this.logic.restoreSnapshot(persistedState, this._actorScope) : persistedState : this.logic.getInitialSnapshot(this._actorScope, this.options?.input);
-      } catch (err) {
-        this._snapshot = {
-          status: "error",
-          output: void 0,
-          error: err
-        };
-      }
-    }
-    update(snapshot, event) {
-      this._snapshot = snapshot;
-      let deferredFn;
-      while (deferredFn = this._deferred.shift()) {
-        try {
-          deferredFn();
-        } catch (err) {
-          this._deferred.length = 0;
-          this._snapshot = {
-            ...snapshot,
-            status: "error",
-            error: err
-          };
-        }
-      }
-      switch (this._snapshot.status) {
-        case "active":
-          for (const observer of this.observers) {
-            try {
-              observer.next?.(snapshot);
-            } catch (err) {
-              reportUnhandledError(err);
-            }
-          }
-          break;
-        case "done":
-          for (const observer of this.observers) {
-            try {
-              observer.next?.(snapshot);
-            } catch (err) {
-              reportUnhandledError(err);
-            }
-          }
-          this._stopProcedure();
-          this._complete();
-          this._doneEvent = createDoneActorEvent(this.id, this._snapshot.output);
-          if (this._parent) {
-            this.system._relay(this, this._parent, this._doneEvent);
-          }
-          break;
-        case "error":
-          this._error(this._snapshot.error);
-          break;
-      }
-      this.system._sendInspectionEvent({
-        type: "@xstate.snapshot",
-        actorRef: this,
-        event,
-        snapshot
-      });
-    }
-    /**
-     * Subscribe an observer to an actor’s snapshot values.
-     *
-     * @remarks
-     * The observer will receive the actor’s snapshot value when it is emitted.
-     * The observer can be:
-     *
-     * - A plain function that receives the latest snapshot, or
-     * - An observer object whose `.next(snapshot)` method receives the latest
-     *   snapshot
-     *
-     * @example
-     *
-     * ```ts
-     * // Observer as a plain function
-     * const subscription = actor.subscribe((snapshot) => {
-     *   console.log(snapshot);
-     * });
-     * ```
-     *
-     * @example
-     *
-     * ```ts
-     * // Observer as an object
-     * const subscription = actor.subscribe({
-     *   next(snapshot) {
-     *     console.log(snapshot);
-     *   },
-     *   error(err) {
-     *     // ...
-     *   },
-     *   complete() {
-     *     // ...
-     *   }
-     * });
-     * ```
-     *
-     * The return value of `actor.subscribe(observer)` is a subscription object
-     * that has an `.unsubscribe()` method. You can call
-     * `subscription.unsubscribe()` to unsubscribe the observer:
-     *
-     * @example
-     *
-     * ```ts
-     * const subscription = actor.subscribe((snapshot) => {
-     *   // ...
-     * });
-     *
-     * // Unsubscribe the observer
-     * subscription.unsubscribe();
-     * ```
-     *
-     * When the actor is stopped, all of its observers will automatically be
-     * unsubscribed.
-     *
-     * @param observer - Either a plain function that receives the latest
-     *   snapshot, or an observer object whose `.next(snapshot)` method receives
-     *   the latest snapshot
-     */
-    subscribe(nextListenerOrObserver, errorListener, completeListener) {
-      const observer = toObserver(nextListenerOrObserver, errorListener, completeListener);
-      if (this._processingStatus !== ProcessingStatus.Stopped) {
-        this.observers.add(observer);
-      } else {
-        switch (this._snapshot.status) {
-          case "done":
-            try {
-              observer.complete?.();
-            } catch (err) {
-              reportUnhandledError(err);
-            }
-            break;
-          case "error": {
-            const err = this._snapshot.error;
-            if (!observer.error) {
-              reportUnhandledError(err);
-            } else {
-              try {
-                observer.error(err);
-              } catch (err2) {
-                reportUnhandledError(err2);
-              }
-            }
-            break;
-          }
-        }
-      }
-      return {
-        unsubscribe: () => {
-          this.observers.delete(observer);
-        }
-      };
-    }
-    on(type, handler) {
-      let listeners = this.eventListeners.get(type);
-      if (!listeners) {
-        listeners = /* @__PURE__ */ new Set();
-        this.eventListeners.set(type, listeners);
-      }
-      const wrappedHandler = handler.bind(void 0);
-      listeners.add(wrappedHandler);
-      return {
-        unsubscribe: () => {
-          listeners.delete(wrappedHandler);
-        }
-      };
-    }
-    select(selector, equalityFn = Object.is) {
-      return {
-        subscribe: (observerOrFn) => {
-          const observer = toObserver(observerOrFn);
-          const snapshot = this.getSnapshot();
-          let previousSelected = selector(snapshot);
-          return this.subscribe((snapshot2) => {
-            const nextSelected = selector(snapshot2);
-            if (!equalityFn(previousSelected, nextSelected)) {
-              previousSelected = nextSelected;
-              observer.next?.(nextSelected);
-            }
-          });
-        },
-        get: () => selector(this.getSnapshot())
-      };
-    }
-    /** Starts the Actor from the initial state */
-    start() {
-      if (this._processingStatus === ProcessingStatus.Running) {
-        return this;
-      }
-      if (this._syncSnapshot) {
-        this.subscribe({
-          next: (snapshot) => {
-            if (snapshot.status === "active") {
-              this.system._relay(this, this._parent, {
-                type: `xstate.snapshot.${this.id}`,
-                snapshot
-              });
-            }
-          },
-          error: () => {
-          }
-        });
-      }
-      this.system._register(this.sessionId, this);
-      if (this.systemId) {
-        this.system._set(this.systemId, this);
-      }
-      this._processingStatus = ProcessingStatus.Running;
-      const initEvent = createInitEvent(this.options.input);
-      this.system._sendInspectionEvent({
-        type: "@xstate.event",
-        sourceRef: this._parent,
-        actorRef: this,
-        event: initEvent
-      });
-      const status = this._snapshot.status;
-      switch (status) {
-        case "done":
-          this.update(this._snapshot, initEvent);
-          return this;
-        case "error":
-          this._error(this._snapshot.error);
-          return this;
-      }
-      if (!this._parent) {
-        this.system.start();
-      }
-      if (this.logic.start) {
-        try {
-          this.logic.start(this._snapshot, this._actorScope);
-        } catch (err) {
-          this._snapshot = {
-            ...this._snapshot,
-            status: "error",
-            error: err
-          };
-          this._error(err);
-          return this;
-        }
-      }
-      this.update(this._snapshot, initEvent);
-      if (this.options.devTools) {
-        this.attachDevTools();
-      }
-      this.mailbox.start();
-      return this;
-    }
-    _process(event) {
-      let nextState;
-      let caughtError;
-      try {
-        nextState = this.logic.transition(this._snapshot, event, this._actorScope);
-      } catch (err) {
-        caughtError = {
-          err
-        };
-      }
-      if (caughtError) {
-        const {
-          err
-        } = caughtError;
-        this._snapshot = {
-          ...this._snapshot,
-          status: "error",
-          error: err
-        };
-        this._error(err);
-        return;
-      }
-      this.update(nextState, event);
-      if (event.type === XSTATE_STOP) {
-        this._stopProcedure();
-        this._complete();
-      }
-    }
-    _stop() {
-      if (this._processingStatus === ProcessingStatus.Stopped) {
-        return this;
-      }
-      this.mailbox.clear();
-      if (this._processingStatus === ProcessingStatus.NotStarted) {
-        this._processingStatus = ProcessingStatus.Stopped;
-        return this;
-      }
-      this.mailbox.enqueue({
-        type: XSTATE_STOP
-      });
-      return this;
-    }
-    /** Stops the Actor and unsubscribe all listeners. */
-    stop() {
-      if (this._parent) {
-        throw new Error("A non-root actor cannot be stopped directly.");
-      }
-      return this._stop();
-    }
-    _complete() {
-      for (const observer of this.observers) {
-        try {
-          observer.complete?.();
-        } catch (err) {
-          reportUnhandledError(err);
-        }
-      }
-      this.observers.clear();
-      this.eventListeners.clear();
-    }
-    _reportError(err) {
-      if (!this.observers.size) {
-        if (!this._parent) {
-          reportUnhandledError(err);
-        }
-        this.eventListeners.clear();
-        return;
-      }
-      let reportError2 = false;
-      for (const observer of this.observers) {
-        const errorListener = observer.error;
-        reportError2 ||= !errorListener;
-        try {
-          errorListener?.(err);
-        } catch (err2) {
-          reportUnhandledError(err2);
-        }
-      }
-      this.observers.clear();
-      this.eventListeners.clear();
-      if (reportError2) {
-        reportUnhandledError(err);
-      }
-    }
-    _error(err) {
-      this._stopProcedure();
-      this._reportError(err);
-      if (this._parent) {
-        this.system._relay(this, this._parent, createErrorActorEvent(this.id, err));
-      }
-    }
-    // TODO: atm children don't belong entirely to the actor so
-    // in a way - it's not even super aware of them
-    // so we can't stop them from here but we really should!
-    // right now, they are being stopped within the machine's transition
-    // but that could throw and leave us with "orphaned" active actors
-    _stopProcedure() {
-      if (this._processingStatus !== ProcessingStatus.Running) {
-        return this;
-      }
-      this.system.scheduler.cancelAll(this);
-      this.mailbox.clear();
-      this.mailbox = new Mailbox(this._process.bind(this));
-      this._processingStatus = ProcessingStatus.Stopped;
-      this.system._unregister(this);
-      return this;
-    }
-    /** @internal */
-    _send(event) {
-      if (this._processingStatus === ProcessingStatus.Stopped) {
-        return;
-      }
-      this.mailbox.enqueue(event);
-    }
-    /**
-     * Sends an event to the running Actor to trigger a transition.
-     *
-     * @param event The event to send
-     */
-    send(event) {
-      this.system._relay(void 0, this, event);
-    }
-    attachDevTools() {
-      const {
-        devTools
-      } = this.options;
-      if (devTools) {
-        const resolvedDevToolsAdapter = typeof devTools === "function" ? devTools : devToolsAdapter;
-        resolvedDevToolsAdapter(this);
-      }
-    }
-    toJSON() {
-      return {
-        xstate$$type: $$ACTOR_TYPE,
-        id: this.id
-      };
-    }
-    /**
-     * Obtain the internal state of the actor, which can be persisted.
-     *
-     * @remarks
-     * The internal state can be persisted from any actor, not only machines.
-     *
-     * Note that the persisted state is not the same as the snapshot from
-     * {@link Actor.getSnapshot}. Persisted state represents the internal state of
-     * the actor, while snapshots represent the actor's last emitted value.
-     *
-     * Can be restored with {@link ActorOptions.state}
-     * @see https://stately.ai/docs/persistence
-     */
-    getPersistedSnapshot(options) {
-      return this.logic.getPersistedSnapshot(this._snapshot, options);
-    }
-    [symbolObservable]() {
-      return this;
-    }
-    /**
-     * Read an actor’s snapshot synchronously.
-     *
-     * @remarks
-     * The snapshot represent an actor's last emitted value.
-     *
-     * When an actor receives an event, its internal state may change. An actor
-     * may emit a snapshot when a state transition occurs.
-     *
-     * Note that some actors, such as callback actors generated with
-     * `fromCallback`, will not emit snapshots.
-     * @see {@link Actor.subscribe} to subscribe to an actor’s snapshot values.
-     * @see {@link Actor.getPersistedSnapshot} to persist the internal state of an actor (which is more than just a snapshot).
-     */
-    getSnapshot() {
-      return this._snapshot;
-    }
-  };
-  function createActor(logic, ...[options]) {
-    return new Actor(logic, options);
-  }
-  function resolveCancel(_, snapshot, actionArgs, actionParams, {
-    sendId
-  }) {
-    const resolvedSendId = typeof sendId === "function" ? sendId(actionArgs, actionParams) : sendId;
-    return [snapshot, {
-      sendId: resolvedSendId
-    }, void 0];
-  }
-  function executeCancel(actorScope, params) {
-    actorScope.defer(() => {
-      actorScope.system.scheduler.cancel(actorScope.self, params.sendId);
-    });
-  }
-  function cancel(sendId) {
-    function cancel2(_args, _params) {
-    }
-    cancel2.type = "xstate.cancel";
-    cancel2.sendId = sendId;
-    cancel2.resolve = resolveCancel;
-    cancel2.execute = executeCancel;
-    return cancel2;
-  }
-  function resolveSpawn(actorScope, snapshot, actionArgs, _actionParams, {
-    id,
-    systemId,
-    src,
-    input,
-    syncSnapshot
-  }) {
-    const logic = typeof src === "string" ? resolveReferencedActor(snapshot.machine, src) : src;
-    const resolvedId = typeof id === "function" ? id(actionArgs) : id;
-    let actorRef;
-    let resolvedInput = void 0;
-    if (logic) {
-      resolvedInput = typeof input === "function" ? input({
-        context: snapshot.context,
-        event: actionArgs.event,
-        self: actorScope.self
-      }) : input;
-      actorRef = createActor(logic, {
-        id: resolvedId,
-        src,
-        parent: actorScope.self,
-        syncSnapshot,
-        systemId,
-        input: resolvedInput
-      });
-    }
-    return [cloneMachineSnapshot(snapshot, {
-      children: {
-        ...snapshot.children,
-        [resolvedId]: actorRef
-      }
-    }), {
-      id,
-      systemId,
-      actorRef,
-      src,
-      input: resolvedInput
-    }, void 0];
-  }
-  function executeSpawn(actorScope, {
-    actorRef
-  }) {
-    if (!actorRef) {
-      return;
-    }
-    actorScope.defer(() => {
-      if (actorRef._processingStatus === ProcessingStatus.Stopped) {
-        return;
-      }
-      actorRef.start();
-    });
-  }
-  function spawnChild(...[src, {
-    id,
-    systemId,
-    input,
-    syncSnapshot = false
-  } = {}]) {
-    function spawnChild2(_args, _params) {
-    }
-    spawnChild2.type = "xstate.spawnChild";
-    spawnChild2.id = id;
-    spawnChild2.systemId = systemId;
-    spawnChild2.src = src;
-    spawnChild2.input = input;
-    spawnChild2.syncSnapshot = syncSnapshot;
-    spawnChild2.resolve = resolveSpawn;
-    spawnChild2.execute = executeSpawn;
-    return spawnChild2;
-  }
-  function resolveStop(_, snapshot, args, actionParams, {
-    actorRef
-  }) {
-    const actorRefOrString = typeof actorRef === "function" ? actorRef(args, actionParams) : actorRef;
-    const resolvedActorRef = typeof actorRefOrString === "string" ? snapshot.children[actorRefOrString] : actorRefOrString;
-    let children = snapshot.children;
-    if (resolvedActorRef) {
-      children = {
-        ...children
-      };
-      delete children[resolvedActorRef.id];
-    }
-    return [cloneMachineSnapshot(snapshot, {
-      children
-    }), resolvedActorRef, void 0];
-  }
-  function unregisterRecursively(actorScope, actorRef) {
-    const snapshot = actorRef.getSnapshot();
-    if (snapshot && "children" in snapshot) {
-      for (const child of Object.values(snapshot.children)) {
-        unregisterRecursively(actorScope, child);
-      }
-    }
-    actorScope.system._unregister(actorRef);
-  }
-  function executeStop(actorScope, actorRef) {
-    if (!actorRef) {
-      return;
-    }
-    unregisterRecursively(actorScope, actorRef);
-    if (actorRef._processingStatus !== ProcessingStatus.Running) {
-      actorScope.stopChild(actorRef);
-      return;
-    }
-    actorScope.defer(() => {
-      actorScope.stopChild(actorRef);
-    });
-  }
-  function stopChild(actorRef) {
-    function stop2(_args, _params) {
-    }
-    stop2.type = "xstate.stopChild";
-    stop2.actorRef = actorRef;
-    stop2.resolve = resolveStop;
-    stop2.execute = executeStop;
-    return stop2;
-  }
-  function checkAnd(snapshot, {
-    context,
-    event
-  }, {
-    guards
-  }) {
-    return guards.every((guard) => evaluateGuard(guard, context, event, snapshot));
-  }
-  function and(guards) {
-    function and2(_args, _params) {
-      return false;
-    }
-    and2.check = checkAnd;
-    and2.guards = guards;
-    return and2;
-  }
-  function evaluateGuard(guard, context, event, snapshot) {
-    const {
-      machine
-    } = snapshot;
-    const isInline = typeof guard === "function";
-    const resolved = isInline ? guard : machine.implementations.guards[typeof guard === "string" ? guard : guard.type];
-    if (!isInline && !resolved) {
-      throw new Error(`Guard '${typeof guard === "string" ? guard : guard.type}' is not implemented.'.`);
-    }
-    if (typeof resolved !== "function") {
-      return evaluateGuard(resolved, context, event, snapshot);
-    }
-    const guardArgs = {
-      context,
-      event
-    };
-    const guardParams = isInline || typeof guard === "string" ? void 0 : "params" in guard ? typeof guard.params === "function" ? guard.params({
-      context,
-      event
-    }) : guard.params : void 0;
-    if (!("check" in resolved)) {
-      return resolved(guardArgs, guardParams);
-    }
-    const builtinGuard = resolved;
-    return builtinGuard.check(
-      snapshot,
-      guardArgs,
-      resolved
-      // this holds all params
-    );
-  }
-  function isAtomicStateNode(stateNode) {
-    return stateNode.type === "atomic" || stateNode.type === "final";
-  }
-  function getChildren(stateNode) {
-    return Object.values(stateNode.states).filter((sn) => sn.type !== "history");
-  }
-  function getProperAncestors(stateNode, toStateNode) {
-    const ancestors = [];
-    if (toStateNode === stateNode) {
-      return ancestors;
-    }
-    let m = stateNode.parent;
-    while (m && m !== toStateNode) {
-      ancestors.push(m);
-      m = m.parent;
-    }
-    return ancestors;
-  }
-  function getAllStateNodes(stateNodes) {
-    const nodeSet = new Set(stateNodes);
-    const adjList = getAdjList(nodeSet);
-    for (const s of nodeSet) {
-      if (s.type === "compound" && (!adjList.get(s) || !adjList.get(s).length)) {
-        getInitialStateNodesWithTheirAncestors(s).forEach((sn) => nodeSet.add(sn));
-      } else {
-        if (s.type === "parallel") {
-          for (const child of getChildren(s)) {
-            if (child.type === "history") {
-              continue;
-            }
-            if (!nodeSet.has(child)) {
-              const initialStates = getInitialStateNodesWithTheirAncestors(child);
-              for (const initialStateNode of initialStates) {
-                nodeSet.add(initialStateNode);
-              }
-            }
-          }
-        }
-      }
-    }
-    for (const s of nodeSet) {
-      let m = s.parent;
-      while (m) {
-        nodeSet.add(m);
-        m = m.parent;
-      }
-    }
-    return nodeSet;
-  }
-  function getValueFromAdj(baseNode, adjList) {
-    const childStateNodes = adjList.get(baseNode);
-    if (!childStateNodes) {
-      return {};
-    }
-    if (baseNode.type === "compound") {
-      const childStateNode = childStateNodes[0];
-      if (childStateNode) {
-        if (isAtomicStateNode(childStateNode)) {
-          return childStateNode.key;
-        }
-      } else {
-        return {};
-      }
-    }
-    const stateValue = {};
-    for (const childStateNode of childStateNodes) {
-      stateValue[childStateNode.key] = getValueFromAdj(childStateNode, adjList);
-    }
-    return stateValue;
-  }
-  function getAdjList(stateNodes) {
-    const adjList = /* @__PURE__ */ new Map();
-    for (const s of stateNodes) {
-      if (!adjList.has(s)) {
-        adjList.set(s, []);
-      }
-      if (s.parent) {
-        if (!adjList.has(s.parent)) {
-          adjList.set(s.parent, []);
-        }
-        adjList.get(s.parent).push(s);
-      }
-    }
-    return adjList;
-  }
-  function getStateValue(rootNode, stateNodes) {
-    const config = getAllStateNodes(stateNodes);
-    return getValueFromAdj(rootNode, getAdjList(config));
-  }
-  function isInFinalState(stateNodeSet, stateNode) {
-    if (stateNode.type === "compound") {
-      return getChildren(stateNode).some((s) => s.type === "final" && stateNodeSet.has(s));
-    }
-    if (stateNode.type === "parallel") {
-      return getChildren(stateNode).every((sn) => isInFinalState(stateNodeSet, sn));
-    }
-    return stateNode.type === "final";
-  }
-  var isStateId = (str) => str[0] === STATE_IDENTIFIER;
-  function getCandidates(stateNode, receivedEventType) {
-    const exactMatch = stateNode.transitions.get(receivedEventType);
-    const wildcardCandidates = [...stateNode.transitions.keys()].filter((eventDescriptor) => eventDescriptor !== receivedEventType && matchesEventDescriptor(receivedEventType, eventDescriptor)).sort((a, b) => b.length - a.length).flatMap((key) => stateNode.transitions.get(key));
-    return exactMatch ? [...exactMatch, ...wildcardCandidates] : wildcardCandidates;
-  }
-  function getDelayedTransitions(stateNode) {
-    const afterConfig = stateNode.config.after;
-    if (!afterConfig) {
-      return [];
-    }
-    const mutateEntryExit = (delay) => {
-      const afterEvent = createAfterEvent(delay, stateNode.id);
-      const eventType = afterEvent.type;
-      stateNode.entry.push(raise(afterEvent, {
-        id: eventType,
-        delay
-      }));
-      stateNode.exit.push(cancel(eventType));
-      return eventType;
-    };
-    const delayedTransitions = Object.keys(afterConfig).flatMap((delay) => {
-      const configTransition = afterConfig[delay];
-      const resolvedTransition = typeof configTransition === "string" ? {
-        target: configTransition
-      } : configTransition;
-      const resolvedDelay = Number.isNaN(+delay) ? delay : +delay;
-      const eventType = mutateEntryExit(resolvedDelay);
-      return toArray(resolvedTransition).map((transition) => ({
-        ...transition,
-        event: eventType,
-        delay: resolvedDelay
-      }));
-    });
-    return delayedTransitions.map((delayedTransition) => {
-      const {
-        delay
-      } = delayedTransition;
-      return {
-        ...formatTransition(stateNode, delayedTransition.event, delayedTransition),
-        delay
-      };
-    });
-  }
-  function formatTransition(stateNode, descriptor, transitionConfig) {
-    const normalizedTarget = normalizeTarget(transitionConfig.target);
-    const reenter = transitionConfig.reenter ?? false;
-    const target = resolveTarget(stateNode, normalizedTarget);
-    const transition = {
-      ...transitionConfig,
-      actions: toArray(transitionConfig.actions),
-      guard: transitionConfig.guard,
-      target,
-      source: stateNode,
-      reenter,
-      eventType: descriptor,
-      toJSON: () => ({
-        ...transition,
-        source: `#${stateNode.id}`,
-        target: target ? target.map((t) => `#${t.id}`) : void 0
-      })
-    };
-    return transition;
-  }
-  function formatTransitions(stateNode) {
-    const transitions = /* @__PURE__ */ new Map();
-    if (stateNode.config.on) {
-      for (const descriptor of Object.keys(stateNode.config.on)) {
-        if (descriptor === NULL_EVENT) {
-          throw new Error('Null events ("") cannot be specified as a transition key. Use `always: { ... }` instead.');
-        }
-        const transitionsConfig = stateNode.config.on[descriptor];
-        transitions.set(descriptor, toTransitionConfigArray(transitionsConfig).map((t) => formatTransition(stateNode, descriptor, t)));
-      }
-    }
-    if (stateNode.config.onDone) {
-      const descriptor = `xstate.done.state.${stateNode.id}`;
-      transitions.set(descriptor, toTransitionConfigArray(stateNode.config.onDone).map((t) => formatTransition(stateNode, descriptor, t)));
-    }
-    for (const invokeDef of stateNode.invoke) {
-      if (invokeDef.onDone) {
-        const descriptor = `xstate.done.actor.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onDone).map((t) => formatTransition(stateNode, descriptor, t)));
-      }
-      if (invokeDef.onError) {
-        const descriptor = `xstate.error.actor.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onError).map((t) => formatTransition(stateNode, descriptor, t)));
-      }
-      if (invokeDef.onSnapshot) {
-        const descriptor = `xstate.snapshot.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onSnapshot).map((t) => formatTransition(stateNode, descriptor, t)));
-      }
-    }
-    for (const delayedTransition of stateNode.after) {
-      let existing = transitions.get(delayedTransition.eventType);
-      if (!existing) {
-        existing = [];
-        transitions.set(delayedTransition.eventType, existing);
-      }
-      existing.push(delayedTransition);
-    }
-    return transitions;
-  }
-  function formatRouteTransitions(rootStateNode) {
-    const routeTransitions = [];
-    const collectRoutes = (states) => {
-      Object.values(states).forEach((sn) => {
-        if (sn.config.route && sn.config.id) {
-          const routeId = sn.config.id;
-          const userGuard = sn.config.route.guard;
-          const routeMatches = ({
-            event
-          }) => event.to === `#${routeId}`;
-          const transition = {
-            ...sn.config.route,
-            guard: userGuard ? and([routeMatches, userGuard]) : routeMatches,
-            target: `#${routeId}`
-          };
-          routeTransitions.push(formatTransition(rootStateNode, "xstate.route", transition));
-        }
-        if (sn.states) {
-          collectRoutes(sn.states);
-        }
-      });
-    };
-    collectRoutes(rootStateNode.states);
-    if (routeTransitions.length > 0) {
-      rootStateNode.transitions.set("xstate.route", routeTransitions);
-    }
-  }
-  function formatInitialTransition(stateNode, _target) {
-    const resolvedTarget = typeof _target === "string" ? stateNode.states[_target] : _target ? stateNode.states[_target.target] : void 0;
-    if (!resolvedTarget && _target) {
-      throw new Error(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-base-to-string
-        `Initial state node "${_target}" not found on parent state node #${stateNode.id}`
-      );
-    }
-    const transition = {
-      source: stateNode,
-      actions: !_target || typeof _target === "string" ? [] : toArray(_target.actions),
-      eventType: null,
-      reenter: false,
-      target: resolvedTarget ? [resolvedTarget] : [],
-      toJSON: () => ({
-        ...transition,
-        source: `#${stateNode.id}`,
-        target: resolvedTarget ? [`#${resolvedTarget.id}`] : []
-      })
-    };
-    return transition;
-  }
-  function resolveTarget(stateNode, targets) {
-    if (targets === void 0) {
-      return void 0;
-    }
-    return targets.map((target) => {
-      if (typeof target !== "string") {
-        return target;
-      }
-      if (isStateId(target)) {
-        return stateNode.machine.getStateNodeById(target);
-      }
-      const isInternalTarget = target[0] === STATE_DELIMITER;
-      if (isInternalTarget && !stateNode.parent) {
-        return getStateNodeByPath(stateNode, target.slice(1));
-      }
-      const resolvedTarget = isInternalTarget ? stateNode.key + target : target;
-      if (stateNode.parent) {
-        try {
-          const targetStateNode = getStateNodeByPath(stateNode.parent, resolvedTarget);
-          return targetStateNode;
-        } catch (err) {
-          throw new Error(`Invalid transition definition for state node '${stateNode.id}':
-${err.message}`);
-        }
-      } else {
-        throw new Error(`Invalid target: "${target}" is not a valid target from the root node. Did you mean ".${target}"?`);
-      }
-    });
-  }
-  function resolveHistoryDefaultTransition(stateNode) {
-    const normalizedTarget = normalizeTarget(stateNode.config.target);
-    if (!normalizedTarget) {
-      if (stateNode.parent.type === "parallel") {
-        return {
-          target: [stateNode.parent]
-        };
-      }
-      return stateNode.parent.initial;
-    }
-    return {
-      target: normalizedTarget.map((t) => typeof t === "string" ? getStateNodeByPath(stateNode.parent, t) : t)
-    };
-  }
-  function isHistoryNode(stateNode) {
-    return stateNode.type === "history";
-  }
-  function getInitialStateNodesWithTheirAncestors(stateNode) {
-    const states = getInitialStateNodes(stateNode);
-    for (const initialState of states) {
-      for (const ancestor of getProperAncestors(initialState, stateNode)) {
-        states.add(ancestor);
-      }
-    }
-    return states;
-  }
-  function getInitialStateNodes(stateNode) {
-    const set = /* @__PURE__ */ new Set();
-    function iter(descStateNode) {
-      if (set.has(descStateNode)) {
-        return;
-      }
-      set.add(descStateNode);
-      if (descStateNode.type === "compound") {
-        iter(descStateNode.initial.target[0]);
-      } else if (descStateNode.type === "parallel") {
-        for (const child of getChildren(descStateNode)) {
-          iter(child);
-        }
-      }
-    }
-    iter(stateNode);
-    return set;
-  }
-  function getStateNode(stateNode, stateKey) {
-    if (isStateId(stateKey)) {
-      return stateNode.machine.getStateNodeById(stateKey);
-    }
-    if (!stateNode.states) {
-      throw new Error(`Unable to retrieve child state '${stateKey}' from '${stateNode.id}'; no child states exist.`);
-    }
-    const result = stateNode.states[stateKey];
-    if (!result) {
-      throw new Error(`Child state '${stateKey}' does not exist on '${stateNode.id}'`);
-    }
-    return result;
-  }
-  function getStateNodeByPath(stateNode, statePath) {
-    if (typeof statePath === "string" && isStateId(statePath)) {
-      try {
-        return stateNode.machine.getStateNodeById(statePath);
-      } catch {
-      }
-    }
-    const arrayStatePath = toStatePath(statePath).slice();
-    let currentStateNode = stateNode;
-    while (arrayStatePath.length) {
-      const key = arrayStatePath.shift();
-      if (!key.length) {
-        break;
-      }
-      currentStateNode = getStateNode(currentStateNode, key);
-    }
-    return currentStateNode;
-  }
-  function getStateNodes(stateNode, stateValue) {
-    if (typeof stateValue === "string") {
-      const childStateNode = stateNode.states[stateValue];
-      if (!childStateNode) {
-        throw new Error(`State '${stateValue}' does not exist on '${stateNode.id}'`);
-      }
-      return [stateNode, childStateNode];
-    }
-    const childStateKeys = Object.keys(stateValue);
-    const childStateNodes = childStateKeys.map((subStateKey) => getStateNode(stateNode, subStateKey)).filter(Boolean);
-    return [stateNode.machine.root, stateNode].concat(childStateNodes, childStateKeys.reduce((allSubStateNodes, subStateKey) => {
-      const subStateNode = getStateNode(stateNode, subStateKey);
-      if (!subStateNode) {
-        return allSubStateNodes;
-      }
-      const subStateNodes = getStateNodes(subStateNode, stateValue[subStateKey]);
-      return allSubStateNodes.concat(subStateNodes);
-    }, []));
-  }
-  function transitionAtomicNode(stateNode, stateValue, snapshot, event) {
-    const childStateNode = getStateNode(stateNode, stateValue);
-    const next = childStateNode.next(snapshot, event);
-    if (!next || !next.length) {
-      return stateNode.next(snapshot, event);
-    }
-    return next;
-  }
-  function transitionCompoundNode(stateNode, stateValue, snapshot, event) {
-    const subStateKeys = Object.keys(stateValue);
-    const childStateNode = getStateNode(stateNode, subStateKeys[0]);
-    const next = transitionNode(childStateNode, stateValue[subStateKeys[0]], snapshot, event);
-    if (!next || !next.length) {
-      return stateNode.next(snapshot, event);
-    }
-    return next;
-  }
-  function transitionParallelNode(stateNode, stateValue, snapshot, event) {
-    const allInnerTransitions = [];
-    for (const subStateKey of Object.keys(stateValue)) {
-      const subStateValue = stateValue[subStateKey];
-      if (!subStateValue) {
-        continue;
-      }
-      const subStateNode = getStateNode(stateNode, subStateKey);
-      const innerTransitions = transitionNode(subStateNode, subStateValue, snapshot, event);
-      if (innerTransitions) {
-        allInnerTransitions.push(...innerTransitions);
-      }
-    }
-    if (!allInnerTransitions.length) {
-      return stateNode.next(snapshot, event);
-    }
-    return allInnerTransitions;
-  }
-  function transitionNode(stateNode, stateValue, snapshot, event) {
-    if (typeof stateValue === "string") {
-      return transitionAtomicNode(stateNode, stateValue, snapshot, event);
-    }
-    if (Object.keys(stateValue).length === 1) {
-      return transitionCompoundNode(stateNode, stateValue, snapshot, event);
-    }
-    return transitionParallelNode(stateNode, stateValue, snapshot, event);
-  }
-  function getHistoryNodes(stateNode) {
-    return Object.keys(stateNode.states).map((key) => stateNode.states[key]).filter((sn) => sn.type === "history");
-  }
-  function isDescendant(childStateNode, parentStateNode) {
-    let marker = childStateNode;
-    while (marker.parent && marker.parent !== parentStateNode) {
-      marker = marker.parent;
-    }
-    return marker.parent === parentStateNode;
-  }
-  function hasIntersection(s1, s2) {
-    const set1 = new Set(s1);
-    const set2 = new Set(s2);
-    for (const item of set1) {
-      if (set2.has(item)) {
-        return true;
-      }
-    }
-    for (const item of set2) {
-      if (set1.has(item)) {
-        return true;
-      }
-    }
-    return false;
-  }
-  function removeConflictingTransitions(enabledTransitions, stateNodeSet, historyValue) {
-    const filteredTransitions = /* @__PURE__ */ new Set();
-    for (const t1 of enabledTransitions) {
-      let t1Preempted = false;
-      const transitionsToRemove = /* @__PURE__ */ new Set();
-      for (const t2 of filteredTransitions) {
-        if (hasIntersection(computeExitSet([t1], stateNodeSet, historyValue), computeExitSet([t2], stateNodeSet, historyValue))) {
-          if (isDescendant(t1.source, t2.source)) {
-            transitionsToRemove.add(t2);
-          } else {
-            t1Preempted = true;
-            break;
-          }
-        }
-      }
-      if (!t1Preempted) {
-        for (const t3 of transitionsToRemove) {
-          filteredTransitions.delete(t3);
-        }
-        filteredTransitions.add(t1);
-      }
-    }
-    return Array.from(filteredTransitions);
-  }
-  function findLeastCommonAncestor(stateNodes) {
-    const [head, ...tail] = stateNodes;
-    for (const ancestor of getProperAncestors(head, void 0)) {
-      if (tail.every((sn) => isDescendant(sn, ancestor))) {
-        return ancestor;
-      }
-    }
-  }
-  function getEffectiveTargetStates(transition, historyValue) {
-    if (!transition.target) {
-      return [];
-    }
-    const targets = /* @__PURE__ */ new Set();
-    for (const targetNode of transition.target) {
-      if (isHistoryNode(targetNode)) {
-        if (historyValue[targetNode.id]) {
-          for (const node of historyValue[targetNode.id]) {
-            targets.add(node);
-          }
-        } else {
-          for (const node of getEffectiveTargetStates(resolveHistoryDefaultTransition(targetNode), historyValue)) {
-            targets.add(node);
-          }
-        }
-      } else {
-        targets.add(targetNode);
-      }
-    }
-    return [...targets];
-  }
-  function getTransitionDomain(transition, historyValue) {
-    const targetStates = getEffectiveTargetStates(transition, historyValue);
-    if (!targetStates) {
-      return;
-    }
-    if (!transition.reenter && targetStates.every((target) => target === transition.source || isDescendant(target, transition.source))) {
-      return transition.source;
-    }
-    const lca = findLeastCommonAncestor(targetStates.concat(transition.source));
-    if (lca) {
-      return lca;
-    }
-    if (transition.reenter) {
-      return;
-    }
-    return transition.source.machine.root;
-  }
-  function computeExitSet(transitions, stateNodeSet, historyValue) {
-    const statesToExit = /* @__PURE__ */ new Set();
-    for (const t of transitions) {
-      if (t.target?.length) {
-        const domain = getTransitionDomain(t, historyValue);
-        if (t.reenter && t.source === domain) {
-          statesToExit.add(domain);
-        }
-        for (const stateNode of stateNodeSet) {
-          if (isDescendant(stateNode, domain)) {
-            statesToExit.add(stateNode);
-          }
-        }
-      }
-    }
-    return [...statesToExit];
-  }
-  function areStateNodeCollectionsEqual(prevStateNodes, nextStateNodeSet) {
-    if (prevStateNodes.length !== nextStateNodeSet.size) {
-      return false;
-    }
-    for (const node of prevStateNodes) {
-      if (!nextStateNodeSet.has(node)) {
-        return false;
-      }
-    }
-    return true;
-  }
-  function initialMicrostep(root, preInitialState, actorScope, initEvent, internalQueue) {
-    return microstep([{
-      target: [...getInitialStateNodes(root)],
-      source: root,
-      reenter: true,
-      actions: [],
-      eventType: null,
-      toJSON: null
-    }], preInitialState, actorScope, initEvent, true, internalQueue);
-  }
-  function microstep(transitions, currentSnapshot, actorScope, event, isInitial, internalQueue) {
-    const actions = [];
-    if (!transitions.length) {
-      return [currentSnapshot, actions];
-    }
-    const originalExecutor = actorScope.actionExecutor;
-    actorScope.actionExecutor = (action) => {
-      actions.push(action);
-      originalExecutor(action);
-    };
-    try {
-      const mutStateNodeSet = new Set(currentSnapshot._nodes);
-      let historyValue = currentSnapshot.historyValue;
-      const filteredTransitions = removeConflictingTransitions(transitions, mutStateNodeSet, historyValue);
-      let nextState = currentSnapshot;
-      if (!isInitial) {
-        [nextState, historyValue] = exitStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, historyValue, internalQueue, actorScope.actionExecutor);
-      }
-      nextState = resolveActionsAndContext(nextState, event, actorScope, filteredTransitions.flatMap((t) => t.actions), internalQueue, void 0);
-      nextState = enterStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, internalQueue, historyValue, isInitial);
-      const nextStateNodes = [...mutStateNodeSet];
-      if (nextState.status === "done") {
-        nextState = resolveActionsAndContext(nextState, event, actorScope, nextStateNodes.sort((a, b) => b.order - a.order).flatMap((state) => state.exit), internalQueue, void 0);
-      }
-      try {
-        if (historyValue === currentSnapshot.historyValue && areStateNodeCollectionsEqual(currentSnapshot._nodes, mutStateNodeSet)) {
-          return [nextState, actions];
-        }
-        return [cloneMachineSnapshot(nextState, {
-          _nodes: nextStateNodes,
-          historyValue
-        }), actions];
-      } catch (e) {
-        throw e;
-      }
-    } finally {
-      actorScope.actionExecutor = originalExecutor;
-    }
-  }
-  function getMachineOutput(snapshot, event, actorScope, rootNode, rootCompletionNode) {
-    if (rootNode.output === void 0) {
-      return;
-    }
-    const doneStateEvent = createDoneStateEvent(rootCompletionNode.id, rootCompletionNode.output !== void 0 && rootCompletionNode.parent ? resolveOutput(rootCompletionNode.output, snapshot.context, event, actorScope.self) : void 0);
-    return resolveOutput(rootNode.output, snapshot.context, doneStateEvent, actorScope.self);
-  }
-  function enterStates(currentSnapshot, event, actorScope, filteredTransitions, mutStateNodeSet, internalQueue, historyValue, isInitial) {
-    let nextSnapshot = currentSnapshot;
-    const statesToEnter = /* @__PURE__ */ new Set();
-    const statesForDefaultEntry = /* @__PURE__ */ new Set();
-    computeEntrySet(filteredTransitions, historyValue, statesForDefaultEntry, statesToEnter);
-    if (isInitial) {
-      statesForDefaultEntry.add(currentSnapshot.machine.root);
-    }
-    const completedNodes = /* @__PURE__ */ new Set();
-    for (const stateNodeToEnter of [...statesToEnter].sort((a, b) => a.order - b.order)) {
-      mutStateNodeSet.add(stateNodeToEnter);
-      const actions = [];
-      actions.push(...stateNodeToEnter.entry);
-      for (const invokeDef of stateNodeToEnter.invoke) {
-        actions.push(spawnChild(invokeDef.src, {
-          ...invokeDef,
-          syncSnapshot: !!invokeDef.onSnapshot
-        }));
-      }
-      if (statesForDefaultEntry.has(stateNodeToEnter)) {
-        const initialActions = stateNodeToEnter.initial.actions;
-        actions.push(...initialActions);
-      }
-      nextSnapshot = resolveActionsAndContext(nextSnapshot, event, actorScope, actions, internalQueue, stateNodeToEnter.invoke.map((invokeDef) => invokeDef.id));
-      if (stateNodeToEnter.type === "final") {
-        const parent = stateNodeToEnter.parent;
-        let ancestorMarker = parent?.type === "parallel" ? parent : parent?.parent;
-        let rootCompletionNode = ancestorMarker || stateNodeToEnter;
-        if (parent?.type === "compound") {
-          internalQueue.push(createDoneStateEvent(parent.id, stateNodeToEnter.output !== void 0 ? resolveOutput(stateNodeToEnter.output, nextSnapshot.context, event, actorScope.self) : void 0));
-        }
-        while (ancestorMarker?.type === "parallel" && !completedNodes.has(ancestorMarker) && isInFinalState(mutStateNodeSet, ancestorMarker)) {
-          completedNodes.add(ancestorMarker);
-          internalQueue.push(createDoneStateEvent(ancestorMarker.id));
-          rootCompletionNode = ancestorMarker;
-          ancestorMarker = ancestorMarker.parent;
-        }
-        if (ancestorMarker) {
-          continue;
-        }
-        nextSnapshot = cloneMachineSnapshot(nextSnapshot, {
-          status: "done",
-          output: getMachineOutput(nextSnapshot, event, actorScope, nextSnapshot.machine.root, rootCompletionNode)
-        });
-      }
-    }
-    return nextSnapshot;
-  }
-  function computeEntrySet(transitions, historyValue, statesForDefaultEntry, statesToEnter) {
-    for (const t of transitions) {
-      const domain = getTransitionDomain(t, historyValue);
-      for (const s of t.target || []) {
-        if (!isHistoryNode(s) && // if the target is different than the source then it will *definitely* be entered
-        (t.source !== s || // we know that the domain can't lie within the source
-        // if it's different than the source then it's outside of it and it means that the target has to be entered as well
-        t.source !== domain || // reentering transitions always enter the target, even if it's the source itself
-        t.reenter)) {
-          statesToEnter.add(s);
-          statesForDefaultEntry.add(s);
-        }
-        addDescendantStatesToEnter(s, historyValue, statesForDefaultEntry, statesToEnter);
-      }
-      const targetStates = getEffectiveTargetStates(t, historyValue);
-      for (const s of targetStates) {
-        const ancestors = getProperAncestors(s, domain);
-        if (domain?.type === "parallel") {
-          ancestors.push(domain);
-        }
-        addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, ancestors, !t.source.parent && t.reenter ? void 0 : domain);
-      }
-    }
-  }
-  function addDescendantStatesToEnter(stateNode, historyValue, statesForDefaultEntry, statesToEnter) {
-    if (isHistoryNode(stateNode)) {
-      if (historyValue[stateNode.id]) {
-        const historyStateNodes = historyValue[stateNode.id];
-        for (const s of historyStateNodes) {
-          statesToEnter.add(s);
-          addDescendantStatesToEnter(s, historyValue, statesForDefaultEntry, statesToEnter);
-        }
-        for (const s of historyStateNodes) {
-          addProperAncestorStatesToEnter(s, stateNode.parent, statesToEnter, historyValue, statesForDefaultEntry);
-        }
-      } else {
-        const historyDefaultTransition = resolveHistoryDefaultTransition(stateNode);
-        for (const s of historyDefaultTransition.target) {
-          statesToEnter.add(s);
-          if (historyDefaultTransition === stateNode.parent?.initial) {
-            statesForDefaultEntry.add(stateNode.parent);
-          }
-          addDescendantStatesToEnter(s, historyValue, statesForDefaultEntry, statesToEnter);
-        }
-        for (const s of historyDefaultTransition.target) {
-          addProperAncestorStatesToEnter(s, stateNode.parent, statesToEnter, historyValue, statesForDefaultEntry);
-        }
-      }
-    } else {
-      if (stateNode.type === "compound") {
-        const [initialState] = stateNode.initial.target;
-        if (!isHistoryNode(initialState)) {
-          statesToEnter.add(initialState);
-          statesForDefaultEntry.add(initialState);
-        }
-        addDescendantStatesToEnter(initialState, historyValue, statesForDefaultEntry, statesToEnter);
-        addProperAncestorStatesToEnter(initialState, stateNode, statesToEnter, historyValue, statesForDefaultEntry);
-      } else {
-        if (stateNode.type === "parallel") {
-          for (const child of getChildren(stateNode).filter((sn) => !isHistoryNode(sn))) {
-            if (![...statesToEnter].some((s) => isDescendant(s, child))) {
-              if (!isHistoryNode(child)) {
-                statesToEnter.add(child);
-                statesForDefaultEntry.add(child);
-              }
-              addDescendantStatesToEnter(child, historyValue, statesForDefaultEntry, statesToEnter);
-            }
-          }
-        }
-      }
-    }
-  }
-  function addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, ancestors, reentrancyDomain) {
-    for (const anc of ancestors) {
-      if (!reentrancyDomain || isDescendant(anc, reentrancyDomain)) {
-        statesToEnter.add(anc);
-      }
-      if (anc.type === "parallel") {
-        for (const child of getChildren(anc).filter((sn) => !isHistoryNode(sn))) {
-          if (![...statesToEnter].some((s) => isDescendant(s, child))) {
-            statesToEnter.add(child);
-            addDescendantStatesToEnter(child, historyValue, statesForDefaultEntry, statesToEnter);
-          }
-        }
-      }
-    }
-  }
-  function addProperAncestorStatesToEnter(stateNode, toStateNode, statesToEnter, historyValue, statesForDefaultEntry) {
-    addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, getProperAncestors(stateNode, toStateNode));
-  }
-  function exitStates(currentSnapshot, event, actorScope, transitions, mutStateNodeSet, historyValue, internalQueue, _actionExecutor) {
-    let nextSnapshot = currentSnapshot;
-    const statesToExit = computeExitSet(transitions, mutStateNodeSet, historyValue);
-    statesToExit.sort((a, b) => b.order - a.order);
-    let changedHistory;
-    for (const exitStateNode of statesToExit) {
-      for (const historyNode of getHistoryNodes(exitStateNode)) {
-        let predicate;
-        if (historyNode.history === "deep") {
-          predicate = (sn) => isAtomicStateNode(sn) && isDescendant(sn, exitStateNode);
-        } else {
-          predicate = (sn) => {
-            return sn.parent === exitStateNode;
-          };
-        }
-        changedHistory ??= {
-          ...historyValue
-        };
-        changedHistory[historyNode.id] = Array.from(mutStateNodeSet).filter(predicate);
-      }
-    }
-    for (const s of statesToExit) {
-      nextSnapshot = resolveActionsAndContext(nextSnapshot, event, actorScope, [...s.exit, ...s.invoke.map((def) => stopChild(def.id))], internalQueue, void 0);
-      mutStateNodeSet.delete(s);
-    }
-    return [nextSnapshot, changedHistory || historyValue];
-  }
-  function getAction(machine, actionType) {
-    return machine.implementations.actions[actionType];
-  }
-  function resolveAndExecuteActionsWithContext(currentSnapshot, event, actorScope, actions, extra, retries) {
-    const {
-      machine
-    } = currentSnapshot;
-    let intermediateSnapshot = currentSnapshot;
-    for (const action of actions) {
-      const isInline = typeof action === "function";
-      const resolvedAction = isInline ? action : (
-        // the existing type of `.actions` assumes non-nullable `TExpressionAction`
-        // it's fine to cast this here to get a common type and lack of errors in the rest of the code
-        // our logic below makes sure that we call those 2 "variants" correctly
-        getAction(machine, typeof action === "string" ? action : action.type)
-      );
-      const actionArgs = {
-        context: intermediateSnapshot.context,
-        event,
-        self: actorScope.self,
-        system: actorScope.system
-      };
-      const actionParams = isInline || typeof action === "string" ? void 0 : "params" in action ? typeof action.params === "function" ? action.params({
-        context: intermediateSnapshot.context,
-        event
-      }) : action.params : void 0;
-      if (!resolvedAction || !("resolve" in resolvedAction)) {
-        actorScope.actionExecutor({
-          type: typeof action === "string" ? action : typeof action === "object" ? action.type : action.name || "(anonymous)",
-          info: actionArgs,
-          params: actionParams,
-          exec: resolvedAction
-        });
-        continue;
-      }
-      const builtinAction = resolvedAction;
-      const [nextState, params, actions2] = builtinAction.resolve(
-        actorScope,
-        intermediateSnapshot,
-        actionArgs,
-        actionParams,
-        resolvedAction,
-        // this holds all params
-        extra
-      );
-      intermediateSnapshot = nextState;
-      if ("retryResolve" in builtinAction) {
-        retries?.push([builtinAction, params]);
-      }
-      if ("execute" in builtinAction) {
-        actorScope.actionExecutor({
-          type: builtinAction.type,
-          info: actionArgs,
-          params,
-          exec: builtinAction.execute.bind(null, actorScope, params)
-        });
-      }
-      if (actions2) {
-        intermediateSnapshot = resolveAndExecuteActionsWithContext(intermediateSnapshot, event, actorScope, actions2, extra, retries);
-      }
-    }
-    return intermediateSnapshot;
-  }
-  function resolveActionsAndContext(currentSnapshot, event, actorScope, actions, internalQueue, deferredActorIds) {
-    const retries = deferredActorIds ? [] : void 0;
-    const nextState = resolveAndExecuteActionsWithContext(currentSnapshot, event, actorScope, actions, {
-      internalQueue,
-      deferredActorIds
-    }, retries);
-    retries?.forEach(([builtinAction, params]) => {
-      builtinAction.retryResolve(actorScope, nextState, params);
-    });
-    return nextState;
-  }
-  function macrostep(snapshot, event, actorScope, internalQueue) {
-    let nextSnapshot = snapshot;
-    const microsteps = [];
-    function addMicrostep(step, event2, transitions) {
-      actorScope.system._sendInspectionEvent({
-        type: "@xstate.microstep",
-        actorRef: actorScope.self,
-        event: event2,
-        snapshot: step[0],
-        _transitions: transitions
-      });
-      microsteps.push(step);
-    }
-    if (event.type === XSTATE_STOP) {
-      nextSnapshot = cloneMachineSnapshot(stopChildren(nextSnapshot, event, actorScope), {
-        status: "stopped"
-      });
-      addMicrostep([nextSnapshot, []], event, []);
-      return {
-        snapshot: nextSnapshot,
-        microsteps
-      };
-    }
-    let nextEvent = event;
-    if (nextEvent.type !== XSTATE_INIT) {
-      const currentEvent = nextEvent;
-      const isErr = isErrorActorEvent(currentEvent);
-      const transitions = selectTransitions(currentEvent, nextSnapshot);
-      if (isErr && !transitions.length) {
-        nextSnapshot = cloneMachineSnapshot(snapshot, {
-          status: "error",
-          error: currentEvent.error
-        });
-        addMicrostep([nextSnapshot, []], currentEvent, []);
-        return {
-          snapshot: nextSnapshot,
-          microsteps
-        };
-      }
-      const step = microstep(
-        transitions,
-        snapshot,
-        actorScope,
-        nextEvent,
-        false,
-        // isInitial
-        internalQueue
-      );
-      nextSnapshot = step[0];
-      addMicrostep(step, currentEvent, transitions);
-    }
-    let shouldSelectEventlessTransitions = true;
-    const maxIterations = snapshot.machine.options?.maxIterations ?? Infinity;
-    let iterationCount = 0;
-    while (nextSnapshot.status === "active") {
-      iterationCount++;
-      if (iterationCount > maxIterations) {
-        throw new Error(`Infinite loop detected: the machine has processed more than ${maxIterations} microsteps without reaching a stable state. This usually happens when there's a cycle of transitions (e.g., eventless transitions or raised events causing state A -> B -> C -> A).`);
-      }
-      let enabledTransitions = shouldSelectEventlessTransitions ? selectEventlessTransitions(nextSnapshot, nextEvent) : [];
-      const previousState = enabledTransitions.length ? nextSnapshot : void 0;
-      if (!enabledTransitions.length) {
-        if (!internalQueue.length) {
-          break;
-        }
-        nextEvent = internalQueue.shift();
-        enabledTransitions = selectTransitions(nextEvent, nextSnapshot);
-      }
-      const step = microstep(enabledTransitions, nextSnapshot, actorScope, nextEvent, false, internalQueue);
-      nextSnapshot = step[0];
-      shouldSelectEventlessTransitions = nextSnapshot !== previousState;
-      addMicrostep(step, nextEvent, enabledTransitions);
-    }
-    if (nextSnapshot.status !== "active") {
-      stopChildren(nextSnapshot, nextEvent, actorScope);
-    }
-    return {
-      snapshot: nextSnapshot,
-      microsteps
-    };
-  }
-  function stopChildren(nextState, event, actorScope) {
-    return resolveActionsAndContext(nextState, event, actorScope, Object.values(nextState.children).map((child) => stopChild(child)), [], void 0);
-  }
-  function selectTransitions(event, nextState) {
-    return nextState.machine.getTransitionData(nextState, event);
-  }
-  function selectEventlessTransitions(nextState, event) {
-    const enabledTransitionSet = /* @__PURE__ */ new Set();
-    const atomicStates = nextState._nodes.filter(isAtomicStateNode);
-    for (const stateNode of atomicStates) {
-      loop: for (const s of [stateNode].concat(getProperAncestors(stateNode, void 0))) {
-        if (!s.always) {
-          continue;
-        }
-        for (const transition of s.always) {
-          if (transition.guard === void 0 || evaluateGuard(transition.guard, nextState.context, event, nextState)) {
-            enabledTransitionSet.add(transition);
-            break loop;
-          }
-        }
-      }
-    }
-    return removeConflictingTransitions(Array.from(enabledTransitionSet), new Set(nextState._nodes), nextState.historyValue);
-  }
-  function resolveStateValue(rootNode, stateValue) {
-    const allStateNodes = getAllStateNodes(getStateNodes(rootNode, stateValue));
-    return getStateValue(rootNode, [...allStateNodes]);
-  }
-  function isMachineSnapshot(value) {
-    return !!value && typeof value === "object" && "machine" in value && "value" in value;
-  }
-  var machineSnapshotMatches = function matches(testValue) {
-    return matchesState(testValue, this.value);
-  };
-  var machineSnapshotHasTag = function hasTag(tag) {
-    return this.tags.has(tag);
-  };
-  var machineSnapshotCan = function can(event) {
-    const transitionData = this.machine.getTransitionData(this, event);
-    return !!transitionData?.length && // Check that at least one transition is not forbidden
-    transitionData.some((t) => t.target !== void 0 || t.actions.length);
-  };
-  var machineSnapshotToJSON = function toJSON() {
-    const {
-      _nodes: nodes,
-      tags,
-      machine,
-      getMeta: getMeta2,
-      toJSON: toJSON2,
-      can: can2,
-      hasTag: hasTag2,
-      matches: matches2,
-      ...jsonValues
-    } = this;
-    return {
-      ...jsonValues,
-      tags: Array.from(tags)
-    };
-  };
-  var machineSnapshotGetMeta = function getMeta() {
-    return this._nodes.reduce((acc, stateNode) => {
-      if (stateNode.meta !== void 0) {
-        acc[stateNode.id] = stateNode.meta;
-      }
-      return acc;
-    }, {});
-  };
-  function createMachineSnapshot(config, machine) {
-    return {
-      status: config.status,
-      output: config.output,
-      error: config.error,
-      machine,
-      context: config.context,
-      _nodes: config._nodes,
-      value: getStateValue(machine.root, config._nodes),
-      tags: new Set(config._nodes.flatMap((sn) => sn.tags)),
-      children: config.children,
-      historyValue: config.historyValue || {},
-      matches: machineSnapshotMatches,
-      hasTag: machineSnapshotHasTag,
-      can: machineSnapshotCan,
-      getMeta: machineSnapshotGetMeta,
-      toJSON: machineSnapshotToJSON
-    };
-  }
-  function cloneMachineSnapshot(snapshot, config = {}) {
-    return createMachineSnapshot({
-      ...snapshot,
-      ...config
-    }, snapshot.machine);
-  }
-  function serializeHistoryValue(historyValue) {
-    if (typeof historyValue !== "object" || historyValue === null) {
-      return {};
-    }
-    const result = {};
-    for (const key in historyValue) {
-      const value = historyValue[key];
-      if (Array.isArray(value)) {
-        result[key] = value.map((item) => ({
-          id: item.id
-        }));
-      }
-    }
-    return result;
-  }
-  function getPersistedSnapshot(snapshot, options) {
-    const {
-      _nodes: nodes,
-      tags,
-      machine,
-      children,
-      context,
-      can: can2,
-      hasTag: hasTag2,
-      matches: matches2,
-      getMeta: getMeta2,
-      toJSON: toJSON2,
-      ...jsonValues
-    } = snapshot;
-    const childrenJson = {};
-    for (const id in children) {
-      const child = children[id];
-      childrenJson[id] = {
-        snapshot: child.getPersistedSnapshot(options),
-        src: child.src,
-        systemId: child.systemId,
-        syncSnapshot: child._syncSnapshot
-      };
-    }
-    const persisted = {
-      ...jsonValues,
-      context: persistContext(context),
-      children: childrenJson,
-      historyValue: serializeHistoryValue(jsonValues.historyValue)
-    };
-    return persisted;
-  }
-  function persistContext(contextPart) {
-    let copy;
-    for (const key in contextPart) {
-      const value = contextPart[key];
-      if (value && typeof value === "object") {
-        if ("sessionId" in value && "send" in value && "ref" in value) {
-          copy ??= Array.isArray(contextPart) ? contextPart.slice() : {
-            ...contextPart
-          };
-          copy[key] = {
-            xstate$$type: $$ACTOR_TYPE,
-            id: value.id
-          };
-        } else {
-          const result = persistContext(value);
-          if (result !== value) {
-            copy ??= Array.isArray(contextPart) ? contextPart.slice() : {
-              ...contextPart
-            };
-            copy[key] = result;
-          }
-        }
-      }
-    }
-    return copy ?? contextPart;
-  }
-  function resolveRaise(_, snapshot, args, actionParams, {
-    event: eventOrExpr,
-    id,
-    delay
-  }, {
-    internalQueue
-  }) {
-    const delaysMap = snapshot.machine.implementations.delays;
-    if (typeof eventOrExpr === "string") {
-      throw new Error(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        `Only event objects may be used with raise; use raise({ type: "${eventOrExpr}" }) instead`
-      );
-    }
-    const resolvedEvent = typeof eventOrExpr === "function" ? eventOrExpr(args, actionParams) : eventOrExpr;
-    let resolvedDelay;
-    if (typeof delay === "string") {
-      const configDelay = delaysMap && delaysMap[delay];
-      resolvedDelay = typeof configDelay === "function" ? configDelay(args, actionParams) : configDelay;
-    } else {
-      resolvedDelay = typeof delay === "function" ? delay(args, actionParams) : delay;
-    }
-    if (typeof resolvedDelay !== "number") {
-      internalQueue.push(resolvedEvent);
-    }
-    return [snapshot, {
-      event: resolvedEvent,
-      id,
-      delay: resolvedDelay
-    }, void 0];
-  }
-  function executeRaise(actorScope, params) {
-    const {
-      event,
-      delay,
-      id
-    } = params;
-    if (typeof delay === "number") {
-      actorScope.defer(() => {
-        const self2 = actorScope.self;
-        actorScope.system.scheduler.schedule(self2, self2, event, delay, id);
-      });
-      return;
-    }
-  }
-  function raise(eventOrExpr, options) {
-    function raise2(_args, _params) {
-    }
-    raise2.type = "xstate.raise";
-    raise2.event = eventOrExpr;
-    raise2.id = options?.id;
-    raise2.delay = options?.delay;
-    raise2.resolve = resolveRaise;
-    raise2.execute = executeRaise;
-    return raise2;
-  }
-
-  // node_modules/.pnpm/xstate@5.32.5/node_modules/xstate/dist/xstate-actors.esm.js
-  function fromTransition(transition, initialContext) {
-    return {
-      config: transition,
-      transition: (snapshot, event, actorScope) => {
-        return {
-          ...snapshot,
-          context: transition(snapshot.context, event, actorScope)
-        };
-      },
-      getInitialSnapshot: (_, input) => {
-        return {
-          status: "active",
-          output: void 0,
-          error: void 0,
-          context: typeof initialContext === "function" ? initialContext({
-            input
-          }) : initialContext
-        };
-      },
-      getPersistedSnapshot: (snapshot) => snapshot,
-      restoreSnapshot: (snapshot) => snapshot
-    };
-  }
-  var XSTATE_PROMISE_RESOLVE = "xstate.promise.resolve";
-  var XSTATE_PROMISE_REJECT = "xstate.promise.reject";
-  var controllerMap = /* @__PURE__ */ new WeakMap();
-  function fromPromise(promiseCreator) {
-    const logic = {
-      config: promiseCreator,
-      transition: (state, event, scope) => {
-        if (state.status !== "active") {
-          return state;
-        }
-        switch (event.type) {
-          case XSTATE_PROMISE_RESOLVE: {
-            const resolvedValue = event.data;
-            return {
-              ...state,
-              status: "done",
-              output: resolvedValue,
-              input: void 0
-            };
-          }
-          case XSTATE_PROMISE_REJECT:
-            return {
-              ...state,
-              status: "error",
-              error: event.data,
-              input: void 0
-            };
-          case XSTATE_STOP: {
-            controllerMap.get(scope.self)?.abort();
-            controllerMap.delete(scope.self);
-            return {
-              ...state,
-              status: "stopped",
-              input: void 0
-            };
-          }
-          default:
-            return state;
-        }
-      },
-      start: (state, {
-        self: self2,
-        system,
-        emit: emit2
-      }) => {
-        if (state.status !== "active") {
-          return;
-        }
-        const controller = new AbortController();
-        controllerMap.set(self2, controller);
-        const resolvedPromise = Promise.resolve(promiseCreator({
-          input: state.input,
-          system,
-          self: self2,
-          signal: controller.signal,
-          emit: emit2
-        }));
-        resolvedPromise.then((response) => {
-          if (self2.getSnapshot().status !== "active") {
-            return;
-          }
-          controllerMap.delete(self2);
-          system._relay(self2, self2, {
-            type: XSTATE_PROMISE_RESOLVE,
-            data: response
-          });
-        }, (errorData) => {
-          if (self2.getSnapshot().status !== "active") {
-            return;
-          }
-          controllerMap.delete(self2);
-          system._relay(self2, self2, {
-            type: XSTATE_PROMISE_REJECT,
-            data: errorData
-          });
-        });
-      },
-      getInitialSnapshot: (_, input) => {
-        return {
-          status: "active",
-          output: void 0,
-          error: void 0,
-          input
-        };
-      },
-      getPersistedSnapshot: (snapshot) => snapshot,
-      restoreSnapshot: (snapshot) => snapshot
-    };
-    return logic;
-  }
-  var emptyLogic = fromTransition((_) => void 0, void 0);
-
-  // node_modules/.pnpm/xstate@5.32.5/node_modules/xstate/dist/assign-29f23f4d.esm.js
-  function createSpawner(actorScope, {
-    machine,
-    context
-  }, event, spawnedChildren) {
-    const spawn = (src, options) => {
-      if (typeof src === "string") {
-        const logic = resolveReferencedActor(machine, src);
-        if (!logic) {
-          throw new Error(`Actor logic '${src}' not implemented in machine '${machine.id}'`);
-        }
-        const actorRef = createActor(logic, {
-          id: options?.id,
-          parent: actorScope.self,
-          syncSnapshot: options?.syncSnapshot,
-          input: typeof options?.input === "function" ? options.input({
-            context,
-            event,
-            self: actorScope.self
-          }) : options?.input,
-          src,
-          systemId: options?.systemId
-        });
-        spawnedChildren[actorRef.id] = actorRef;
-        return actorRef;
-      } else {
-        const actorRef = createActor(src, {
-          id: options?.id,
-          parent: actorScope.self,
-          syncSnapshot: options?.syncSnapshot,
-          input: options?.input,
-          src,
-          systemId: options?.systemId
-        });
-        return actorRef;
-      }
-    };
-    return (src, options) => {
-      const actorRef = spawn(src, options);
-      spawnedChildren[actorRef.id] = actorRef;
-      actorScope.defer(() => {
-        if (actorRef._processingStatus === ProcessingStatus.Stopped) {
-          return;
-        }
-        actorRef.start();
-      });
-      return actorRef;
-    };
-  }
-  function resolveAssign(actorScope, snapshot, actionArgs, actionParams, {
-    assignment
-  }) {
-    if (!snapshot.context) {
-      throw new Error("Cannot assign to undefined `context`. Ensure that `context` is defined in the machine config.");
-    }
-    const spawnedChildren = {};
-    const assignArgs = {
-      context: snapshot.context,
-      event: actionArgs.event,
-      spawn: createSpawner(actorScope, snapshot, actionArgs.event, spawnedChildren),
-      self: actorScope.self,
-      system: actorScope.system
-    };
-    let partialUpdate = {};
-    if (typeof assignment === "function") {
-      partialUpdate = assignment(assignArgs, actionParams);
-    } else {
-      for (const key of Object.keys(assignment)) {
-        const propAssignment = assignment[key];
-        partialUpdate[key] = typeof propAssignment === "function" ? propAssignment(assignArgs, actionParams) : propAssignment;
-      }
-    }
-    const updatedContext = Object.assign({}, snapshot.context, partialUpdate);
-    return [cloneMachineSnapshot(snapshot, {
-      context: updatedContext,
-      children: Object.keys(spawnedChildren).length ? {
-        ...snapshot.children,
-        ...spawnedChildren
-      } : snapshot.children
-    }), void 0, void 0];
-  }
-  function assign(assignment) {
-    function assign2(_args, _params) {
-    }
-    assign2.type = "xstate.assign";
-    assign2.assignment = assignment;
-    assign2.resolve = resolveAssign;
-    return assign2;
-  }
-
-  // node_modules/.pnpm/xstate@5.32.5/node_modules/xstate/dist/StateMachine-5f345bba.esm.js
-  var cache = /* @__PURE__ */ new WeakMap();
-  function memo(object, key, fn) {
-    let memoizedData = cache.get(object);
-    if (!memoizedData) {
-      memoizedData = {
-        [key]: fn()
-      };
-      cache.set(object, memoizedData);
-    } else if (!(key in memoizedData)) {
-      memoizedData[key] = fn();
-    }
-    return memoizedData[key];
-  }
-  var EMPTY_OBJECT = {};
-  var toSerializableAction = (action) => {
-    if (typeof action === "string") {
-      return {
-        type: action
-      };
-    }
-    if (typeof action === "function") {
-      if ("resolve" in action) {
-        return {
-          type: action.type
-        };
-      }
-      return {
-        type: action.name
-      };
-    }
-    return action;
-  };
-  var StateNode = class _StateNode {
-    constructor(config, options) {
-      this.config = config;
-      this.key = void 0;
-      this.id = void 0;
-      this.type = void 0;
-      this.path = void 0;
-      this.states = void 0;
-      this.history = void 0;
-      this.entry = void 0;
-      this.exit = void 0;
-      this.parent = void 0;
-      this.machine = void 0;
-      this.meta = void 0;
-      this.output = void 0;
-      this.order = -1;
-      this.description = void 0;
-      this.tags = [];
-      this.transitions = void 0;
-      this.always = void 0;
-      this.parent = options._parent;
-      this.key = options._key;
-      this.machine = options._machine;
-      this.path = this.parent ? this.parent.path.concat(this.key) : [];
-      this.id = this.config.id || [this.machine.id, ...this.path].join(STATE_DELIMITER);
-      this.type = this.config.type || (this.config.states && Object.keys(this.config.states).length ? "compound" : this.config.history ? "history" : "atomic");
-      this.description = this.config.description;
-      this.order = this.machine.idMap.size;
-      this.machine.idMap.set(this.id, this);
-      this.states = this.config.states ? mapValues(this.config.states, (stateConfig, key) => {
-        const stateNode = new _StateNode(stateConfig, {
-          _parent: this,
-          _key: key,
-          _machine: this.machine
-        });
-        return stateNode;
-      }) : EMPTY_OBJECT;
-      if (this.type === "compound" && !this.config.initial) {
-        throw new Error(`No initial state specified for compound state node "#${this.id}". Try adding { initial: "${Object.keys(this.states)[0]}" } to the state config.`);
-      }
-      this.history = this.config.history === true ? "shallow" : this.config.history || false;
-      this.entry = toArray(this.config.entry).slice();
-      this.exit = toArray(this.config.exit).slice();
-      this.meta = this.config.meta;
-      this.output = this.type === "final" || !this.parent ? this.config.output : void 0;
-      this.tags = toArray(config.tags).slice();
-    }
-    /** @internal */
-    _initialize() {
-      this.transitions = formatTransitions(this);
-      if (this.config.always) {
-        this.always = toTransitionConfigArray(this.config.always).map((t) => formatTransition(this, NULL_EVENT, t));
-      }
-      Object.keys(this.states).forEach((key) => {
-        this.states[key]._initialize();
-      });
-    }
-    /** The well-structured state node definition. */
-    get definition() {
-      return {
-        id: this.id,
-        key: this.key,
-        version: this.machine.version,
-        type: this.type,
-        initial: this.initial ? {
-          target: this.initial.target,
-          source: this,
-          actions: this.initial.actions.map(toSerializableAction),
-          eventType: null,
-          reenter: false,
-          toJSON: () => ({
-            target: this.initial.target.map((t) => `#${t.id}`),
-            source: `#${this.id}`,
-            actions: this.initial.actions.map(toSerializableAction),
-            eventType: null
-          })
-        } : void 0,
-        history: this.history,
-        states: mapValues(this.states, (state) => {
-          return state.definition;
-        }),
-        on: this.on,
-        transitions: [...this.transitions.values()].flat().map((t) => ({
-          ...t,
-          actions: t.actions.map(toSerializableAction)
-        })),
-        entry: this.entry.map(toSerializableAction),
-        exit: this.exit.map(toSerializableAction),
-        meta: this.meta,
-        order: this.order || -1,
-        output: this.output,
-        invoke: this.invoke,
-        description: this.description,
-        tags: this.tags
-      };
-    }
-    /** @internal */
-    toJSON() {
-      return this.definition;
-    }
-    /** The logic invoked as actors by this state node. */
-    get invoke() {
-      return memo(this, "invoke", () => toArray(this.config.invoke).map((invokeConfig, i) => {
-        const {
-          src,
-          systemId
-        } = invokeConfig;
-        const resolvedId = invokeConfig.id ?? createInvokeId(this.id, i);
-        const sourceName = typeof src === "string" ? src : `xstate.invoke.${createInvokeId(this.id, i)}`;
-        return {
-          ...invokeConfig,
-          src: sourceName,
-          id: resolvedId,
-          systemId,
-          toJSON() {
-            const {
-              onDone,
-              onError,
-              ...invokeDefValues
-            } = invokeConfig;
-            return {
-              ...invokeDefValues,
-              type: "xstate.invoke",
-              src: sourceName,
-              id: resolvedId
-            };
-          }
-        };
-      }));
-    }
-    /** The mapping of events to transitions. */
-    get on() {
-      return memo(this, "on", () => {
-        const transitions = this.transitions;
-        return [...transitions].flatMap(([descriptor, t]) => t.map((t2) => [descriptor, t2])).reduce((map, [descriptor, transition]) => {
-          map[descriptor] = map[descriptor] || [];
-          map[descriptor].push(transition);
-          return map;
-        }, {});
-      });
-    }
-    get after() {
-      return memo(this, "delayedTransitions", () => getDelayedTransitions(this));
-    }
-    get initial() {
-      return memo(this, "initial", () => formatInitialTransition(this, this.config.initial));
-    }
-    /** @internal */
-    next(snapshot, event) {
-      const eventType = event.type;
-      const actions = [];
-      let selectedTransition;
-      const candidates = memo(this, `candidates-${eventType}`, () => getCandidates(this, eventType));
-      for (const candidate of candidates) {
-        const {
-          guard
-        } = candidate;
-        const resolvedContext = snapshot.context;
-        let guardPassed = false;
-        try {
-          guardPassed = !guard || evaluateGuard(guard, resolvedContext, event, snapshot);
-        } catch (err) {
-          const guardType = typeof guard === "string" ? guard : typeof guard === "object" ? guard.type : void 0;
-          throw new Error(`Unable to evaluate guard ${guardType ? `'${guardType}' ` : ""}in transition for event '${eventType}' in state node '${this.id}':
-${err.message}`);
-        }
-        if (guardPassed) {
-          actions.push(...candidate.actions);
-          selectedTransition = candidate;
-          break;
-        }
-      }
-      return selectedTransition ? [selectedTransition] : void 0;
-    }
-    /** All the event types accepted by this state node and its descendants. */
-    get events() {
-      return memo(this, "events", () => {
-        const {
-          states
-        } = this;
-        const events = new Set(this.ownEvents);
-        if (states) {
-          for (const stateId of Object.keys(states)) {
-            const state = states[stateId];
-            if (state.states) {
-              for (const event of state.events) {
-                events.add(`${event}`);
-              }
-            }
-          }
-        }
-        return Array.from(events);
-      });
-    }
-    /**
-     * All the events that have transitions directly from this state node.
-     *
-     * Excludes any inert events.
-     */
-    get ownEvents() {
-      const keys = Object.keys(Object.fromEntries(this.transitions));
-      const events = new Set(keys.filter((descriptor) => {
-        return this.transitions.get(descriptor).some((transition) => !(!transition.target && !transition.actions.length && !transition.reenter));
-      }));
-      return Array.from(events);
-    }
-  };
-  var STATE_IDENTIFIER2 = "#";
-  var StateMachine = class _StateMachine {
-    constructor(config, implementations) {
-      this.config = config;
-      this.version = void 0;
-      this.schemas = void 0;
-      this.implementations = void 0;
-      this.options = void 0;
-      this.__xstatenode = true;
-      this.idMap = /* @__PURE__ */ new Map();
-      this.root = void 0;
-      this.id = void 0;
-      this.states = void 0;
-      this.events = void 0;
-      this.id = config.id || "(machine)";
-      this.implementations = {
-        actors: implementations?.actors ?? {},
-        actions: implementations?.actions ?? {},
-        delays: implementations?.delays ?? {},
-        guards: implementations?.guards ?? {}
-      };
-      this.version = this.config.version;
-      this.schemas = this.config.schemas;
-      this.options = {
-        maxIterations: Infinity,
-        ...this.config.options
-      };
-      this.transition = this.transition.bind(this);
-      this.getInitialSnapshot = this.getInitialSnapshot.bind(this);
-      this.getPersistedSnapshot = this.getPersistedSnapshot.bind(this);
-      this.restoreSnapshot = this.restoreSnapshot.bind(this);
-      this.start = this.start.bind(this);
-      this.root = new StateNode(config, {
-        _key: this.id,
-        _machine: this
-      });
-      this.root._initialize();
-      formatRouteTransitions(this.root);
-      this.states = this.root.states;
-      this.events = this.root.events;
-    }
-    /**
-     * Clones this state machine with the provided implementations.
-     *
-     * @param implementations Options (`actions`, `guards`, `actors`, `delays`) to
-     *   recursively merge with the existing options.
-     * @returns A new `StateMachine` instance with the provided implementations.
-     */
-    provide(implementations) {
-      const {
-        actions,
-        guards,
-        actors,
-        delays
-      } = this.implementations;
-      return new _StateMachine(this.config, {
-        actions: {
-          ...actions,
-          ...implementations.actions
-        },
-        guards: {
-          ...guards,
-          ...implementations.guards
-        },
-        actors: {
-          ...actors,
-          ...implementations.actors
-        },
-        delays: {
-          ...delays,
-          ...implementations.delays
-        }
-      });
-    }
-    resolveState(config) {
-      const resolvedStateValue = resolveStateValue(this.root, config.value);
-      const nodeSet = getAllStateNodes(getStateNodes(this.root, resolvedStateValue));
-      return createMachineSnapshot({
-        _nodes: [...nodeSet],
-        context: config.context || {},
-        children: {},
-        status: isInFinalState(nodeSet, this.root) ? "done" : config.status || "active",
-        output: config.output,
-        error: config.error,
-        historyValue: config.historyValue
-      }, this);
-    }
-    /**
-     * Determines the next snapshot given the current `snapshot` and received
-     * `event`. Calculates a full macrostep from all microsteps.
-     *
-     * @param snapshot The current snapshot
-     * @param event The received event
-     */
-    transition(snapshot, event, actorScope) {
-      return macrostep(snapshot, event, actorScope, []).snapshot;
-    }
-    /**
-     * Determines the next state given the current `state` and `event`. Calculates
-     * a microstep.
-     *
-     * @param state The current state
-     * @param event The received event
-     */
-    microstep(snapshot, event, actorScope) {
-      return macrostep(snapshot, event, actorScope, []).microsteps.map(([s]) => s);
-    }
-    getTransitionData(snapshot, event) {
-      return transitionNode(this.root, snapshot.value, snapshot, event) || [];
-    }
-    /**
-     * The initial state _before_ evaluating any microsteps. This "pre-initial"
-     * state is provided to initial actions executed in the initial state.
-     *
-     * @internal
-     */
-    _getPreInitialState(actorScope, initEvent, internalQueue) {
-      const {
-        context
-      } = this.config;
-      const preInitial = createMachineSnapshot({
-        context: typeof context !== "function" && context ? context : {},
-        _nodes: [this.root],
-        children: {},
-        status: "active"
-      }, this);
-      if (typeof context === "function") {
-        const assignment = ({
-          spawn,
-          event,
-          self: self2
-        }) => context({
-          spawn,
-          input: event.input,
-          self: self2
-        });
-        return resolveActionsAndContext(preInitial, initEvent, actorScope, [assign(assignment)], internalQueue, void 0);
-      }
-      return preInitial;
-    }
-    /**
-     * Returns the initial `State` instance, with reference to `self` as an
-     * `ActorRef`.
-     */
-    getInitialSnapshot(actorScope, input) {
-      const initEvent = createInitEvent(input);
-      const internalQueue = [];
-      const preInitialState = this._getPreInitialState(actorScope, initEvent, internalQueue);
-      const [nextState] = initialMicrostep(this.root, preInitialState, actorScope, initEvent, internalQueue);
-      const {
-        snapshot: macroState
-      } = macrostep(nextState, initEvent, actorScope, internalQueue);
-      return macroState;
-    }
-    start(snapshot) {
-      Object.values(snapshot.children).forEach((child) => {
-        if (child.getSnapshot().status === "active") {
-          child.start();
-        }
-      });
-    }
-    getStateNodeById(stateId) {
-      const fullPath = toStatePath(stateId);
-      const relativePath = fullPath.slice(1);
-      const resolvedStateId = isStateId(fullPath[0]) ? fullPath[0].slice(STATE_IDENTIFIER2.length) : fullPath[0];
-      const stateNode = this.idMap.get(resolvedStateId);
-      if (!stateNode) {
-        throw new Error(`Child state node '#${resolvedStateId}' does not exist on machine '${this.id}'`);
-      }
-      return getStateNodeByPath(stateNode, relativePath);
-    }
-    get definition() {
-      return this.root.definition;
-    }
-    toJSON() {
-      return this.definition;
-    }
-    getPersistedSnapshot(snapshot, options) {
-      return getPersistedSnapshot(snapshot, options);
-    }
-    restoreSnapshot(snapshot, _actorScope) {
-      const children = {};
-      const snapshotChildren = snapshot.children;
-      Object.keys(snapshotChildren).forEach((actorId) => {
-        const actorData = snapshotChildren[actorId];
-        const childState = actorData.snapshot;
-        const src = actorData.src;
-        const logic = typeof src === "string" ? resolveReferencedActor(this, src) : src;
-        if (!logic) {
-          return;
-        }
-        const actorRef = createActor(logic, {
-          id: actorId,
-          parent: _actorScope.self,
-          syncSnapshot: actorData.syncSnapshot,
-          snapshot: childState,
-          src,
-          systemId: actorData.systemId
-        });
-        children[actorId] = actorRef;
-      });
-      function resolveHistoryReferencedState(root, referenced) {
-        if (referenced instanceof StateNode) {
-          return referenced;
-        }
-        try {
-          return root.machine.getStateNodeById(referenced.id);
-        } catch {
-        }
-      }
-      function reviveHistoryValue(root, historyValue) {
-        if (!historyValue || typeof historyValue !== "object") {
-          return {};
-        }
-        const revived = {};
-        for (const key in historyValue) {
-          const arr = historyValue[key];
-          for (const item of arr) {
-            const resolved = resolveHistoryReferencedState(root, item);
-            if (!resolved) {
-              continue;
-            }
-            revived[key] ??= [];
-            revived[key].push(resolved);
-          }
-        }
-        return revived;
-      }
-      const revivedHistoryValue = reviveHistoryValue(this.root, snapshot.historyValue);
-      const restoredSnapshot = createMachineSnapshot({
-        ...snapshot,
-        children,
-        _nodes: Array.from(getAllStateNodes(getStateNodes(this.root, snapshot.value))),
-        historyValue: revivedHistoryValue
-      }, this);
-      const seen = /* @__PURE__ */ new Set();
-      function reviveContext(contextPart, children2) {
-        if (seen.has(contextPart)) {
-          return;
-        }
-        seen.add(contextPart);
-        for (const key in contextPart) {
-          const value = contextPart[key];
-          if (value && typeof value === "object") {
-            if ("xstate$$type" in value && value.xstate$$type === $$ACTOR_TYPE) {
-              contextPart[key] = children2[value.id];
-              continue;
-            }
-            reviveContext(value, children2);
-          }
-        }
-      }
-      reviveContext(restoredSnapshot.context, children);
-      return restoredSnapshot;
-    }
-  };
-
-  // node_modules/.pnpm/xstate@5.32.5/node_modules/xstate/dist/log-79409d72.esm.js
-  function resolveEmit(_, snapshot, args, actionParams, {
-    event: eventOrExpr
-  }) {
-    const resolvedEvent = typeof eventOrExpr === "function" ? eventOrExpr(args, actionParams) : eventOrExpr;
-    return [snapshot, {
-      event: resolvedEvent
-    }, void 0];
-  }
-  function executeEmit(actorScope, {
-    event
-  }) {
-    actorScope.defer(() => actorScope.emit(event));
-  }
-  function emit(eventOrExpr) {
-    function emit2(_args, _params) {
-    }
-    emit2.type = "xstate.emit";
-    emit2.event = eventOrExpr;
-    emit2.resolve = resolveEmit;
-    emit2.execute = executeEmit;
-    return emit2;
-  }
-  var SpecialTargets = /* @__PURE__ */ function(SpecialTargets2) {
-    SpecialTargets2["Parent"] = "#_parent";
-    SpecialTargets2["Internal"] = "#_internal";
-    return SpecialTargets2;
-  }({});
-  function resolveSendTo(actorScope, snapshot, args, actionParams, {
-    to,
-    event: eventOrExpr,
-    id,
-    delay
-  }, extra) {
-    const delaysMap = snapshot.machine.implementations.delays;
-    if (typeof eventOrExpr === "string") {
-      throw new Error(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        `Only event objects may be used with sendTo; use sendTo({ type: "${eventOrExpr}" }) instead`
-      );
-    }
-    const resolvedEvent = typeof eventOrExpr === "function" ? eventOrExpr(args, actionParams) : eventOrExpr;
-    let resolvedDelay;
-    if (typeof delay === "string") {
-      const configDelay = delaysMap && delaysMap[delay];
-      resolvedDelay = typeof configDelay === "function" ? configDelay(args, actionParams) : configDelay;
-    } else {
-      resolvedDelay = typeof delay === "function" ? delay(args, actionParams) : delay;
-    }
-    const resolvedTarget = typeof to === "function" ? to(args, actionParams) : to;
-    let targetActorRef;
-    if (typeof resolvedTarget === "string") {
-      if (resolvedTarget === SpecialTargets.Parent) {
-        targetActorRef = actorScope.self._parent;
-      } else if (resolvedTarget === SpecialTargets.Internal) {
-        targetActorRef = actorScope.self;
-      } else if (resolvedTarget.startsWith("#_")) {
-        targetActorRef = snapshot.children[resolvedTarget.slice(2)];
-      } else {
-        targetActorRef = extra.deferredActorIds?.includes(resolvedTarget) ? resolvedTarget : snapshot.children[resolvedTarget];
-      }
-      if (!targetActorRef) {
-        throw new Error(`Unable to send event to actor '${resolvedTarget}' from machine '${snapshot.machine.id}'.`);
-      }
-    } else {
-      targetActorRef = resolvedTarget || actorScope.self;
-    }
-    return [snapshot, {
-      to: targetActorRef,
-      targetId: typeof resolvedTarget === "string" ? resolvedTarget : void 0,
-      event: resolvedEvent,
-      id,
-      delay: resolvedDelay
-    }, void 0];
-  }
-  function retryResolveSendTo(_, snapshot, params) {
-    if (typeof params.to === "string") {
-      params.to = snapshot.children[params.to];
-    }
-  }
-  function executeSendTo(actorScope, params) {
-    actorScope.defer(() => {
-      const {
-        to,
-        event,
-        delay,
-        id
-      } = params;
-      if (typeof delay === "number") {
-        actorScope.system.scheduler.schedule(actorScope.self, to, event, delay, id);
-        return;
-      }
-      actorScope.system._relay(
-        actorScope.self,
-        // at this point, in a deferred task, it should already be mutated by retryResolveSendTo
-        // if it initially started as a string
-        to,
-        event.type === XSTATE_ERROR ? createErrorActorEvent(actorScope.self.id, event.data) : event
-      );
-    });
-  }
-  function sendTo(to, eventOrExpr, options) {
-    function sendTo2(_args, _params) {
-    }
-    sendTo2.type = "xstate.sendTo";
-    sendTo2.to = to;
-    sendTo2.event = eventOrExpr;
-    sendTo2.id = options?.id;
-    sendTo2.delay = options?.delay;
-    sendTo2.resolve = resolveSendTo;
-    sendTo2.retryResolve = retryResolveSendTo;
-    sendTo2.execute = executeSendTo;
-    return sendTo2;
-  }
-  function sendParent(event, options) {
-    return sendTo(SpecialTargets.Parent, event, options);
-  }
-  function resolveEnqueueActions(actorScope, snapshot, args, actionParams, {
-    collect
-  }) {
-    const actions = [];
-    const enqueue = function enqueue2(action) {
-      actions.push(action);
-    };
-    enqueue.assign = (...args2) => {
-      actions.push(assign(...args2));
-    };
-    enqueue.cancel = (...args2) => {
-      actions.push(cancel(...args2));
-    };
-    enqueue.raise = (...args2) => {
-      actions.push(raise(...args2));
-    };
-    enqueue.sendTo = (...args2) => {
-      actions.push(sendTo(...args2));
-    };
-    enqueue.sendParent = (...args2) => {
-      actions.push(sendParent(...args2));
-    };
-    enqueue.spawnChild = (...args2) => {
-      actions.push(spawnChild(...args2));
-    };
-    enqueue.stopChild = (...args2) => {
-      actions.push(stopChild(...args2));
-    };
-    enqueue.emit = (...args2) => {
-      actions.push(emit(...args2));
-    };
-    collect({
-      context: args.context,
-      event: args.event,
-      enqueue,
-      check: (guard) => evaluateGuard(guard, snapshot.context, args.event, snapshot),
-      self: actorScope.self,
-      system: actorScope.system
-    }, actionParams);
-    return [snapshot, void 0, actions];
-  }
-  function enqueueActions(collect) {
-    function enqueueActions2(_args, _params) {
-    }
-    enqueueActions2.type = "xstate.enqueueActions";
-    enqueueActions2.collect = collect;
-    enqueueActions2.resolve = resolveEnqueueActions;
-    return enqueueActions2;
-  }
-  function resolveLog(_, snapshot, actionArgs, actionParams, {
-    value,
-    label
-  }) {
-    return [snapshot, {
-      value: typeof value === "function" ? value(actionArgs, actionParams) : value,
-      label
-    }, void 0];
-  }
-  function executeLog({
-    logger
-  }, {
-    value,
-    label
-  }) {
-    if (label) {
-      logger(label, value);
-    } else {
-      logger(value);
-    }
-  }
-  function log(value = ({
-    context,
-    event
-  }) => ({
-    context,
-    event
-  }), label) {
-    function log2(_args, _params) {
-    }
-    log2.type = "xstate.log";
-    log2.value = value;
-    log2.label = label;
-    log2.resolve = resolveLog;
-    log2.execute = executeLog;
-    return log2;
-  }
-
-  // node_modules/.pnpm/xstate@5.32.5/node_modules/xstate/dist/xstate.esm.js
-  function createMachine(config, implementations) {
-    return new StateMachine(config, implementations);
-  }
-  function setup({
-    schemas,
-    actors,
-    actions,
-    guards,
-    delays
-  }) {
-    return {
-      assign,
-      sendTo,
-      raise,
-      log,
-      cancel,
-      stopChild,
-      enqueueActions,
-      emit,
-      spawnChild,
-      createStateConfig: (config) => config,
-      createAction: (fn) => fn,
-      createMachine: (config) => createMachine({
-        ...config,
-        schemas
-      }, {
-        actors,
-        actions,
-        guards,
-        delays
-      }),
-      extend: (extended) => setup({
-        schemas,
-        actors,
-        actions: {
-          ...actions,
-          ...extended.actions
-        },
-        guards: {
-          ...guards,
-          ...extended.guards
-        },
-        delays: {
-          ...delays,
-          ...extended.delays
-        }
-      })
-    };
-  }
-
-  // node_modules/.pnpm/@xstate+react@6.1.0_@types+react@18.3.31_react@18.3.1_xstate@5.32.5/node_modules/@xstate/react/dist/xstate-react.esm.js
-  var import_with_selector = __toESM(require_with_selector());
-  var import_shim = __toESM(require_shim());
-  var forEachActor = (actorRef, callback) => {
-    callback(actorRef);
-    const children = actorRef.getSnapshot().children;
-    if (children) {
-      Object.values(children).forEach((child) => {
-        forEachActor(child, callback);
-      });
-    }
-  };
-  function stopRootWithRehydration(actorRef) {
-    const persistedSnapshots = [];
-    forEachActor(actorRef, (ref) => {
-      persistedSnapshots.push([ref, ref.getSnapshot()]);
-      ref.observers = /* @__PURE__ */ new Set();
-    });
-    const systemSnapshot = actorRef.system.getSnapshot?.();
-    actorRef.stop();
-    actorRef.system._snapshot = systemSnapshot;
-    persistedSnapshots.forEach(([ref, snapshot]) => {
-      ref._processingStatus = 0;
-      ref._snapshot = snapshot;
-    });
-  }
-  function useIdleActorRef(logic, ...[options]) {
-    let [[currentConfig, actorRef], setCurrent] = (0, import_react2.useState)(() => {
-      const actorRef2 = createActor(logic, options);
-      return [logic.config, actorRef2];
-    });
-    if (logic.config !== currentConfig) {
-      const newActorRef = createActor(logic, {
-        ...options,
-        snapshot: actorRef.getPersistedSnapshot({
-          __unsafeAllowInlineActors: true
-        })
-      });
-      setCurrent([logic.config, newActorRef]);
-      actorRef = newActorRef;
-    }
-    index(() => {
-      actorRef.logic.implementations = logic.implementations;
-    });
-    return actorRef;
-  }
-  function useActor(logic, ...[options]) {
-    const actorRef = useIdleActorRef(logic, options);
-    const getSnapshot = (0, import_react2.useCallback)(() => {
-      return actorRef.getSnapshot();
-    }, [actorRef]);
-    const subscribe = (0, import_react2.useCallback)((handleStoreChange) => {
-      const {
-        unsubscribe
-      } = actorRef.subscribe({
-        next: handleStoreChange,
-        error: handleStoreChange
-      });
-      return unsubscribe;
-    }, [actorRef]);
-    const actorSnapshot = (0, import_shim.useSyncExternalStore)(subscribe, getSnapshot, getSnapshot);
-    const snapshotWithStatus = "status" in actorSnapshot ? actorSnapshot : void 0;
-    if (snapshotWithStatus?.status === "error") {
-      throw snapshotWithStatus.error;
-    }
-    (0, import_react2.useEffect)(() => {
-      actorRef.start();
-      return () => {
-        stopRootWithRehydration(actorRef);
-      };
-    }, [actorRef]);
-    return [actorSnapshot, actorRef.send, actorRef];
-  }
-  function useMachine(machine, ...[options]) {
-    return useActor(machine, options);
-  }
-
-  // dev/javascript/settings/_components/ui.jsx
-  var import_react3 = __toESM(require_react());
-  var cx = (...classes) => classes.filter(Boolean).join(" ");
-  var Input = (0, import_react3.forwardRef)(({ className, ...props }, ref) => /* @__PURE__ */ React.createElement(
-    "input",
-    {
-      ref,
-      className: cx(
-        "w-full lg:max-w-md text-gray-700 mt-2 lg:mt-0 py-1.5 px-2.5 text-sm border border-gray-400 focus:border-accent-600",
-        className
-      ),
-      ...props
-    }
-  ));
-  var NOTICE_TYPES = {
-    default: "text-gray-800",
-    alert: "text-red-600",
-    error: "text-red-600",
-    warning: "text-orange-700",
-    success: "text-green-700",
-    info: "text-gray-500"
-  };
-  var Notice = ({ type = "default", className, ...props }) => /* @__PURE__ */ React.createElement(
-    "div",
-    {
-      ...props,
-      className: cx(
-        "text-xs leading-normal font-semibold",
-        NOTICE_TYPES[type] ?? NOTICE_TYPES.default,
-        className
-      )
-    }
-  );
-  var FieldNotice = ({ type, ...props }) => /* @__PURE__ */ React.createElement(Notice, { ...props, type, className: "mt-2" });
-  var Field = ({ tag: Tag = "div", className, ...props }) => /* @__PURE__ */ React.createElement(
-    Tag,
-    {
-      ...props,
-      className: cx(
-        "block bg-white py-5 px-5 lg:px-7 ring-1 ring-gray-200",
-        className
-      )
-    }
-  );
-  var FieldTitle = (props) => /* @__PURE__ */ React.createElement("div", { ...props, className: "lg:w-3/12 lg:pr-5 text-gray-800 text-sm font-medium" });
-  var FieldContent = (props) => /* @__PURE__ */ React.createElement("div", { ...props, className: "lg:w-9/12 mt-2 lg:mt-0 space-y-2" });
-  var FormField = ({ ...props }) => /* @__PURE__ */ React.createElement(Field, { tag: "label" }, /* @__PURE__ */ React.createElement("div", { ...props, className: "lg:flex lg:items-baseline" }));
-
-  // dev/javascript/settings/_machines/upgradeMachine.js
   var { __: __5 } = window.wp.i18n;
-  var failureFromThrown = (error) => {
-    if (error?.data?.status === 404) {
-      return {
-        noticeCode: "gone",
-        message: __5(
-          "This site looks like it has already switched to Cycle Block Pro. Open the Plugins screen to finish activating it, or reload this page.",
-          "ghostlabs-cycle-block-lite"
-        )
-      };
-    }
-    return {
-      noticeCode: "network",
-      message: error?.message || __5(
-        "The upgrade request could not be sent. Check your connection and try again.",
-        "ghostlabs-cycle-block-lite"
-      )
-    };
-  };
-  var createUpgradeMachine = ({ submit }) => setup({
-    actors: {
-      submit: fromPromise(({ input }) => submit(input))
-    }
-  }).createMachine({
-    id: "ghostlabs-free-upgrade",
-    initial: "idle",
-    context: {
-      message: "",
-      noticeCode: "",
-      activationUrl: null
+  var UpgradePanel = ({ accountUrl, uploadUrl }) => /* @__PURE__ */ React.createElement(
+    "section",
+    {
+      "data-gl-handoff": true,
+      className: "rounded-[10px] border border-gray-200 bg-white px-7 py-[18px]"
     },
-    states: {
-      idle: {
-        on: { SUBMIT: "submitting", CLAIM: "submitting" }
-      },
-      submitting: {
-        // A fresh attempt clears the previous failure, so the status
-        // region never shows a stale error over a retry in flight.
-        entry: assign({ message: () => "", noticeCode: () => "" }),
-        invoke: {
-          src: "submit",
-          input: ({ event }) => ({
-            licenseKey: event.licenseKey ?? null,
-            claimToken: event.claimToken ?? null
-          }),
-          onDone: [
-            {
-              guard: ({ event }) => event.output?.ok === true,
-              target: "redirecting",
-              actions: assign({
-                activationUrl: ({ event }) => event.output.activationUrl
-              })
-            },
-            {
-              target: "failed",
-              actions: assign({
-                message: ({ event }) => event.output?.message ?? "",
-                noticeCode: ({ event }) => event.output?.noticeCode ?? ""
-              })
-            }
-          ],
-          onError: {
-            target: "failed",
-            actions: assign(
-              ({ event }) => failureFromThrown(event.error)
-            )
-          }
-        }
-      },
-      failed: {
-        on: { SUBMIT: "submitting", CLAIM: "submitting" }
-      },
-      redirecting: {
-        type: "final"
-      }
-    }
-  });
-
-  // dev/javascript/settings/_components/upgrade/UpgradePanel.jsx
-  var { __: __6 } = window.wp.i18n;
-  var FORM_ID = "ghostlabs-upgrade-form";
-  var MISSING_KEY_MESSAGE = () => __6(
-    "Enter the license key from your receipt email.",
-    "ghostlabs-cycle-block-lite"
-  );
-  var BUTTON_BASE = "rounded-md px-5 py-2.5 text-sm font-semibold text-white transition";
-  var buttonClass = (inFlight) => `${BUTTON_BASE} ${inFlight ? "bg-primary-300 cursor-wait" : "bg-primary-500 hover:bg-primary-400"}`;
-  var CLAIM_ARG = "cycle_upgrade_claim";
-  var CLAIM_GONE = "claim_gone";
-  var submitUpgrade = (restNamespace2) => ({ licenseKey, claimToken }) => claimToken ? window.wp.apiFetch({
-    path: `${restNamespace2}/claim-upgrade`,
-    method: "POST",
-    data: { claimToken }
-  }) : window.wp.apiFetch({
-    path: `${restNamespace2}/upgrade`,
-    method: "POST",
-    data: { licenseKey }
-  });
-  var UpgradePanel = ({ restNamespace: restNamespace2 }) => {
-    const [machine] = (0, import_react4.useState)(
-      () => createUpgradeMachine({ submit: submitUpgrade(restNamespace2) })
-    );
-    const [state, send] = useMachine(machine);
-    const [claimToken] = (0, import_react4.useState)(
-      () => new URLSearchParams(window.location.search).get(CLAIM_ARG)
-    );
-    const [revealed, setRevealed] = (0, import_react4.useState)(false);
-    const [claimDead, setClaimDead] = (0, import_react4.useState)(false);
-    const [licenseKey, setLicenseKey] = (0, import_react4.useState)("");
-    const [missingKey, setMissingKey] = (0, import_react4.useState)(false);
-    const inputRef = (0, import_react4.useRef)(null);
-    const claimRef = (0, import_react4.useRef)(null);
-    const busy = state.matches("submitting");
-    const failed = state.matches("failed");
-    const redirecting = state.matches("redirecting");
-    const claimGone = failed && state.context.noticeCode === CLAIM_GONE;
-    const claimOffered = Boolean(claimToken) && !claimDead && !claimGone;
-    const inFlight = busy || redirecting;
-    (0, import_react4.useEffect)(() => {
-      if (claimToken) {
-        claimRef.current?.focus();
-      }
-    }, [claimToken]);
-    (0, import_react4.useEffect)(() => {
-      if (revealed) {
-        inputRef.current?.focus();
-      }
-    }, [revealed]);
-    (0, import_react4.useEffect)(() => {
-      if (claimGone) {
-        setClaimDead(true);
-        setRevealed(true);
-      }
-    }, [claimGone]);
-    (0, import_react4.useEffect)(() => {
-      if (!failed) {
-        return;
-      }
-      if (claimOffered) {
-        claimRef.current?.focus();
-      } else {
-        inputRef.current?.focus();
-      }
-    }, [failed, claimOffered]);
-    (0, import_react4.useEffect)(() => {
-      if (redirecting && state.context.activationUrl) {
-        window.location.assign(state.context.activationUrl);
-      }
-    }, [redirecting, state.context.activationUrl]);
-    let status = "";
-    if (busy) {
-      status = __6(
-        "Verifying your key and installing Cycle Block Pro\u2026",
-        "ghostlabs-cycle-block-lite"
-      );
-    } else if (redirecting) {
-      status = __6(
-        "Done \u2014 activating Cycle Block Pro\u2026",
-        "ghostlabs-cycle-block-lite"
-      );
-    } else if (failed) {
-      status = state.context.message;
-    } else if (missingKey) {
-      status = MISSING_KEY_MESSAGE();
-    }
-    let heading = __6("Already own Cycle Block Pro?", "ghostlabs-cycle-block-lite");
-    let subheading = __6(
-      "Paste your license key and this site switches to Pro in place \u2014 every block, schedule and setting stays exactly as it is.",
+    /* @__PURE__ */ React.createElement("details", { className: "group" }, /* @__PURE__ */ React.createElement("summary", { className: "flex cursor-pointer list-none items-center justify-between gap-6 rounded-md focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-500" }, /* @__PURE__ */ React.createElement("h2", { className: "text-sm font-semibold text-gray-900" }, __5("Already own Cycle Block Pro?", "ghostlabs-cycle-block-lite")), /* @__PURE__ */ React.createElement("span", { className: "shrink-0 rounded-full border-2 border-primary-400 px-5 py-2 text-sm font-semibold text-primary-500 transition group-hover:bg-primary-50/20" }, __5("Have a license?", "ghostlabs-cycle-block-lite"))), /* @__PURE__ */ React.createElement("div", { className: "mt-4 text-sm text-gray-700" }, /* @__PURE__ */ React.createElement("p", { className: "text-gray-500" }, __5(
+      "Cycle Block Pro is a separate plugin. When you activate it, it switches this plugin off, and every block, schedule and setting stays exactly as it is.",
       "ghostlabs-cycle-block-lite"
-    );
-    if (claimToken) {
-      heading = __6("Finish your upgrade", "ghostlabs-cycle-block-lite");
-      subheading = claimOffered ? __6(
-        "Your purchase is complete. One click and this site switches to Pro in place \u2014 no key entry needed, and every block, schedule and setting stays exactly as it is.",
-        "ghostlabs-cycle-block-lite"
-      ) : __6(
-        "This site switches to Pro in place \u2014 every block, schedule and setting stays exactly as it is.",
-        "ghostlabs-cycle-block-lite"
-      );
-    }
-    const onSubmit = (event) => {
-      event.preventDefault();
-      if (inFlight) {
-        return;
-      }
-      if (licenseKey.trim() === "") {
-        setMissingKey(true);
-        inputRef.current?.focus();
-        return;
-      }
-      setMissingKey(false);
-      send({ type: "SUBMIT", licenseKey: licenseKey.trim() });
-    };
-    return /* @__PURE__ */ React.createElement("div", { className: "rounded-[10px] border border-gray-200 bg-white px-7 py-[18px]" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between gap-6" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", { className: "text-sm font-semibold text-gray-900" }, heading), /* @__PURE__ */ React.createElement("p", { className: "mt-0.5 text-sm text-gray-500" }, subheading)), /* @__PURE__ */ React.createElement(
-      "button",
+    )), /* @__PURE__ */ React.createElement("ol", { className: "mt-3 list-decimal space-y-1.5 pl-5" }, /* @__PURE__ */ React.createElement("li", null, accountUrl ? /* @__PURE__ */ React.createElement(
+      "a",
       {
-        type: "button",
-        className: "shrink-0 rounded-full border-2 border-primary-400 px-5 py-2 text-sm font-semibold text-primary-500 transition hover:bg-primary-50/20",
-        "aria-expanded": revealed,
-        "aria-controls": FORM_ID,
-        onClick: () => setRevealed((open) => !open)
+        href: accountUrl,
+        target: "_blank",
+        rel: "noopener noreferrer",
+        className: "font-semibold text-primary-500 underline hover:text-primary-400"
       },
-      __6("Have a license?", "ghostlabs-cycle-block-lite")
-    )), claimOffered && /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(
-      "button",
-      {
-        ref: claimRef,
-        type: "button",
-        className: buttonClass(inFlight),
-        "aria-disabled": inFlight,
-        onClick: () => {
-          if (inFlight) {
-            return;
-          }
-          send({ type: "CLAIM", claimToken });
-        }
-      },
-      __6("Complete upgrade", "ghostlabs-cycle-block-lite")
-    )), /* @__PURE__ */ React.createElement("div", { id: FORM_ID, hidden: !revealed, className: "mt-6" }, /* @__PURE__ */ React.createElement("form", { onSubmit, "aria-busy": busy }, /* @__PURE__ */ React.createElement(FormField, null, /* @__PURE__ */ React.createElement(FieldTitle, null, __6("License key", "ghostlabs-cycle-block-lite")), /* @__PURE__ */ React.createElement(FieldContent, null, /* @__PURE__ */ React.createElement(
-      Input,
-      {
-        ref: inputRef,
-        type: "text",
-        autoComplete: "off",
-        spellCheck: false,
-        value: licenseKey,
-        readOnly: inFlight,
-        "aria-invalid": missingKey,
-        onChange: (event) => {
-          setMissingKey(false);
-          setLicenseKey(event.target.value);
-        }
-      }
-    ), missingKey && /* @__PURE__ */ React.createElement(FieldNotice, { type: "error" }, MISSING_KEY_MESSAGE()))), /* @__PURE__ */ React.createElement("div", { className: "mt-6 flex items-center gap-x-2" }, /* @__PURE__ */ React.createElement(
-      "button",
-      {
-        type: "submit",
-        className: buttonClass(inFlight),
-        "aria-disabled": inFlight
-      },
-      __6(
-        "Verify and upgrade",
+      __5(
+        "Download Cycle Block Pro from your account",
         "ghostlabs-cycle-block-lite"
-      )
-    )))), /* @__PURE__ */ React.createElement("p", { role: "status", className: "mt-4 text-sm text-gray-700" }, status));
-  };
+      ),
+      /* @__PURE__ */ React.createElement("span", { className: "sr-only" }, " ", __5("(opens in a new tab)", "ghostlabs-cycle-block-lite"))
+    ) : __5(
+      "Download Cycle Block Pro from your GhostLabs account.",
+      "ghostlabs-cycle-block-lite"
+    )), /* @__PURE__ */ React.createElement("li", null, uploadUrl ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(
+      "a",
+      {
+        href: uploadUrl,
+        className: "font-semibold text-primary-500 underline hover:text-primary-400"
+      },
+      __5("Upload it to this site", "ghostlabs-cycle-block-lite")
+    ), " ", __5(
+      "with WordPress\u2019s plugin uploader.",
+      "ghostlabs-cycle-block-lite"
+    )) : __5(
+      "Upload it with WordPress\u2019s plugin uploader. Your account can't upload plugins here, so ask whoever manages plugins on this site to upload it for you.",
+      "ghostlabs-cycle-block-lite"
+    )), /* @__PURE__ */ React.createElement("li", null, __5(
+      "Activate Cycle Block Pro, then enter your license key in its settings.",
+      "ghostlabs-cycle-block-lite"
+    )))))
+  );
   var UpgradePanel_default = UpgradePanel;
 
-  // dev/javascript/settings/_components/upgrade/UpgradeUnavailablePanel.jsx
-  var { __: __7 } = window.wp.i18n;
-  var CLAIM_ARG2 = "cycle_upgrade_claim";
-  var UpgradeUnavailablePanel = ({ inPlace: inPlace2 }) => {
-    const returningFromCheckout = Boolean(
-      new URLSearchParams(window.location.search).get(CLAIM_ARG2)
-    );
-    const heading = returningFromCheckout ? __7("Your purchase is complete", "ghostlabs-cycle-block-lite") : __7("Already own Cycle Block Pro?", "ghostlabs-cycle-block-lite");
-    return /* @__PURE__ */ React.createElement("div", { className: "rounded-[10px] border border-gray-200 bg-white px-7 py-[18px]" }, /* @__PURE__ */ React.createElement("h2", { className: "text-sm font-semibold text-gray-900" }, heading), /* @__PURE__ */ React.createElement("p", { className: "mt-0.5 text-sm text-gray-500" }, inPlace2.message));
-  };
-  var UpgradeUnavailablePanel_default = UpgradeUnavailablePanel;
-
   // dev/javascript/settings/settings.jsx
-  var { __: __8 } = window.wp.i18n;
-  var { rootElementId, restNamespace, upgrade } = window.GHOSTLABS_CYCLE_BLOCK_CONFIG;
-  var inPlace = upgrade?.inPlace ?? { available: true, state: "available", message: "" };
-  var SettingsScreen = () => /* @__PURE__ */ React.createElement("div", { id: "ghostlabs" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-3 bg-white px-10 pb-4 pt-[22px]" }, /* @__PURE__ */ React.createElement("h1", { className: "text-[22px] font-bold leading-tight text-[#1d2327]" }, __8("Cycle Block", "ghostlabs-cycle-block-lite")), /* @__PURE__ */ React.createElement("span", { className: "rounded-full bg-gray-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-gray-600" }, __8("Free", "ghostlabs-cycle-block-lite"))), /* @__PURE__ */ React.createElement(
+  var { __: __6 } = window.wp.i18n;
+  var { rootElementId, upgrade } = window.GHOSTLABS_CYCLE_BLOCK_CONFIG;
+  var SettingsScreen = () => /* @__PURE__ */ React.createElement("div", { id: "ghostlabs" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-3 bg-white px-10 pb-4 pt-[22px]" }, /* @__PURE__ */ React.createElement("h1", { className: "text-[22px] font-bold leading-tight text-[#1d2327]" }, __6("Cycle Block", "ghostlabs-cycle-block-lite")), /* @__PURE__ */ React.createElement("span", { className: "rounded-full bg-gray-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-gray-600" }, __6("Free", "ghostlabs-cycle-block-lite"))), /* @__PURE__ */ React.createElement(
     "div",
     {
       "data-gl-body": true,
       className: "mt-5 flex max-w-[920px] flex-col gap-2 px-10 pb-12"
     },
     /* @__PURE__ */ React.createElement(OrientationCard_default, null),
-    inPlace.available ? /* @__PURE__ */ React.createElement(UpgradePanel_default, { restNamespace }) : /* @__PURE__ */ React.createElement(UpgradeUnavailablePanel_default, { inPlace }),
+    /* @__PURE__ */ React.createElement(
+      UpgradePanel_default,
+      {
+        accountUrl: upgrade?.accountUrl,
+        uploadUrl: upgrade?.uploadUrl
+      }
+    ),
     /* @__PURE__ */ React.createElement(ProComponent_default, null)
   ));
   document.addEventListener("DOMContentLoaded", () => {
@@ -27650,27 +23862,5 @@ react-dom/cjs/react-dom.development.js:
    * @return {boolean} True if the event is supported.
    * @internal
    * @license Modernizr 3.0.0pre (Custom Build) | MIT
-   *)
-
-use-sync-external-store/cjs/use-sync-external-store-shim.development.js:
-  (**
-   * @license React
-   * use-sync-external-store-shim.development.js
-   *
-   * Copyright (c) Meta Platforms, Inc. and affiliates.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
-   *)
-
-use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js:
-  (**
-   * @license React
-   * use-sync-external-store-shim/with-selector.development.js
-   *
-   * Copyright (c) Meta Platforms, Inc. and affiliates.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
    *)
 */
