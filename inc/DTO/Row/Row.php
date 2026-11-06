@@ -2,7 +2,7 @@
 
 namespace GHOSTLABS\CYCLE_BLOCK\DTO\Row;
 
-use GhostLabs\WPKit\Service\DTOMapper;
+use GHOSTLABS\CYCLE_BLOCK\Services\DTOMapper;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 

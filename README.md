@@ -35,7 +35,6 @@ it is the flow worth reading closely.
 | `dev/javascript/` | settings screen sources → compiled into `assets/js/` |
 | `build/`, `assets/js/`, `assets/css/settings.css` | compiled output, as published |
 | `assets/css/theghostlab-cycle.css` | the front-end stylesheet, hand-written |
-| `lib/wp-kit/` | the one GhostLabs library the plugin uses, carried as readable GPL-2.0-or-later source |
 | `vendor/` | Composer's autoloader — the plugin has no third-party PHP dependencies |
 | `readme.txt`, `LICENSE`, `index.php` | the WordPress.org listing text, the GPL-2.0 licence, and the directory guard |
 

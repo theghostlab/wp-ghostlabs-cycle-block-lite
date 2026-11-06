@@ -15,19 +15,9 @@ if ( file_exists( GHOSTLABS_CYCLE_BLOCK_PLUGIN_PATH . 'vendor/autoload.php' ) ) 
 	return;
 }
 
-$ghostlabs_cycle_block_packages = array_merge(
-	glob( GHOSTLABS_CYCLE_BLOCK_PLUGIN_PATH . 'vendor/ghostlabs/*', GLOB_ONLYDIR ) ?: [],
-	glob( GHOSTLABS_CYCLE_BLOCK_PLUGIN_PATH . 'lib/*', GLOB_ONLYDIR ) ?: []
-);
+$ghostlabs_cycle_block_packages = glob( GHOSTLABS_CYCLE_BLOCK_PLUGIN_PATH . 'vendor/ghostlabs/*', GLOB_ONLYDIR ) ?: [];
 
-usort(
-	$ghostlabs_cycle_block_packages,
-	static function ( $a, $b ) {
-		
-		return ( basename( $b ) === 'wp-kit' ) <=> ( basename( $a ) === 'wp-kit' )
-			?: strcmp( $a, $b );
-	}
-);
+sort( $ghostlabs_cycle_block_packages, SORT_STRING );
 
 foreach ( $ghostlabs_cycle_block_packages as $ghostlabs_cycle_block_dir ) {
 	$ghostlabs_cycle_block_loader = sprintf( '%s/%s.php', $ghostlabs_cycle_block_dir, basename( $ghostlabs_cycle_block_dir ) );
@@ -39,26 +29,12 @@ foreach ( $ghostlabs_cycle_block_packages as $ghostlabs_cycle_block_dir ) {
 
 unset( $ghostlabs_cycle_block_packages, $ghostlabs_cycle_block_dir, $ghostlabs_cycle_block_loader );
 
-use GHOSTLABS\CYCLE_BLOCK\Boot\TierBootFactory;
 use GHOSTLABS\CYCLE_BLOCK\Kernel;
 use GHOSTLABS\CYCLE_BLOCK\Services\ActivatorDeactivator;
 use GHOSTLABS\CYCLE_BLOCK\Services\DebugLog;
 use GHOSTLABS\CYCLE_BLOCK\Services\TranslationNotice;
 
-add_action( 'init', static function () {
-	$ghostlabs_cycle_block_languages = TierBootFactory::current()->translationsDir();
-
-	if ( $ghostlabs_cycle_block_languages === null ) {
-		return;
-	}
-
-	// phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Unreachable in the WordPress.org edition: its tier boot answers null above and returns before this line. This file is shared with an edition distributed outside .org, which has no language-pack installer behind it and whose shipped .mo files are read only because of this call.
-	load_plugin_textdomain(
-		'ghostlabs-cycle-block-lite',
-		false,
-		dirname( GHOSTLABS_CYCLE_BLOCK_PLUGIN_SLUG ) . '/' . $ghostlabs_cycle_block_languages
-	);
-} );
+// since 4.6. The call used to sit here behind `translationsDir()` and a `phpcs:ignore`,
 
 TranslationNotice::register();
 

@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace GHOSTLABS\CYCLE_BLOCK\Services;
 
 use GHOSTLABS\CYCLE_BLOCK\Config\PluginConfig;
-use GhostLabs\WPKit\Contracts\MutableOptionsServiceInterface;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class OptionsService implements MutableOptionsServiceInterface
+class OptionsService
 {
 	public function delete(string $key): ?bool {
 

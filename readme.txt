@@ -5,7 +5,7 @@ Tags: content rotation, scheduled content, testimonials, gutenberg, rotating con
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -143,8 +143,7 @@ https://github.com/theghostlab/wp-ghostlabs-cycle-block-lite
 
 That repository contains this plugin's source at the version the newest tag names — the same PHP
 that ships — plus the uncompiled `src/` and `dev/` behind its bundles and the configuration used
-to build them. Every dependency is a public package, and the one GhostLabs library the plugin uses
-is carried as readable source inside it (`lib/wp-kit/`, GPL-2.0-or-later) — so `composer install
+to build them. Every dependency is a public package and none is private — so `composer install
 && pnpm install && pnpm run build` needs no credentials of any kind and reproduces that
 repository's `build/`, `assets/js/` and `assets/css/settings.css` byte for byte.
 
@@ -158,6 +157,13 @@ repository's `build/`, `assets/js/` and `assets/css/settings.css` byte for byte.
 6. Already own Cycle Block Pro? Download it from your account, upload it with WordPress's plugin uploader, activate it and enter your license key in its settings. It switches this plugin off, and every block, schedule and setting stays exactly as it was.
 
 == Changelog ==
+
+= 2.1.1 =
+* The plugin no longer carries a separate GhostLabs library. The few parts of it this edition used
+  are now part of the plugin's own code. Nothing about how your content rotates changes, and no
+  setting moves.
+* Removed a translation loader this edition never ran. WordPress.org's language packs load the
+  plugin's translations, as they already did.
 
 = 2.1.0 =
 * This edition now carries only the schedules it runs: daily, weekly and monthly. The six it used
@@ -223,6 +229,10 @@ The relaunch release. WordPress.org last published 1.0.4, so everything listed u
 * **Requires PHP 8.1** (previously 7.4).
 
 == Upgrade Notice ==
+
+= 2.1.1 =
+A maintenance release: the plugin no longer bundles a separate GhostLabs library. Your blocks,
+schedules and settings are unchanged.
 
 = 2.1.0 =
 Requires WordPress 6.8 or newer; sites on an older version will not be offered this update. Your

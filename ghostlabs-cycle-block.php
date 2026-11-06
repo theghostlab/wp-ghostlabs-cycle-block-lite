@@ -19,16 +19,15 @@
  * `languages/` directory — WordPress.org installs and loads its language packs
  * from `wp-content/languages/plugins/`, as it has for every hosted plugin since
  * WP 4.6. The header named `/languages` for as long as it existed and the folder
- * never did, which Plugin Check reports. The matching half is
- * `Boot\FreeBoot::translationsDir()` returning null, so `bootstrap.php` makes no
- * `load_plugin_textdomain()` call either; `TierTranslationsTest` holds the two
- * together and will fail the moment one of them changes alone.
+ * never did, which Plugin Check reports. Nor does this edition load a text
+ * domain itself: `FreeBuildLoadsNoTextdomainTest` refuses any such call in a
+ * file a free build carries.
  *
  * @wordpress-plugin
  * Plugin Name:       Cycle Block
  * Plugin URI:        https://theghostlab.io/cycle-block
  * Description:       Rotate content variations on a schedule — daily, weekly or monthly. Rendered server-side, so there's no flicker or layout shift.
- * Version:           2.1.0
+ * Version:           2.1.1
  * Requires at least: 6.8
  * Requires PHP:      8.1
  * Author:            GhostLabs
@@ -44,7 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'GHOSTLABS_CYCLE_BLOCK_EDITION', 'free' );
 define( 'GHOSTLABS_CYCLE_BLOCK_BOOT', 'GHOSTLABS\\CYCLE_BLOCK\\Boot\\FreeBoot' );
-define( 'GHOSTLABS_CYCLE_BLOCK_VERSION', '2.1.0' );
+define( 'GHOSTLABS_CYCLE_BLOCK_VERSION', '2.1.1' );
 define( 'GHOSTLABS_CYCLE_BLOCK_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'GHOSTLABS_CYCLE_BLOCK_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'GHOSTLABS_CYCLE_BLOCK_PLUGIN_SLUG', plugin_basename( __FILE__ ) );

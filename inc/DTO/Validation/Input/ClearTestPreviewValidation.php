@@ -2,7 +2,7 @@
 
 namespace GHOSTLABS\CYCLE_BLOCK\DTO\Validation\Input;
 
-use GhostLabs\WPKit\Contracts\DTOValidationInterface;
+use GHOSTLABS\CYCLE_BLOCK\Contracts\DTOValidationInterface;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 

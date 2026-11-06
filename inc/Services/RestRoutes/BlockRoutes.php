@@ -2,8 +2,8 @@
 
 namespace GHOSTLABS\CYCLE_BLOCK\Services\RestRoutes;
 
-use GhostLabs\WPKit\Contracts\DTOValidationInterface;
-use GhostLabs\WPKit\Service\DTOMapper;
+use GHOSTLABS\CYCLE_BLOCK\Contracts\DTOValidationInterface;
+use GHOSTLABS\CYCLE_BLOCK\Services\DTOMapper;
 use GHOSTLABS\CYCLE_BLOCK\Config\PluginConfig;
 use GHOSTLABS\CYCLE_BLOCK\DTO\Input\BlockRequestDto;
 use GHOSTLABS\CYCLE_BLOCK\DTO\Input\EntryChangeDto;
